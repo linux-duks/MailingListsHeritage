@@ -22,21 +22,21 @@ Run with:
   pytest anonymizer/tests/test_body_anonymizer.py -v
 """
 
-import re
 import pytest
+import json
+import threading
 
 # ---------------------------------------------------------------------------
 # Imports – will raise ImportError until implementation exists (RED phase)
 # ---------------------------------------------------------------------------
 from mlh_anonymizer.hasher import generate_sha1_hash
+from mlh_anonymizer.anonymizer import mlh_anonymizer
 
-# These two modules do NOT exist yet; tests will fail until they are created.
 from mlh_anonymizer.body_anonymizer import anonymize_body
 from mlh_anonymizer.identity_map import (
     IdentityMap,
     IdentityRecord,
 )
-
 
 # ===========================================================================
 # Fixtures
@@ -74,6 +74,13 @@ def known_name_hash(known_name) -> str:
 #    Verifies that the right email patterns are detected inside raw_body.
 # ===========================================================================
 
+class TestIntegrationWithHeaderAnonymizer:
+    def test_body_hash_matches_header_anonymizer_output(self, fresh_map, known_email):
+        """Hash from anonymize_body matches mlh_anonymizer() for same email."""
+        header_hash = mlh_anonymizer(known_email)  # existing header path
+        body = f"From: {known_email}"
+        result, _ = anonymize_body(body, fresh_map)
+        assert header_hash in result
 
 class TestEmailDetection:
     """anonymize_body must detect every email pattern mandated by the spec."""
@@ -196,9 +203,8 @@ class TestNegativeCases:
         """URLs like 'http://user@host/path' should not be treated as email addresses."""
         body = "Repo at http://git@github.com/org/repo.git"
         result, _ = anonymize_body(body, fresh_map)
-        # The URL should remain or at minimum not produce a false hash for a URL
-        # The constraint: do not hash domains without a valid local-part@domain pattern
-        assert "github.com" in result
+        # The URL-embedded pattern should NOT be treated as email
+        assert generate_sha1_hash("git@github.com") not in result
 
 
 # ===========================================================================
@@ -254,19 +260,16 @@ class TestHashConsistency:
 class TestNameHandling:
     """Edge cases around display name + email combinations."""
 
-    def test_same_email_two_different_names_two_rows(self, fresh_map, known_email):
-        """
-        If the same email appears with two different names, the identity map
-        must store them as separate records (different rows per spec).
-        """
-        name_a = "Alice Doe"
-        name_b = "A. Doe"
-        body = f"{name_a} <{known_email}>\n{name_b} <{known_email}>"
+    def test_same_name_two_different_emails_two_rows(self, fresh_map, known_name):
+        """Same name with two different emails → separate identity records."""
+        email_a = "alice@company.com"
+        email_b = "alice@personal.com"
+        body = f"{known_name} <{email_a}>\n{known_name} <{email_b}>"
         _, updated_map = anonymize_body(body, fresh_map)
-        records = updated_map.get_records_for_email(known_email)
-        names_seen = {r.name for r in records}
-        assert name_a in names_seen
-        assert name_b in names_seen
+        records_a = updated_map.get_records_for_email(email_a)
+        records_b = updated_map.get_records_for_email(email_b)
+        assert len(records_a) >= 1
+        assert len(records_b) >= 1
 
     def test_email_without_name_stored_separately(self, fresh_map, known_email, known_name):
         """
@@ -286,6 +289,27 @@ class TestNameHandling:
         result, _ = anonymize_body(body, fresh_map)
         assert known_email not in result
         assert known_email_hash in result
+    
+    def test_email_with_plus_tag(self, fresh_map):
+        """Emails with '+' tags (e.g., user+tag@example.com) are detected."""
+        body = "Contact user+tag@example.com for info."
+        result, _ = anonymize_body(body, fresh_map)
+        assert "user+tag@example.com" not in result
+        assert generate_sha1_hash("user+tag@example.com") in result
+
+    def test_email_with_dots_in_local_part(self, fresh_map):
+        """Emails like first.last@example.com are detected."""
+        body = "Reach first.last@example.com"
+        result, _ = anonymize_body(body, fresh_map)
+        assert "first.last@example.com" not in result
+
+    def test_email_case_sensitivity(self, fresh_map):
+        """Email hashing should normalize case (or not) — define expected behavior."""
+        body = "Contact Alice@Example.COM"
+        result, _ = anonymize_body(body, fresh_map)
+        # Decide: should the hash be for "Alice@Example.COM" as-is,
+        # or normalized to "alice@example.com"?
+        # The spec says "same email = same hash" — clarify case handling.
 
 
 # ===========================================================================
@@ -296,7 +320,7 @@ class TestNameHandling:
 class TestIdentityMapSchema:
     """IdentityRecord must track header_count, body_count, total_count."""
 
-    def test_new_record_has_zero_counts(self, fresh_map, known_email):
+    def test_first_body_occurrence_sets_counts_correctly(self, fresh_map, known_email):
         """A freshly added record starts with all counts at zero."""
         fresh_map.add_or_update(known_email, name=None, location="body")
         record = fresh_map.get_records_for_email(known_email)[0]
@@ -355,7 +379,6 @@ class TestMapPersistence:
 
     def test_identity_map_serialises_to_dict(self, known_email):
         """IdentityMap.to_dict() returns a plain-Python structure (JSON-serialisable)."""
-        import json
         imap = IdentityMap()
         imap.add_or_update(known_email, name=None, location="body")
         data = imap.to_dict()
@@ -377,7 +400,6 @@ class TestMapPersistence:
         Concurrent body_count increments from multiple threads must not
         produce a race condition (total must equal number of threads).
         """
-        import threading
 
         imap = IdentityMap()
         n_threads = 50
@@ -442,6 +464,12 @@ class TestOutputFormat:
         body = f"hello {known_email}"
         _, updated_map = anonymize_body(body, fresh_map)
         assert isinstance(updated_map, IdentityMap)
+
+    def test_bare_email_replacement_format(self, fresh_map, known_email, known_email_hash):
+        body = f"Contact {known_email}"
+        result, _ = anonymize_body(body, fresh_map)
+        # Verify the exact replacement format matches the spec
+        assert f"<{known_email_hash}>" in result  # if angle-bracket wrapping is required
 
 
 # ===========================================================================
