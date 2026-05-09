@@ -1,3 +1,6 @@
+PARSER_OUTPUT_DIR=$(shell dirname $(CURDIR))/parser_output/dataset
+ANONYMIZER_OUTPUT_DIR=$(shell dirname $(CURDIR))/anonymizer_output
+
 # Include shared container runtime detection
 include ../containers.mk
 
@@ -11,12 +14,12 @@ test:
 		echo "==> Found Python Testing toolchain, running natively..."; \
 		nox; \
 	else \
-		echo "==> Python Testing toolchain not found, running with Docker (Image: $(PYTHON_DOCKER_IMAGE))..."; \
+		echo "==> Python Testing toolchain not found, running with $(CONTAINER) (Image: $(PYTHON_DOCKER_IMAGE))..."; \
 		$(CONTAINER) run --rm \
-			-it -u $(id -u):$(id -g) \
 			--network=host \
 			-e UV_CACHE_DIR=/tmp/.cache/uv \
-			-v .:/usr/src/app:z \
+			-e UV_PROJECT_ENVIRONMENT=/tmp/.venv \
+			-v $(CURDIR):/usr/src/app \
 			-w /usr/src/app \
 			$(PYTHON_DOCKER_IMAGE) \
 			bash -c "uv sync --locked && uvx nox"; \
@@ -33,45 +36,35 @@ run:
 			echo "==> Found uv toolchain, running natively..."; \
 			INPUT_DIR="../parser_output/dataset,../anonymizer_output/" OUTPUT_DIR="../analysis/results/" uv run src/main.py; \
 		else \
-			echo "==> uv toolchain not found, running with Docker (Image: $(PYTHON_DOCKER_IMAGE))..."; \
-			$(CONTAINER) run --rm \
-				-it -u $$(id -u):$$(id -g) \
+			echo "==> uv toolchain not found, running with $(CONTAINER) (Image: $(PYTHON_DOCKER_IMAGE))..."; \
+			$(CONTAINER) run --rm -it \
 				--network=host \
 				-e INPUT_DIR=/data/dataset,/data/anonymized \
 				-e OUTPUT_DIR=./results/ \
 				-e GIT_COMMIT=$${GIT_COMMIT:-unknown} \
 				-e GIT_DATE=$${GIT_DATE:-unknown} \
 				-e UV_CACHE_DIR=/tmp/.cache/uv \
-				-v ../parser_output/dataset:/data/dataset:z \
-				-v ../anonymizer_output/:/data/anonymized:z \
-				-v .:/usr/src/app:z \
+				-e UV_PROJECT_ENVIRONMENT=/tmp/.venv \
+				-v $(PARSER_OUTPUT_DIR):/data/dataset \
+				-v $(ANONYMIZER_OUTPUT_DIR):/data/anonymized \
+				-v $(CURDIR):/usr/src/app \
 				-w /usr/src/app \
 				$(PYTHON_DOCKER_IMAGE) \
 				bash -c "uv sync --locked && uv run src/main.py"; \
 		fi \
 	fi
 
-.PHONY: debug
-debug:
-	@if command -v uv >/dev/null 2>&1; then \
-		echo "==> Found uv toolchain, running natively..."; \
-		INPUT_DIR="../parser_output/dataset,../anonymizer_output/" OUTPUT_DIR="../analysis/results/" uv run src/make_analysis.py; \
-	else \
-		echo "==> uv toolchain not found, running with Docker..."; \
-		$(CONTAINER) run --rm \
-			-it -u $(id -u):$(id -g) \
-			--network=host \
-			-e INPUT_DIR=/data/dataset,/data/anonymized \
-			-e OUTPUT_DIR=./results/ \
-			-e UV_CACHE_DIR=/tmp/.cache/uv \
-			-v ../parser_output/dataset:/data/dataset:z \
-			-v ../anonymizer_output/:/data/anonymized:z \
-			-v .:/usr/src/app:z \
-			-w /usr/src/app \
-			$(PYTHON_DOCKER_IMAGE) \
-			bash -c "uv sync --locked && uv run src/make_analysis.py"; \
-	fi
 
 .PHONY: rebuild
 rebuild:
 	$(CONTAINER) pull $(PYTHON_DOCKER_IMAGE)
+
+.PHONY: clean
+clean:
+	@echo "==> Cleaning up anonymizer artifacts..."
+	@rm -rf .venv .cache
+	@rm -rf .nox
+	@rm -rf .ruff_cache
+	@rm -rf .pytest_cache
+	@rm -rf __pycache__
+	@rm -rf **/__pycache__
