@@ -131,13 +131,13 @@ impl ParquetEmailStore {
             for entry in entries.flatten() {
                 if let Some(file_name) = entry.file_name().to_str()
                     && file_name.starts_with(&format!("{}_", stem))
-                        && file_name.ends_with(".parquet")
-                    {
-                        let index_part = &file_name[stem.len() + 1..file_name.len() - 8];
-                        if let Ok(idx) = index_part.parse::<usize>() {
-                            max_index = Some(max_index.map_or(idx, |m| std::cmp::max(m, idx)));
-                        }
+                    && file_name.ends_with(".parquet")
+                {
+                    let index_part = &file_name[stem.len() + 1..file_name.len() - 8];
+                    if let Ok(idx) = index_part.parse::<usize>() {
+                        max_index = Some(max_index.map_or(idx, |m| std::cmp::max(m, idx)));
                     }
+                }
             }
 
             self.writer_index = max_index.map(|m| m + 1).unwrap_or(0);
@@ -199,8 +199,7 @@ impl EmailStore for ParquetEmailStore {
         }
 
         // Rotate to a new file when max_emails_per_file is reached
-        if self.emails_in_current_file >= self.max_emails_per_file && self.max_emails_per_file > 0
-        {
+        if self.emails_in_current_file >= self.max_emails_per_file && self.max_emails_per_file > 0 {
             if !self.buffer.is_empty() {
                 let flushed = self.flush()?;
                 if let Some(ref mut items) = synced_items {
@@ -290,26 +289,27 @@ mod tests {
             for path in &parquet_paths {
                 if let Ok(file) = File::open(path)
                     && let Ok(builder) = ParquetRecordBatchReaderBuilder::try_new(file)
-                        && let Ok(reader) = builder.build() {
-                            for batch in reader.flatten() {
-                                let ids = batch
-                                    .column(0)
-                                    .as_any()
-                                    .downcast_ref::<StringArray>()
-                                    .unwrap();
-                                let contents = batch
-                                    .column(1)
-                                    .as_any()
-                                    .downcast_ref::<StringArray>()
-                                    .unwrap();
-                                for row in 0..batch.num_rows() {
-                                    results.push((
-                                        ids.value(row).to_string(),
-                                        contents.value(row).to_string(),
-                                    ));
-                                }
-                            }
+                    && let Ok(reader) = builder.build()
+                {
+                    for batch in reader.flatten() {
+                        let ids = batch
+                            .column(0)
+                            .as_any()
+                            .downcast_ref::<StringArray>()
+                            .unwrap();
+                        let contents = batch
+                            .column(1)
+                            .as_any()
+                            .downcast_ref::<StringArray>()
+                            .unwrap();
+                        for row in 0..batch.num_rows() {
+                            results.push((
+                                ids.value(row).to_string(),
+                                contents.value(row).to_string(),
+                            ));
                         }
+                    }
+                }
             }
         }
         results
@@ -429,7 +429,10 @@ mod tests {
         store.close().unwrap();
 
         // Verify files exist and have data
-        assert!(dir.read_dir().unwrap().count() > 0, "Output dir should not be empty");
+        assert!(
+            dir.read_dir().unwrap().count() > 0,
+            "Output dir should not be empty"
+        );
 
         // Read back all parquet files and verify total
         let all_data = read_parquet_dir(&dir);
