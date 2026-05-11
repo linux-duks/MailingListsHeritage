@@ -1,8 +1,18 @@
 FROM docker.io/rust:slim-trixie
 
+ENV DEBIAN_FRONTEND=noninteractive
+
 RUN apt update && \
-	apt upgrade -y && \
-	apt install -y python3 docker.io git libgit2-dev pkg-config libssl-dev build-essential make ripgrep
+  apt upgrade -y && \
+  apt install -y python3 \
+              docker.io \
+              git \
+              libgit2-dev \
+              pkg-config \
+              libssl-dev \
+              build-essential \
+              make \
+              ripgrep
 
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 

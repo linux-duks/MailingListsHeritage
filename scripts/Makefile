@@ -22,9 +22,8 @@ peek:
 		uv run --project ./peek_parquet ./peek_parquet/peek_files.py $(PEEK_PATH) ;\
 	else \
 		echo "==> uv toolchain not found, running in container..."; \
-		$(CONTAINER) run --rm -it \
-			$(USER_FLAGS) \
-			--userns keep-id \
+		$(CONTAINER) run --rm \
+			-it -u $(id -u):$(id -g) \
 			-v ./:/usr/src/app:z \
 			-v $(PEEK_PATH):/target_path:z \
 			-w /usr/src/app \
