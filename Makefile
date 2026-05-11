@@ -3,9 +3,45 @@
 all: rebuild run
 
 
-# run all targets in order
+# run all targets in order, with timing
 .PHONY: run
-run: run-archiver parse anonymize analysis
+run:
+	@echo "==> Starting sequential pipeline..."; \
+	total=0; \
+	\
+	start=$$(date +%s); \
+	$(MAKE) -C mlh_archiver run; \
+	end=$$(date +%s); \
+	archiver_dur=$$((end - start)); \
+	total=$$((total + archiver_dur)); \
+	\
+	start=$$(date +%s); \
+	$(MAKE) -C mlh_parser run; \
+	end=$$(date +%s); \
+	parser_dur=$$((end - start)); \
+	total=$$((total + parser_dur)); \
+	\
+	start=$$(date +%s); \
+	$(MAKE) -C anonymizer run; \
+	end=$$(date +%s); \
+	anonymizer_dur=$$((end - start)); \
+	total=$$((total + anonymizer_dur)); \
+	\
+	start=$$(date +%s); \
+	$(MAKE) -C analysis run; \
+	end=$$(date +%s); \
+	analysis_dur=$$((end - start)); \
+	total=$$((total + analysis_dur)); \
+	\
+	echo "=============================="; \
+	echo "  Pipeline timing summary:"; \
+	echo "  archiver:    $${archiver_dur}s"; \
+	echo "  parser:      $${parser_dur}s"; \
+	echo "  anonymizer:  $${anonymizer_dur}s"; \
+	echo "  analysis:    $${analysis_dur}s"; \
+	echo "  ----------------------------"; \
+	echo "  Total:       $${total}s"; \
+	echo "=============================="
 
 # ------------------------------------------------------------------------------
 # APPLICATION TARGETS
