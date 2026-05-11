@@ -58,14 +58,14 @@ devbox run analysis
 # Debug mode (native execution)
 make debug-analysis
 # or
-INPUT_DIR="../anonymizer_output" uv run src/make_analysis.py
+INPUT_DIR="../output/anonymizer" uv run src/make_analysis.py
 ```
 
 ### Input/Output Directories
 
 | Directory | Purpose |
 |-----------|---------|
-| `../anonymizer_output/` | Input: Anonymized Parquet dataset |
+| `../output/anonymizer/` | Input: Anonymized Parquet dataset |
 | `results/` | Output: Analysis results and visualizations |
 
 ## Available Analyses
@@ -114,7 +114,7 @@ The `compose.yaml` file configures volume mounts:
 
 ```yaml
 volumes:
-  - ../anonymizer_output:/input:z   # Input dataset
+  - ../output/anonymizer:/input:z   # Input dataset
   - ./results:/results:z            # Output results
 ```
 
@@ -126,13 +126,13 @@ For development and debugging, run scripts directly:
 
 ```bash
 # Set input directory
-export INPUT_DIR="../anonymizer_output"
+export INPUT_DIR="../output/anonymizer"
 
 # Run analysis
 uv run src/make_analysis.py
 
 # Or with inline variable
-INPUT_DIR="../anonymizer_output" uv run src/make_analysis.py
+INPUT_DIR="../output/anonymizer" uv run src/make_analysis.py
 ```
 
 ### Project Structure
@@ -177,7 +177,7 @@ Here's an example of querying mailing list data with Polars:
 import polars as pl
 
 # Load the dataset
-df = pl.scan_parquet("../anonymizer_output/**/*.parquet")
+df = pl.scan_parquet("../output/anonymizer/**/*.parquet")
 
 # Count emails per day
 daily_activity = (
@@ -261,7 +261,7 @@ Example:
 # src/my_analysis.py
 import polars as pl
 
-df = pl.scan_parquet("../anonymizer_output/**/*.parquet")
+df = pl.scan_parquet("../output/anonymizer/**/*.parquet")
 # ... your analysis ...
 ```
 

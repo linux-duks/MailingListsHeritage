@@ -1,5 +1,5 @@
-PARSER_OUTPUT_DIR=$(shell dirname $(CURDIR))/parser_output/dataset
-ANONYMIZER_OUTPUT_DIR=$(shell dirname $(CURDIR))/anonymizer_output
+PARSER_OUTPUT_DIR=$(shell dirname $(CURDIR))/output/parser/dataset
+ANONYMIZER_OUTPUT_DIR=$(shell dirname $(CURDIR))/output/anonymizer
 
 # Include shared container runtime detection
 include ../containers.mk
@@ -27,14 +27,14 @@ test:
 
 .PHONY: run
 run:
-	@if [ ! -d "../parser_output/dataset" ] || [ -z "$$(ls ../parser_output/dataset 2>/dev/null)" ]; then \
-		echo "==> Error: '../parser_output/dataset' directory is missing or empty."; \
+	@if [ ! -d "../output/parser/dataset" ] || [ -z "$$(ls ../output/parser/dataset 2>/dev/null)" ]; then \
+		echo "==> Error: '../output/parser/dataset' directory is missing or empty."; \
 		echo "==> Please run the parser first to generate the dataset."; \
 		exit 1; \
 	else \
 		if command -v uv >/dev/null 2>&1; then \
 			echo "==> Found uv toolchain, running natively..."; \
-			INPUT_DIR="../parser_output/dataset,../anonymizer_output/" OUTPUT_DIR="../analysis/results/" uv run src/main.py; \
+			INPUT_DIR="../output/parser/dataset,../output/anonymizer/" OUTPUT_DIR="../output/analysis/" uv run src/main.py; \
 		else \
 			echo "==> uv toolchain not found, running with $(CONTAINER) (Image: $(PYTHON_DOCKER_IMAGE))..."; \
 			$(CONTAINER) run --rm -it \

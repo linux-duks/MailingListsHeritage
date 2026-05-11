@@ -1,10 +1,5 @@
 **/target
-output*
-data
-archiver_output**
-anonymizer_output**
-parser_output**
-anonymizer_output
+output/*
 nohup.out
 **.tar.gz
 **/__pycache__

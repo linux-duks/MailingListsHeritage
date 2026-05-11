@@ -77,10 +77,10 @@ Defaults as set in `example_parser_config.yaml`:
 
 | Directory | Purpose |
 |-----------|---------|
-| `./archiver_output/` | Input: Root directory with mailing list subdirectories from archiver |
-| `./parser_output/dataset/` | Output: Parquet dataset (Hive partitioned by list) |
-| `./parser_output/errors/` | Failed parses per mailing list |
-| `./parser_output/lineage/` | Audit trail (reserved) |
+| `./output/archiver/` | Input: Root directory with mailing list subdirectories from archiver |
+| `./output/parser/dataset/` | Output: Parquet dataset (Hive partitioned by list) |
+| `./output/parser/errors/` | Failed parses per mailing list |
+| `./output/parser/lineage/` | Audit trail (reserved) |
 
 All paths can be changed via the `input_dir_path` and `output_dir_path` options
 in `parser_config.yaml`.
@@ -154,8 +154,8 @@ parser settings — only `RUST_LOG` controls log verbosity.
 ```yaml
 # parser_config.yaml
 nthreads: 4
-input_dir_path: "./archiver_output/"
-output_dir_path: "./parser_output/"
+input_dir_path: "./output/archiver/"
+output_dir_path: "./output/parser/"
 fail_on_parsing_error: false
 # lists_to_parse applies to all input subdirectories:
 # lists_to_parse:
@@ -269,7 +269,7 @@ Failed parses are tracked per mailing list under:
 import polars as pl
 
 # Read the dataset dataset
-df = pl.scan_parquet("../parser_output/dataset/**/*.parquet")
+df = pl.scan_parquet("../output/parser/dataset/**/*.parquet")
 
 # Query emails by subject
 result = (
@@ -289,7 +289,7 @@ use polars::prelude::*;
 fn main() -> PolarsResult<()> {
     // Read the dataset dataset
     let mut args = ScanArgsParquet::default();
-    let df = LazyFrame::scan_parquet("../parser_output/dataset/**/*.parquet", args)?
+    let df = LazyFrame::scan_parquet("../output/parser/dataset/**/*.parquet", args)?
         .filter(col("subject").str().contains(lit("example"), true))
         .select([col("date"), col("from"), col("subject")])
         .collect()?;

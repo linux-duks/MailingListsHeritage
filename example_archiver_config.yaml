@@ -6,7 +6,7 @@
 # The `public_inbox:` block contains settings for consumming public-inbox git repositories
 
 nthreads: 3
-output_dir: "./archiver_output"
+output_dir: "./output/archiver"
 loop_groups: true
 
 # write_mode:

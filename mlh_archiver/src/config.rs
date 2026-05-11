@@ -341,7 +341,7 @@ fn default_nthreads() -> u8 {
 }
 
 fn default_output_dir() -> String {
-    "./output".to_string()
+    "./output/archiver".to_string()
 }
 
 fn default_loop_groups() -> bool {

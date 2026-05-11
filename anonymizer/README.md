@@ -75,22 +75,22 @@ devbox run anonymize
 # Debug mode (native execution)
 make debug-anonymizer
 # or
-INPUT_DIR="../parser_output/dataset" OUTPUT_DIR="../anonymizer_output" uv run src/main.py
+INPUT_DIR="../output/parser/dataset" OUTPUT_DIR="../output/anonymizer" uv run src/main.py
 ```
 
 ### Input/Output Directories
 
 | Directory | Purpose |
 |-----------|---------|
-| `../parser_output/dataset/` | Input: Non-anonymized Parquet dataset |
-| `../anonymizer_output/` | Output: Anonymized dataset |
+| `../output/parser/dataset/` | Input: Non-anonymized Parquet dataset |
+| `../output/anonymizer/` | Output: Anonymized dataset |
 
 ## Output Format
 
 The anonymized dataset maintains the same structure as the input but with hashed PII fields:
 
 ```
-anonymizer_output/
+output/anonymizer/
 ├── mailing_list=dev.rcpassos.me.lists.gfs2/
 │   ├── part-0.parquet
 │   └── part-1.parquet
@@ -125,8 +125,8 @@ The `compose.yaml` file configures volume mounts:
 
 ```yaml
 volumes:
-  - ../parser_output/dataset/:/input:z    # Input dataset
-  - ../anonymizer_output:/output:z       # Output directory
+  - ../output/parser/dataset/:/input:z    # Input dataset
+  - ../output/anonymizer:/output:z       # Output directory
 ```
 
 ## Development
@@ -152,7 +152,7 @@ uv run pytest
 Run the anonymizer directly without containers:
 
 ```bash
-INPUT_DIR="../parser_output/dataset" OUTPUT_DIR="../anonymizer_output" uv run src/main.py
+INPUT_DIR="../output/parser/dataset" OUTPUT_DIR="../output/anonymizer" uv run src/main.py
 ```
 
 ### Project Structure
@@ -252,7 +252,7 @@ make analysis   # Run analysis
 import polars as pl
 
 # Read the anonymized dataset
-df = pl.scan_parquet("../anonymizer_output/**/*.parquet")
+df = pl.scan_parquet("../output/anonymizer/**/*.parquet")
 
 # Count emails per anonymized user
 result = (

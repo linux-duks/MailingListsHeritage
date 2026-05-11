@@ -11,7 +11,7 @@
 /// All entries share the same columns:
 ///   email_index, list_name, source_type, write_mode, timestamp, archiver_build_info
 ///
-///   This module will stream content into parquet row group batches
+/// This module will stream content into parquet row group batches
 ///
 use std::collections::HashMap;
 use std::fs;

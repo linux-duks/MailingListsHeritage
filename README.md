@@ -278,7 +278,7 @@ Quick inspection tool for Parquet files and directories located in [`scripts/pee
 
 ```bash
 # Inspect a single parquet file
-devbox run peek parser_output/dataset/list=dev.rcpassos.me.lists.gfs2/list_data.parquet
+devbox run peek output/parser/dataset/list=dev.rcpassos.me.lists.gfs2/list_data.parquet
 
 # Inspect a directory (finds all .parquet files under it)
 devbox run peek output/

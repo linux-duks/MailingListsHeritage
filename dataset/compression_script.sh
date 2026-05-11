@@ -5,7 +5,7 @@
 CHUNK_SIZE=20
 # The prefix for your archive names
 ARCHIVE_PREFIX="LKML5Ws-linux-mailing-lists-columnar-dataset_anonymized"
-SOURCE_DIR="../anonymizer_output/__main_dataset/"
+SOURCE_DIR="../output/anonymizer/__main_dataset/"
 # ---------------------
 
 # 1. Check if the source directory exists

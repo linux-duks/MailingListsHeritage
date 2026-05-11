@@ -1,8 +1,8 @@
 # Example parser configuration file
 
 nthreads: 1
-input_dir_path: "./archiver_output/"
-output_dir_path: "./parser_output/"
+input_dir_path: "./output/archiver/"
+output_dir_path: "./output/parser/"
 fail_on_parsing_error: false
 
 # lists_to_parse: 
