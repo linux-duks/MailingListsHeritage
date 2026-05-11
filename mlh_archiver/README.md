@@ -346,42 +346,21 @@ Documentation is output to `target/doc/mlh_archiver/` and automatically opened i
 
 ## Project Structure
 
+Here are the important files and folders:
+
 ```
 mlh_archiver/
 ├── src/
-│   ├── main.rs              # Application entry point, Ctrl+C handler
 │   ├── lib.rs               # Core start() function, worker initialization
 │   ├── config.rs            # Configuration loading and RunMode handling
 │   ├── scheduler.rs         # Thread orchestration, producer/consumer pattern
 │   ├── worker.rs            # Worker trait, WorkerManager ownership
 │   ├── errors.rs            # Error types (Error, ConfigError)
-│   ├── file_utils.rs        # File I/O, YAML serialization
-│   ├── range_inputs.rs      # email range parsing (lazy iterator)
 │   ├── archive_writer/      # Reusable storage facade (MUST be used by all workers)
-│   │   ├── mod.rs           # ArchiveWriter facade
-│   │   ├── progress.rs      # ProgressTracker (reads/writes __progress.yaml)
-│   │   ├── data_lineage.rs  # DataLineageWriter (appends audit trail)
-│   │   ├── error_log.rs     # ErrorLogger (appends to __errors.csv)
-│   │   └── email_store.rs   # EmailStore (writes .eml files)
-│   ├── nntp_source/         # NNTP-specific implementation
-│   │   ├── mod.rs           # Module exports, NNTP connection helper
-│   │   ├── nntp_config.rs   # NNTP configuration struct
-│   │   ├── nntp_lister.rs   # List retrieval from NNTP server
-│   │   ├── nntp_utils.rs    # shared utils handling the NNTP lib
-│   │   └── nntp_worker.rs   # NNTPWorker implementation
-│   └── public_inbox_source/ # Public-Inbox git repo implementation
-│       ├── mod.rs           # Module exports
-│       ├── pi_config.rs     # Public-Inbox configuration struct
-│       ├── pi_lister.rs     # List retrieval from public-inbox repos
-│       ├── pi_utils.rs      # Shared public-inbox utilities
-│       └─── pi_worker.rs     # PublicInboxWorker implementation
+│   └── *_source/            # Implementation of the Mailing List Sources
+│       └─── mod.rs          # Module exports
 ├── rust-nntp/               # Forked NNTP library
-├── tests/
-│   ├── test_config.rs       # Configuration tests
-│   ├── test_nntp.rs         # Integration tests with testcontainers
-│   └── test_shutdown.rs     # Shutdown flag tests
-├── Cargo.toml               # Rust dependencies
-└── Makefile                 # Build automation
+└── tests/                   # Integration Tests
 ```
 
 ## Dependencies

@@ -26,14 +26,17 @@
 			"run": [
 				"make run"
 			],
+			"archive": [
+				"make run-archiver"
+			],
 			"parse": [
-				"make parse"
+				"make run-parser"
 			],
 			"anonymize": [
-				"make anonymize"
+				"make run-anonymizer"
 			],
 			"analysis": [
-				"make analysis"
+				"make run-analysis"
 			],
 			"rebuild": [
 				"make rebuild"

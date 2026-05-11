@@ -112,13 +112,13 @@ or
 make run_archiver
 
 # Parse raw emails into Parquet dataset
-make parse
+make run-parser
 
 # Anonymize the dataset
-make anonymize
+make run-anonymizer
 
 # Run example analyses
-make analysis
+make run-analysis
 ```
 
 ---
@@ -153,7 +153,8 @@ This sets up:
 | Command | Description |
 |---------|-------------|
 | `devbox run build` | Build the archiver |
-| `devbox run run` | Run the archiver |
+| `devbox run run` | Run all steps |
+| `devbox run run` | Run all steps |
 | `devbox run parse` | Run the mailing list parser |
 | `devbox run anonymize` | Run the anonymizer |
 | `devbox run analysis` | Run example analyses |
@@ -167,7 +168,7 @@ This sets up:
 | `devbox run debug-anonymizer` | Run anonymizer in debug mode |
 | `devbox run debug-analysis` | Run analysis in debug mode |
 | `devbox run peek <path>` | Quick inspection of Parquet files |
-| `devbox run doc` | Generate and open Rust API docs |
+| `devbox run doc` | Generate and open Rust package docs |
 
 #### Option 2: Manual Installation
 

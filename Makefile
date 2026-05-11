@@ -19,20 +19,16 @@ build-archiver:
 run-archiver:
 	$(MAKE) -C mlh_archiver run
 
-
-.PHONY: debug-archiver
-debug-archiver:
-	$(MAKE) -C mlh_archiver debug
-
-.PHONY: parse
-parse:
+.PHONY: run-parser
+run-parser:
 	$(MAKE) -C mlh_parser run
-.PHONY: anonymize
-anonymize:
+
+.PHONY: run-anonymizer
+run-anonymizer:
 	$(MAKE) -C anonymizer run
 
-.PHONY: analysis
-analysis:
+.PHONY: run-analysis
+run-analysis:
 	$(MAKE) -C analysis run
 
 # ------------------------------------------------------------------------------
@@ -60,6 +56,10 @@ rebuild-analysis:
 # ------------------------------------------------------------------------------
 # DEBUG TARGETS
 # ------------------------------------------------------------------------------
+
+.PHONY: debug-archiver
+debug-archiver:
+	$(MAKE) -C mlh_archiver debug
 
 .PHONY: debug-parser
 debug-parser:
@@ -91,6 +91,11 @@ test-anonymizer:
 # ------------------------------------------------------------------------------
 # UTILITY TARGETS
 # ------------------------------------------------------------------------------
+
+
+.PHONY: doc
+doc:
+	cargo doc --open
 
 .PHONY: clean
 clean:
