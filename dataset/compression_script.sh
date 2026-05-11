@@ -6,6 +6,7 @@ CHUNK_SIZE=20
 # The prefix for your archive names
 ARCHIVE_PREFIX="LKML5Ws-linux-mailing-lists-columnar-dataset_anonymized"
 SOURCE_DIR="../output/anonymizer/__main_dataset/"
+LINEAGE_SOURCE_DIR="../output/parser/lineage/"
 # ---------------------
 
 # 1. Check if the source directory exists
@@ -59,6 +60,9 @@ for ((i = 0; i < $total_folders; i += $CHUNK_SIZE)); do
 
 	echo "Successfully created $archive_name."
 done
+
+lineage_archive_name="data-lineage_${ARCHIVE_PREFIX}.tar.gz"
+tar -C "$(dirname "$LINEAGE_SOURCE_DIR")" -cvf - lineage | gzip -9 >"$lineage_archive_name"
 
 echo "---"
 echo "All done!"
