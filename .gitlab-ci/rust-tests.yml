@@ -25,7 +25,7 @@ cargo-test:archiver:
     - cargo test -p mlh_archiver
 
 cargo-coverage:archiver:
-  <<: *rust-base
+  <<: *rust-docker-base
   stage: test
   rules:
     - changes:
