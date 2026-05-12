@@ -11,7 +11,7 @@ use mlh_archiver::nntp_source::nntp_config::NntpConfig;
 fn test_app_config_defaults() {
     let config = AppConfig::default();
     assert_eq!(config.nthreads, 1);
-    assert_eq!(config.output_dir, "./output");
+    assert_eq!(config.output_dir, "./output/archiver");
     assert!(config.loop_groups);
     assert!(config.nntp.is_none());
 }
@@ -50,7 +50,7 @@ nntp:
 "#;
     let config: AppConfig = serde_yaml::from_str(yaml).expect("Failed to parse");
     assert_eq!(config.nthreads, 1);
-    assert_eq!(config.output_dir, "./output");
+    assert_eq!(config.output_dir, "./output/archiver");
     assert!(config.loop_groups);
 }
 
