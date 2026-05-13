@@ -3,4 +3,4 @@ ignore-vcs = true
 ignore-hidden = true
 ignore-files = true
 ignore-dot = true
-extend-exclude = ["*.eml", "*.expected", "**/tests/**"]
+extend-exclude = ["*.eml", "*.svg", "*.excalidraw", "*.expected", "**/tests/**"]

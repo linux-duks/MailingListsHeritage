@@ -6,6 +6,8 @@ A Python tool for pseudo-anonymizing personal identification data in mailing lis
 
 The MLH Anonymizer processes Parquet datasets produced by the MLH Parser and replaces personally identifiable information (PII) with SHA1 digests. This enables analysis of mailing list data while protecting user privacy.
 
+![Anonymizer Diagram](/docs/anonymizer.avif)
+
 ## Features
 
 - **SHA1 Hashing**: Replaces email addresses and names with consistent hashes

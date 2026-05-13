@@ -6,6 +6,8 @@ Example analyses and research scripts for exploring mailing list datasets.
 
 This component contains example analysis scripts that demonstrate how to query and visualize mailing list data. These scripts were used during research and can serve as templates for custom analyses.
 
+![Analysis Diagram](/docs/analysis.avif)
+
 ## Features
 
 - **Polars-Based**: Efficient data processing with the Polars DataFrame library

@@ -8,6 +8,8 @@ The MLH Archiver fetches emails from the configured source (e.g., NNTP servers) 
 
 ## Architecture
 
+![Archiver Diagram](/docs/archiver.avif)
+
 The MLH Archiver uses a producer-consumer pattern with multiple worker threads:
 
 ### Worker Model
@@ -44,8 +46,6 @@ enabling natural load balancing.
 - **Respectful bandwidth**: Not designed to fetch as fast as possible
 - **Continuous operation**: Can keep local files up-to-date with new emails
 - **Graceful shutdown**: Clean exit on Ctrl+C with progress preservation
-
-See the [architecture diagram](../docs/fluxogram.svg) for a visual representation.
 
 ## Features
 

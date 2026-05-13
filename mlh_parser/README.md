@@ -6,6 +6,8 @@ A Rust tool for parsing raw email archives from the MLH Archiver into a structur
 
 The MLH Parser processes email files produced by the MLH Archiver and converts them into an efficient, queryable Parquet dataset with Hive partitioning by mailing list name. It automatically detects and reads both `.eml` (RFC 822) and `.parquet` (columnar) input formats.
 
+![Parser Diagram](/docs/parser.avif)
+
 ## Features
 
 - **Parquet Output**: Columnar storage format optimized for analytics via Apache Arrow

@@ -2,7 +2,7 @@
 
 Collect and archive locally all emails from mailing lists, parse them into structured datasets, and analyze them while preserving privacy.
 
-This project is in active development. It currently supports reading from NNTP endpoints and public-inbox git repositories.
+This software is extensible. It currently supports reading from NNTP endpoints and public-inbox git repositories, and new sources can be added by implementing a clear interface (a rust `Trait`).
 
 ## Pipeline Overview
 
@@ -12,6 +12,8 @@ This project is in active development. It currently supports reading from NNTP e
 │  (raw emails)   │     │  (Parquet DS)   │     │ (anonymized DS) │     │  (insights)     │
 └─────────────────┘     └─────────────────┘     └─────────────────┘     └─────────────────┘
 ```
+
+See the [architecture diagram](/docs/fluxogram.svg) for a visual representation.
 
 ## Project Components
 
@@ -412,7 +414,7 @@ The anonymizer applies SHA1 hashing to personally identifiable information (PII)
 - [Anonymizer Detailed Documentation](anonymizer/README.md)
 - [Analysis Detailed Documentation](analysis/README.md)
 - [Example Configuration](example_archiver_config.yaml)
-- [Architecture Diagram](./docs/fluxogram.svg)
+- [Architecture Diagrams](./docs/)
 - Generated docs via `cargo doc` (or )
 
 ## License
