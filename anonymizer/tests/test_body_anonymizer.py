@@ -35,7 +35,6 @@ from mlh_anonymizer.anonymizer import mlh_anonymizer
 from mlh_anonymizer.body_anonymizer import anonymize_body
 from mlh_anonymizer.identity_map import (
     IdentityMap,
-    IdentityRecord,
 )
 
 # ===========================================================================
@@ -74,6 +73,7 @@ def known_name_hash(known_name) -> str:
 #    Verifies that the right email patterns are detected inside raw_body.
 # ===========================================================================
 
+
 class TestIntegrationWithHeaderAnonymizer:
     def test_body_hash_matches_header_anonymizer_output(self, fresh_map, known_email):
         """Hash from anonymize_body matches mlh_anonymizer() for same email."""
@@ -81,6 +81,7 @@ class TestIntegrationWithHeaderAnonymizer:
         body = f"From: {known_email}"
         result, _ = anonymize_body(body, fresh_map)
         assert header_hash in result
+
 
 class TestEmailDetection:
     """anonymize_body must detect every email pattern mandated by the spec."""
@@ -271,7 +272,9 @@ class TestNameHandling:
         assert len(records_a) >= 1
         assert len(records_b) >= 1
 
-    def test_email_without_name_stored_separately(self, fresh_map, known_email, known_name):
+    def test_email_without_name_stored_separately(
+        self, fresh_map, known_email, known_name
+    ):
         """
         An email appearing bare (no name) and the same email with a name
         are treated as separate identity records.
@@ -289,7 +292,7 @@ class TestNameHandling:
         result, _ = anonymize_body(body, fresh_map)
         assert known_email not in result
         assert known_email_hash in result
-    
+
     def test_email_with_plus_tag(self, fresh_map):
         """Emails with '+' tags (e.g., user+tag@example.com) are detected."""
         body = "Contact user+tag@example.com for info."
@@ -465,11 +468,15 @@ class TestOutputFormat:
         _, updated_map = anonymize_body(body, fresh_map)
         assert isinstance(updated_map, IdentityMap)
 
-    def test_bare_email_replacement_format(self, fresh_map, known_email, known_email_hash):
+    def test_bare_email_replacement_format(
+        self, fresh_map, known_email, known_email_hash
+    ):
         body = f"Contact {known_email}"
         result, _ = anonymize_body(body, fresh_map)
         # Verify the exact replacement format matches the spec
-        assert f"<{known_email_hash}>" in result  # if angle-bracket wrapping is required
+        assert (
+            f"<{known_email_hash}>" in result
+        )  # if angle-bracket wrapping is required
 
 
 # ===========================================================================
@@ -480,7 +487,9 @@ class TestOutputFormat:
 class TestHtmlHandling:
     """Email addresses embedded in HTML must be hashed; markup must survive."""
 
-    def test_email_in_html_attribute_hashed(self, fresh_map, known_email, known_email_hash):
+    def test_email_in_html_attribute_hashed(
+        self, fresh_map, known_email, known_email_hash
+    ):
         """Email inside an HTML attribute value is detected and hashed."""
         body = f'<input type="email" value="{known_email}" />'
         result, _ = anonymize_body(body, fresh_map)
@@ -538,10 +547,7 @@ class TestQuotedText:
         When the same email appears in both a quoted section and the non-quoted
         body, both occurrences are replaced and counted in body_count.
         """
-        body = (
-            f"> Original sender: {known_email}\n"
-            f"I agree with {known_email}'s point."
-        )
+        body = f"> Original sender: {known_email}\nI agree with {known_email}'s point."
         result, updated_map = anonymize_body(body, fresh_map)
         assert result.count(known_email_hash) == 2
         record = updated_map.get_records_for_email(known_email)[0]
