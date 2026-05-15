@@ -4,27 +4,35 @@ from datetime import datetime, timedelta
 import seaborn as sns
 import matplotlib.pyplot as plt
 import re
+import os
+import glob
 
 sns.set_style("whitegrid")
 
 
 def main(dataset_dir, output_dir):
-    LISTS_OF_INTEREST = [
-        "amd-gfx",
-        "intel-gfx",
-        "linux-iio",
-        "rust-for-linux",
-    ]
 
-    df = pl.read_parquet(f"{dataset_dir}/list={LISTS_OF_INTEREST[0]}/*.parquet")
-    df = df.with_columns(pl.lit(LISTS_OF_INTEREST[0]).alias("list"))
+    # pass list names split by ","
+    default_lists = "amd-gfx,intel-gfx,linux-iio,rust-for-linux"
+    LISTS_OF_INTEREST = os.environ.get("LISTS_OF_INTEREST", default_lists).split(",")
+    LISTS_OF_INTEREST = [li for li in LISTS_OF_INTEREST if li]
 
-    for i in range(1, len(LISTS_OF_INTEREST)):
-        new_list_df = pl.read_parquet(f"{dataset_dir}/list={LISTS_OF_INTEREST[i]}/*.parquet")
-        new_list_df = new_list_df.with_columns(
-            pl.lit(LISTS_OF_INTEREST[i]).alias("list")
+    if not LISTS_OF_INTEREST:
+        raw_dirs = glob.glob(f"{dataset_dir}/list=*")
+        LISTS_OF_INTEREST = sorted(
+            [os.path.basename(d).removeprefix("list=") for d in raw_dirs]
         )
-        df.extend(new_list_df)
+        print(f"Using all available lists: {LISTS_OF_INTEREST}")
+
+    df = None
+
+    for m_list in LISTS_OF_INTEREST:
+        new_list_df = pl.read_parquet(f"{dataset_dir}/list={m_list}/*.parquet")
+        new_list_df = new_list_df.with_columns(pl.lit(m_list).alias("list"))
+        if df is None:
+            df = new_list_df
+        else:
+            df.vstack(new_list_df)
 
     df = df.filter(pl.col("date") > datetime(2020, 1, 1))
     df = df.sort("date")

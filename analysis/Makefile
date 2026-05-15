@@ -3,6 +3,10 @@ PARSER_OUTPUT_DIR=$(REPO_ROOT)/output/parser/dataset
 ANONYMIZER_OUTPUT_DIR=$(REPO_ROOT)/output/anonymizer
 ANALYSIS_OUTPUT_DIR=$(REPO_ROOT)/output/analysis
 
+# Env variables for analysis
+LISTS_OF_INTEREST ?=
+RUN_VALIDATION_SCRIPTS ?=
+
 # Include shared container runtime detection
 include ../containers.mk
 
@@ -40,13 +44,15 @@ run: create-output-dir
 	else \
 		if command -v uv >/dev/null 2>&1; then \
 			echo "==> Found uv toolchain, running natively..."; \
-			INPUT_DIR="../output/parser/dataset,../output/anonymizer/" OUTPUT_DIR="../output/analysis/" uv run src/main.py; \
+			INPUT_DIR="../output/parser/dataset,../output/anonymizer/" OUTPUT_DIR="../output/analysis/" LISTS_OF_INTEREST="$(LISTS_OF_INTEREST)" RUN_VALIDATION_SCRIPTS="$(RUN_VALIDATION_SCRIPTS)" uv run src/main.py; \
 		else \
 			echo "==> uv toolchain not found, running with $(CONTAINER) (Image: $(PYTHON_DOCKER_IMAGE))..."; \
 			$(CONTAINER) run --rm -it \
 				--network=host \
 				-e INPUT_DIR=/data/dataset,/data/anonymized \
 				-e OUTPUT_DIR=/output \
+				-e LISTS_OF_INTEREST="$(LISTS_OF_INTEREST)" \
+				-e RUN_VALIDATION_SCRIPTS="$(RUN_VALIDATION_SCRIPTS)" \
 				-e GIT_COMMIT=$${GIT_COMMIT:-unknown} \
 				-e GIT_DATE=$${GIT_DATE:-unknown} \
 				-e UV_CACHE_DIR=/tmp/.cache/uv \

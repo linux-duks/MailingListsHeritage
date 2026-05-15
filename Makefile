@@ -1,3 +1,10 @@
+# Variables for the analysis script
+LISTS_OF_INTEREST ?=
+RUN_VALIDATION_SCRIPTS ?=
+export LISTS_OF_INTEREST
+export RUN_VALIDATION_SCRIPTS
+# end of variables for the analysis script
+
 # By default, 'make' will run the 'all' target
 .PHONY: all
 all: create-output-dirs rebuild run
