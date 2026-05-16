@@ -3,6 +3,7 @@ from mlh_analysis import list_sizes
 from mlh_analysis import unique_authors
 from mlh_analysis import date_analysis
 from mlh_analysis import patch_missing
+from mlh_analysis import author_distribution
 from mlh_analysis import date_missing
 from mlh_analysis.inputs import resolve_inputs
 
@@ -44,6 +45,10 @@ def main():
 
     print("Starting missing dates...\n")
     date_missing.main(inputs["dataset_dir"], output_dir)
+    print()
+
+    print("Starting author_distribution...\n")
+    author_distribution.main(inputs["dataset_dir"], output_dir)
     print()
 
 
