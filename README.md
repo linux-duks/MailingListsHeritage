@@ -345,7 +345,6 @@ check_git --inbox-dir /path/to/inboxes --email-id 0000000056-e0-5dadd9f0f9884ed3
 | `--list <NAME>` | List (folder) name for test or email-id lookup |
 | `--article <N>` | Article position for test fetch (1-indexed) |
 | `--email-id <ID>` | Look up and print a single email by its formatted identifier |
-| `--export-config` | Export configuration to YAML after browsing |
 | `--verbose` | Enable verbose (debug) logging |
 
 ---
