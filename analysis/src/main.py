@@ -20,16 +20,16 @@ def main():
 
     scripts = {
         "list_comparison": lambda: list_comparison.main(
-            inputs["dataset_dir"], output_dir
+            inputs["dataset"], output_dir
         ),
-        "list_sizes": lambda: list_sizes.main(inputs["dataset_dir"], output_dir),
-        "unique_authors": lambda: unique_authors.main(inputs["id_map_dir"], output_dir),
-        "date_analysis": lambda: date_analysis.main(inputs["dataset_dir"], output_dir),
-        "patch_missing": lambda: patch_missing.main(inputs["dataset_dir"], output_dir),
-        "date_missing": lambda: date_missing.main(inputs["dataset_dir"], output_dir),
+        "list_sizes": lambda: list_sizes.main(inputs["dataset"], output_dir),
+        "unique_authors": lambda: unique_authors.main(inputs["id_map"], output_dir),
+        "date_analysis": lambda: date_analysis.main(inputs["dataset"], output_dir),
+        "patch_missing": lambda: patch_missing.main(inputs["dataset"], output_dir),
+        "date_missing": lambda: date_missing.main(inputs["dataset"], output_dir),
         # these scripts below will not run by default
         "author_distribution": lambda: author_distribution.main(
-            inputs["dataset_dir"], output_dir
+            inputs["dataset"], output_dir
         ),
         "sql_querier": lambda: sql_querier.main(
             inputs, output_dir

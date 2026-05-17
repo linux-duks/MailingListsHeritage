@@ -2,11 +2,12 @@ import os
 
 
 def resolve_inputs(input_dirs):
-    """Resolve dataset and id_map directories from a list of input directories.
+    """Resolve dataset, lineage, and id_map directories from a list of input directories.
 
-    Returns a dict with keys 'dataset_dir' and 'id_map_dir'.
+    Returns a dict with keys 'dataset', 'lineage', and 'id_map'.
     """
     dataset_dir = None
+    lineage_dir = None
     id_map_dir = None
 
     for d in input_dirs:
@@ -18,6 +19,10 @@ def resolve_inputs(input_dirs):
 
         if "__id_map_from" in entries and id_map_dir is None:
             id_map_dir = os.path.join(d, "__id_map_from")
+
+        if lineage_dir is None:
+            if os.path.isfile(os.path.join(d, "lineage.parquet")):
+                lineage_dir = d
 
         if dataset_dir is None:
             has_list_dirs = any(e.startswith("list=") for e in entries)
@@ -34,4 +39,8 @@ def resolve_inputs(input_dirs):
             "Expected 'list=*/' subdirectories, '__main_dataset/', or 'dataset/'."
         )
 
-    return {"dataset_dir": dataset_dir, "id_map_dir": id_map_dir or ""}
+    return {
+        "dataset": dataset_dir,
+        "lineage": lineage_dir or "",
+        "id_map": id_map_dir or "",
+    }

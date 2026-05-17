@@ -1,5 +1,6 @@
 REPO_ROOT := $(abspath $(CURDIR)/..)
 PARSER_OUTPUT_DIR=$(REPO_ROOT)/output/parser/dataset
+LINEAGE_OUTPUT_DIR=$(REPO_ROOT)/output/parser/lineage
 ANONYMIZER_OUTPUT_DIR=$(REPO_ROOT)/output/anonymizer
 ANALYSIS_OUTPUT_DIR=$(REPO_ROOT)/output/analysis
 
@@ -43,7 +44,7 @@ run: create-output-dir
 	else \
 		if command -v uv >/dev/null 2>&1; then \
 			echo "==> Found uv toolchain, running natively..."; \
-			INPUT_DIR="../output/parser/dataset,../output/anonymizer/" OUTPUT_DIR="../output/analysis/" LISTS_OF_INTEREST="$(LISTS_OF_INTEREST)" ANALYSIS_SCRIPT="$(ANALYSIS_SCRIPT)" uv run src/main.py; \
+			INPUT_DIR="../output/parser/dataset,../output/parser/lineage,../output/anonymizer/" OUTPUT_DIR="../output/analysis/" LISTS_OF_INTEREST="$(LISTS_OF_INTEREST)" ANALYSIS_SCRIPT="$(ANALYSIS_SCRIPT)" uv run src/main.py; \
 		else \
 			echo "==> uv toolchain not found, running with $(CONTAINER) (Image: $(ANALYSIS_IMAGE))..."; \
 			if [ "$(IMAGE_EXISTS)" = "no" ]; then \
@@ -52,13 +53,14 @@ run: create-output-dir
 			fi; \
 			$(CONTAINER) run --rm -it \
 				--network=host \
-				-e INPUT_DIR=/data/dataset,/data/anonymized \
+				-e INPUT_DIR=/data/dataset,/data/lineage,/data/anonymized \
 				-e OUTPUT_DIR=/output \
 				-e LISTS_OF_INTEREST="$(LISTS_OF_INTEREST)" \
 				-e ANALYSIS_SCRIPT="$(ANALYSIS_SCRIPT)" \
 				-e GIT_COMMIT=$${GIT_COMMIT:-unknown} \
 				-e GIT_DATE=$${GIT_DATE:-unknown} \
 				-v $(PARSER_OUTPUT_DIR):/data/dataset \
+				-v $(LINEAGE_OUTPUT_DIR):/data/lineage \
 				-v $(ANONYMIZER_OUTPUT_DIR):/data/anonymized \
 				-v $(ANALYSIS_OUTPUT_DIR):/output \
 				-v $(CURDIR):/usr/src/app \
