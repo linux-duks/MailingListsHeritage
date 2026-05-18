@@ -1,3 +1,5 @@
+#![cfg(feature = "otel")]
+
 use opentelemetry::{KeyValue, global, trace::TracerProvider as _};
 use opentelemetry_otlp::WithExportConfig;
 use opentelemetry_sdk::{

@@ -10,5 +10,5 @@ clap = { version = "4.6", features = ["derive"] }
 env_logger = "0.11"
 inquire = { version = "0.9", default-features = false, features = ["termion"] }
 log = "0.4"
-git2 = { version = "0.20", default-features = false, features = ["vendored-libgit2"]}
+git2 = { version = "0.21", default-features = false, features = ["vendored-libgit2"]}
 mlh_archiver = { path = "../../mlh_archiver" }

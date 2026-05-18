@@ -31,7 +31,7 @@ nntp = { path = "./rust-nntp" }
 serde = { version = "1.0", features = ["derive"] }
 serde_yaml = "0.9"
 thiserror = "2.0"
-git2 = { version = "0.20", default-features = false, features = ["vendored-libgit2"]}
+git2 = { version = "0.21", default-features = false, features = ["vendored-libgit2"]}
 #parquet
 arrow = { version="58.3"}
 parquet = { version="58.3" }
@@ -39,12 +39,12 @@ parquet = { version="58.3" }
 # otel
 tracing = { version="0.1", features=["attributes"], optional=true}
 tracing-subscriber = { version="0.3", optional=true}
-opentelemetry = { version="0.32", optional=true }
-opentelemetry_sdk = { version="0.32", optional=true }
-opentelemetry-stdout = {version="0.32", optional=true}
-opentelemetry-appender-tracing = { version="0.32", optional=true}
-opentelemetry-otlp = { version="0.32", features=["http-proto", "reqwest-blocking-client"], optional=true }
-opentelemetry-semantic-conventions = { version="0.32", optional=true }
+opentelemetry = { version="0.31", optional=true }
+opentelemetry_sdk = { version="0.31", optional=true }
+opentelemetry-stdout = {version="0.31", optional=true}
+opentelemetry-appender-tracing = { version="0.31", optional=true}
+opentelemetry-otlp = { version="0.31", features=["http-proto", "reqwest-blocking-client"], optional=true }
+opentelemetry-semantic-conventions = { version="0.31", optional=true }
 tracing-core = { version="0.1", optional=true }
 tracing-opentelemetry = { version="0.32", optional=true }
 

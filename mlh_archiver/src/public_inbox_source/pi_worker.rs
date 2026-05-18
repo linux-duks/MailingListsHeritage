@@ -574,7 +574,7 @@ impl PIWorker {
                         let subject = commit
                             .message()
                             .map(|msg| msg.to_string())
-                            .unwrap_or_else(|| "<no message>".to_string());
+                            .unwrap_or_else(|_| "<no message>".to_string());
                         let tree_id = commit.tree_id();
                         let tree_str = format!("{}", tree_id);
 

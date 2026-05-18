@@ -490,7 +490,7 @@ fn extract_emails_from_inbox(inbox: &PublicInbox) -> Vec<(String, String)> {
         let tree_id = commit.tree_id();
         let tree = repo.find_tree(tree_id).expect("find tree");
 
-        let blob_oid = tree.iter().find(|e| e.name() == Some("m")).map(|e| e.id());
+        let blob_oid = tree.iter().find(|e| e.name() == Ok("m")).map(|e| e.id());
 
         match blob_oid {
             Some(blob_oid) => {

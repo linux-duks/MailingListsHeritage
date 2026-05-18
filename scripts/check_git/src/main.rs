@@ -1,4 +1,4 @@
-use std::path::{PathBuf};
+use std::path::PathBuf;
 
 /// A public-inbox email reader using libgit2.
 /// Scans a directory for public-inbox subdirectories and reads emails from them.
