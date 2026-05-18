@@ -55,6 +55,19 @@ fn header_value_to_string(val: &mail_parser::HeaderValue<'_>) -> String {
                 st
             }
         }
+        mail_parser::HeaderValue::Received(r) => {
+            if let Some(ref dt) = r.date {
+                let sign = if dt.tz_before_gmt { "-" } else { "+" };
+                format!(
+                    "{:04}-{:02}-{:02}T{:02}:{:02}:{:02}{}{:02}:{:02}",
+                    dt.year, dt.month, dt.day,
+                    dt.hour, dt.minute, dt.second,
+                    sign, dt.tz_hour, dt.tz_minute,
+                )
+            } else {
+                String::new()
+            }
+        }
         other => format!("{:?}", other),
     }
 }

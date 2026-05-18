@@ -194,11 +194,11 @@ pub fn find_other_date_entries(email_dict: &HashMap<String, String>) -> Vec<Date
     let mut value_list = Vec::new();
     for header in &["received", "x-received"] {
         if let Some(values_str) = email_dict.get(*header) {
-            let res = find_date_in_string(values_str);
-            if let Some(date_str) = res
-                && let Some(parsed) = parse_date_tentative_raw(&date_str)
-            {
-                value_list.push(parsed);
+            for m in DATE_REGEX.find_iter(values_str) {
+                let date_str = m.as_str();
+                if let Some(parsed) = parse_date_tentative_raw(date_str) {
+                    value_list.push(parsed);
+                }
             }
         }
     }
@@ -222,37 +222,41 @@ pub fn process_date(email_dict: &mut HashMap<String, String>, now: DateTime<Fixe
     email_dict.insert("client-date".to_string(), client_date.join("||"));
 
     let mut date_options: Vec<DateTime<FixedOffset>> = Vec::new();
+    let mut had_millennium = false;
     for date in &client_date {
         if !date.is_empty() {
             let trimmed = date.trim();
             if let Some(date_str) = find_date_in_string(trimmed)
                 && let Some(dt) = parse_date_tentative_raw(&date_str)
             {
-                date_options.push(dt);
+                if is_date_too_old(&dt) {
+                    had_millennium = true;
+                    date_options.push(fix_millennium_date(dt, now));
+                } else {
+                    date_options.push(dt);
+                }
             }
         }
     }
 
-    let mut safe_options: Vec<DateTime<FixedOffset>> = date_options
-        .iter()
-        .filter(|d| !check_date_issues(d, now))
-        .cloned()
+    // Collect dates from Received/X-Received headers
+    let other_entries = find_other_date_entries(email_dict);
+
+    // When the Date header had a millennium issue, prefer Received headers
+    // since the Date header may have other malformations beyond the year.
+    let all_dates = if had_millennium && !other_entries.is_empty() {
+        other_entries
+    } else {
+        let mut dates = date_options;
+        dates.extend(other_entries);
+        dates
+    };
+
+    // Filter out future dates
+    let mut safe_options: Vec<DateTime<FixedOffset>> = all_dates
+        .into_iter()
+        .filter(|d| !is_date_in_future(d, now))
         .collect();
-
-    if safe_options.is_empty() {
-        safe_options = find_other_date_entries(email_dict);
-    }
-
-    if safe_options.is_empty() {
-        let millennium_dates: Vec<DateTime<FixedOffset>> = date_options
-            .iter()
-            .filter(|d| is_date_too_old(d))
-            .cloned()
-            .collect();
-        for d in millennium_dates {
-            safe_options.push(fix_millennium_date(d, now));
-        }
-    }
 
     if !safe_options.is_empty() {
         safe_options.sort();
