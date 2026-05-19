@@ -1,3 +1,9 @@
+mod common;
+
+use common::parse_trailers_file;
+use mlh_parser::email_reader::{decode_mail, get_body};
+use std::fs;
+
 use mlh_parser::extractors::extract_attributions;
 
 const SYZBOT_MAIL: &str = r#"
@@ -50,4 +56,40 @@ fn test_correct_email() {
         attr[0].identification,
         "Example Contributor <example@contributor.com>"
     );
+}
+
+#[test]
+fn test_email_trailers() {
+    let directory = "./fixtures/";
+    let pairs = common::list_fixture_pairs(directory, ".trailers.expected");
+
+    if pairs.is_empty() {
+        panic!("test cases missing")
+    }
+
+    for (body_file, email_file) in &pairs {
+        let mail_bytes = fs::read(email_file).unwrap();
+
+        let expected_trailers = parse_trailers_file(body_file);
+
+        let mail = decode_mail(&mail_bytes).unwrap();
+        let actual_body = get_body(&mail);
+
+        let attr = extract_attributions(&actual_body);
+
+        assert_eq!(
+            attr.len(),
+            expected_trailers.len(),
+            "Trailer count mismatch for {:?}",
+            email_file
+        );
+
+        for (id, trailer) in attr.iter().enumerate() {
+            assert_eq!(
+                trailer, &expected_trailers[id],
+                "Attribution mismatch for {:?}",
+                email_file
+            );
+        }
+    }
 }

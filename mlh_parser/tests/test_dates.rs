@@ -62,6 +62,10 @@ fn test_email_dates() {
     let directory = "./fixtures/";
     let pairs = common::list_fixture_pairs(directory, ".date.expected");
 
+    if pairs.is_empty() {
+        panic!("test cases missing")
+    }
+
     // TODO: this should reflect the maximum real date in tests.
     // I will only cause problems if new cases are introduced with dates in the future
     // relative to this one:

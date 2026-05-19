@@ -4,6 +4,7 @@
 use std::collections::HashMap;
 use std::fs;
 use std::path::{Path, PathBuf};
+use mlh_parser::Attribution;
 
 pub fn list_files_with_extension(directory: &str, extension: &str) -> Vec<PathBuf> {
     let ext = if extension.starts_with('.') {
@@ -16,15 +17,14 @@ pub fn list_files_with_extension(directory: &str, extension: &str) -> Vec<PathBu
     let dir = base.join(directory.trim_start_matches("./"));
 
     let dot_ext = ext;
-    let ext_without_dot = &dot_ext[1..];
 
     let mut files: Vec<PathBuf> = match fs::read_dir(&dir) {
         Ok(entries) => entries
             .filter_map(|e| e.ok())
             .filter(|e| {
                 e.path()
-                    .extension()
-                    .is_some_and(|e| e.to_string_lossy() == ext_without_dot)
+                    .file_name()
+                    .is_some_and(|name| name.to_string_lossy().ends_with(&dot_ext))
             })
             .filter(|e| e.file_type().is_ok_and(|ft| ft.is_file()))
             .map(|e| e.path())
@@ -81,7 +81,7 @@ fn expected_to_eml(expected_path: &Path, expected_ext: &str) -> PathBuf {
         .to_string_lossy()
         .to_string();
     let base = match file_name.strip_suffix(suffix) {
-        Some(b) => b.to_string(),
+        Some(b) => b.trim_end_matches('.').to_string(),
         None => expected_path
             .file_stem()
             .unwrap_or_default()
@@ -138,4 +138,90 @@ pub fn parse_headers_file(headers_file: &Path) -> HashMap<String, String> {
     }
 
     headers
+}
+
+pub fn parse_patches_file(patches_file: &Path) -> Vec<String> {
+    let mut patches = Vec::new();
+    let content = match fs::read_to_string(patches_file) {
+        Ok(c) => c.replace("\r\n", "\n"),
+        Err(_) => return patches,
+    };
+
+    let content = content.trim();
+    let inner = content
+        .strip_prefix('[')
+        .and_then(|s| s.strip_suffix(']'))
+        .unwrap_or(content)
+        .trim();
+
+    let mut remaining = inner;
+    while let Some(start) = remaining.find("\"\"\"") {
+        let after_open = &remaining[start + 3..];
+        match after_open.find("\"\"\"") {
+            Some(end) => {
+                let patch = after_open[..end].trim().to_string();
+                patches.push(patch);
+                remaining = &after_open[end + 3..];
+            }
+            None => break,
+        }
+    }
+
+    patches
+}
+
+pub fn parse_trailers_file(file: &Path) -> Vec<Attribution> {
+    let mut trailers = Vec::new();
+    let content = match fs::read_to_string(file) {
+        Ok(c) => c.replace("\r\n", "\n"),
+        Err(_) => return trailers,
+    };
+
+    let mut current_attribution = String::new();
+    let mut current_identification = String::new();
+    let mut in_block = false;
+
+    for line in content.lines() {
+        let line = line.trim();
+
+        if line.contains('{') {
+            in_block = true;
+            current_attribution.clear();
+            current_identification.clear();
+        }
+
+        if in_block {
+            if let Some(value) = extract_json_value(line, "attribution") {
+                current_attribution = value;
+            } else if let Some(value) = extract_json_value(line, "identification") {
+                current_identification = value;
+            }
+        }
+
+        if line.contains('}') {
+            if in_block && !current_attribution.is_empty() {
+                trailers.push(Attribution {
+                    attribution: current_attribution.clone(),
+                    identification: current_identification.clone(),
+                });
+            }
+            in_block = false;
+        }
+    }
+
+    trailers
+}
+
+fn extract_json_value(line: &str, key: &str) -> Option<String> {
+    let line = line.trim();
+    for quote in ['"', '\''] {
+        let prefix = format!("{q}{key}{q}: {q}", q = quote);
+        if let Some(pos) = line.find(&prefix) {
+            let after = &line[pos + prefix.len()..];
+            if let Some(end_pos) = after.find(quote) {
+                return Some(after[..end_pos].to_string());
+            }
+        }
+    }
+    None
 }

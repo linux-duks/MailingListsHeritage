@@ -1,4 +1,9 @@
+mod common;
+
+use common::parse_patches_file;
+use mlh_parser::email_reader::{decode_mail, get_body};
 use mlh_parser::extractors::extract_patches;
+use std::fs;
 
 const NO_PATCH_MAIL: &str = r#"
 syzbot has found a reproducer for the following crash on:
@@ -138,4 +143,30 @@ index 73afed4..bde8f22 100644
 fn test_mail_with_many_spaces_before_git_version() {
     let output = extract_patches(PATCH_MANY_SPACES_BEFORE_GIT);
     assert_eq!(output.len(), 1);
+}
+
+#[test]
+fn test_patch_emails() {
+    let directory = "./fixtures/";
+    let pairs = common::list_fixture_pairs(directory, ".code.expected");
+
+    if pairs.is_empty() {
+        panic!("test cases missing")
+    }
+    for (patches_file, email_file) in &pairs {
+        let mail_bytes = fs::read(email_file).unwrap();
+        let expected_patches = parse_patches_file(patches_file);
+
+        let mail = decode_mail(&mail_bytes).unwrap();
+        let body = get_body(&mail);
+        let acctual_patches = extract_patches(&body);
+
+        for (id, patch) in acctual_patches.iter().enumerate() {
+            assert_eq!(
+                *patch, *expected_patches[id],
+                "Patch mismatch for '{}' in {:?}",
+                id, email_file
+            );
+        }
+    }
 }

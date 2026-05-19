@@ -29,6 +29,10 @@ fn test_header_parser() {
     let directory = "./fixtures/";
     let pairs = common::list_fixture_pairs(directory, ".headers.expected");
 
+    if pairs.is_empty() {
+        panic!("test cases missing")
+    }
+
     for (headers_file, email_file) in &pairs {
         let mail_bytes = fs::read(email_file).unwrap();
         let expected_headers = parse_headers_file(headers_file);
