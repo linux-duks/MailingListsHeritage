@@ -3,7 +3,7 @@ received: from manicmethod.com (localhost [127.0.0.1]) by msux-gh1-uea01.nsa.gov
 message-id: <4A0EE3AE.7020509@manicmethod.com>
 date: Sat, 16 May 2009 12:02:54 -0400
 mime-version: 1.0
-to: hechao55429 <hechao55429@126.com>
+to: Kaguya Moon <kaguya.moon@ghibli.local>
 cc: selinux <selinux@tycho.nsa.gov>
 subject: Re: write selinux policy
 references: <17697801.901261242485650930.JavaMail.coremail@bj126app52.126.com>
@@ -14,4 +14,4 @@ list-id: selinux@tycho.nsa.gov
 xref: nntp.lore.kernel.org org.kernel.vger.selinux:29583
 newsgroups: org.kernel.vger.selinux
 path: nntp.lore.kernel.org!not-for-mail
-from: Joshua Brindle <method@manicmethod.com>
+from: Granny Cat <granny.cat@ghibli.local>

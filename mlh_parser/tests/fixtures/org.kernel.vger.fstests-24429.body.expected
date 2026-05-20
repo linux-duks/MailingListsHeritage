@@ -1,4 +1,4 @@
-From: Darrick J. Wong <djwong@kernel.org>
+From: Spock S'chn <spock.schn@starfleet.local>
 
 If xfs_metadump supports the -r switch to capture the contents of
 realtime devices and there is a realtime device, add the option to the
@@ -8,7 +8,7 @@ Similarly, if xfs_mdrestore supports the -r switch and there's an
 external scratch rtdev, pass the option so that we can restore rtdev
 contents.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+Signed-off-by: Spock S'chn <spock.schn@starfleet.local>
 ---
  common/fuzzy    |    6 ++++-
  common/populate |   12 ++++++++--

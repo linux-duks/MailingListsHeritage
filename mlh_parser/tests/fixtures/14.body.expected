@@ -1,12 +1,12 @@
-From: Ramesh Thomas <ramesh.thomas(a)intel.com>
+From: Cassian Andor <cassian.andor(a)ferrix.local>
 
 Add Intel Analytics Accelerator support.
 
 Changes in v2:
 - block on fault is available for IAX
 
-Signed-off-by: Ramesh Thomas <ramesh.thomas(a)intel.com>
-Signed-off-by: Dave Jiang <dave.jiang(a)intel.com>
+Signed-off-by: Cassian Andor <cassian.andor(a)ferrix.local>
+Signed-off-by: Jean-Luc Picard <dave.jiang(a)starfleet.ncc>
 ---
  accfg/config.c          | 10 ++++++++++
  accfg/lib/libaccfg.c    |  3 +++

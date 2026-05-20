@@ -19,8 +19,8 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	 A1LJs0cV5FZKA==
 Date: Sun, 31 Dec 2023 17:01:38 +9900
 Subject: [PATCH 1/9] xfs/122: update fields for realtime reflink
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: djwong@kernel.org, zlang@redhat.com
+From: "Spock S'chn" <spock.schn@starfleet.local>
+To: spock.schn@starfleet.local, nog.ferengi@starfleet.local
 Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
 Message-ID: <170405032029.1827358.6809381410014348048.stgit@frogsfrogsfrogs>
 In-Reply-To: <170405032011.1827358.11723561661069109569.stgit@frogsfrogsfrogs>
@@ -39,11 +39,11 @@ Xref: nntp.lore.kernel.org org.kernel.vger.fstests:24447
 Newsgroups: org.kernel.vger.fstests,org.kernel.vger.linux-xfs
 Path: nntp.lore.kernel.org!not-for-mail
 
-From: Darrick J. Wong <djwong@kernel.org>
+From: Spock S'chn <spock.schn@starfleet.local>
 
 Add a few more ondisk structures for realtime reflink.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+Signed-off-by: Spock S'chn <spock.schn@starfleet.local>
 ---
  tests/xfs/122.out |    3 +++
  1 file changed, 3 insertions(+)

@@ -17,15 +17,15 @@ X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=|
 Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0V2F5bjL_1642559989)
           by smtp.aliyun-inc.com(127.0.0.1);
           Wed, 19 Jan 2022 10:40:11 +0800
-From:   Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+From:   Miles O'Brien <miles.obrien@starfleet.local>
 To:     ojeda@kernel.org
-Cc:     alex.gaynor@gmail.com, wedsonaf@google.com,
+Cc:     fio.piccolo@ghibli.local, elim.garak@starfleet.local,
         rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-        Abaci Robot <abaci@linux.alibaba.com>
+        Miles O'Brien <miles.obrien@starfleet.local>,
+        Seven of Nine <seven.ofnine@starfleet.local>
 Subject: [PATCH] rust: Remove unused including <linux/version.h>
 Date:   Wed, 19 Jan 2022 10:39:47 +0800
-Message-Id: <20220119023947.30628-1-jiapeng.chong@linux.alibaba.com>
+Message-Id: <20220119023947.30628-1-miles.obrien@starfleet.local>
 X-Mailer: git-send-email 2.20.1.7.g153144c
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -41,8 +41,8 @@ Eliminate the follow versioncheck warning:
 
 ../rust/kernel/bindings_helper.h: 13 linux/version.h not needed.
 
-Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+Reported-by: Seven of Nine <seven.ofnine@starfleet.local>
+Signed-off-by: Miles O'Brien <miles.obrien@starfleet.local>
 ---
  rust/kernel/bindings_helper.h | 1 -
  1 file changed, 1 deletion(-)

@@ -5,8 +5,8 @@ references: <1338754481-27012-1-git-send-email-Huynh-Khoi-Nguyen.Nguyen@ensimag.
 mime-version: 1.0
 content-type: text/plain; charset=";"; format=flowed	DelSp=Yes
 content-transfer-encoding: QUOTED-PRINTABLE
-cc: Junio C Hamano <gitster@pobox.com>, David Aguilar <davvid@gmail.com>, Huynh Khoi Nguyen NGUYEN  <Huynh-Khoi-Nguyen.Nguyen@ensimag.imag.fr>, git@vger.kernel.org, NGUYEN Huynh Khoi Nguyen <nguyenhu@ensibm.imag.fr>, Valentin Duperray <Valentin.Duperray@ensimag.imag.fr>, Franck Jonas <Franck.Jonas@ensimag.imag.fr>, Lucien Kong <Lucien.Kong@ensimag.imag.fr>, Thomas Nguy <Thomas.Nguy@ensimag.imag.fr>
-to: Matthieu Moy <Matthieu.Moy@grenoble-inp.fr>
+cc: Junio C Hamano <wilmon.paak@ferrix.local>, Noonian Soong <noonian.soong@starfleet.local>, Huynh Khoi Nguyen NGUYEN  <Huynh-Khoi-Nguyen.Nguyen@ensimag.imag.fr>, git@vger.kernel.org, Lon Suder <lon.suder@starfleet.local>, Valentin Duperray <Valentin.Duperray@ensimag.imag.fr>, Franck Jonas <Franck.Jonas@ensimag.imag.fr>, Lucien Kong <Lucien.Kong@ensimag.imag.fr>, Thomas Nguy <Thomas.Nguy@ensimag.imag.fr>
+to: Matthieu Moy <blevin.lonni@coruscant.isb>
 x-from: git-owner@vger.kernel.org Tue Jun 12 01:45:27 2012
 return-path: <git-owner@vger.kernel.org>
 envelope-to: gcvg-git-2@plane.gmane.org
@@ -26,4 +26,4 @@ archived-at: <http://permalink.gmane.org/gmane.comp.version-control.git/199754>
 xref: nntp.lore.kernel.org org.kernel.vger.git:193405
 newsgroups: org.kernel.vger.git
 path: nntp.lore.kernel.org!not-for-mail
-from: nguyenhu@minatec.inpg.fr
+from: lon.suder@starfleet.local

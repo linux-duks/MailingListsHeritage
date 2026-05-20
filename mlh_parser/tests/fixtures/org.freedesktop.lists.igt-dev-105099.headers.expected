@@ -41,16 +41,16 @@ X-IronPort-AV: E=Sophos;i="6.23,109,1770624000"; d="scan'208";a="218851547"
 Received: from jeevan24.iind.intel.com ([10.223.74.58])
  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
  08 Mar 2026 22:42:47 -0700
-From: Smitha Balasubramanyam <smitha.balasubramanyam@intel.com>
-To: igt-dev@lists.freedesktop.org, zbigniew.kempczynski@intel.com,
- matthew.auld@intel.com
-Cc: Smitha Balasubramanyam <smitha.balasubramanyam@intel.com>
+From: Vel Sartha <vel.sartha@coruscant.senate>
+To: igt-dev@lists.freedesktop.org, belanna.torres@starfleet.local,
+ tuvok.vulcan@starfleet.local
+Cc: Vel Sartha <vel.sartha@coruscant.senate>
 Subject: [PATCH 3/3] tests/intel : Add Neg tests for VM_Bind Decomp
 Date: Mon,  9 Mar 2026 11:13:00 +0530
-Message-ID: <20260309054300.642203-4-smitha.balasubramanyam@intel.com>
+Message-ID: <20260309054300.642203-4-vel.sartha@coruscant.senate>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260309054300.642203-1-smitha.balasubramanyam@intel.com>
-References: <20260309054300.642203-1-smitha.balasubramanyam@intel.com>
+In-Reply-To: <20260309054300.642203-1-vel.sartha@coruscant.senate>
+References: <20260309054300.642203-1-vel.sartha@coruscant.senate>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=quoted-printable
 Content-Transfer-Encoding: 8bit

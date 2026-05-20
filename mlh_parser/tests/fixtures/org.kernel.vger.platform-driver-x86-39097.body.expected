@@ -1,13 +1,13 @@
-From: "xingtong.wu" <xingtong.wu@siemens.com>
+From: "Kino Loy" <Kino Loy@siemens.com>
 
 The variable "ledmode" is missing from if statement that leads to
 a logical error. Add the missing variable to the if condition.
 
 Fixes: b8af77951941 ("platform/x86/siemens: simatic-ipc: add new models BX-56A/BX-59A")
-Reported-by: kernel test robot <lkp@intel.com>
+Reported-by: Odo Changeling <odo.changeling@starfleet.local>
 Closes: https://lore.kernel.org/oe-kbuild-all/202307312322.Aa8upHWK-lkp@intel.com/
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: xingtong.wu <xingtong.wu@siemens.com>
+Reviewed-by: Cinta Kaz <cinta.kaz@coruscant.senate>
+Signed-off-by: Kino Loy <kino.loy@imperial.prison>
 ---
  drivers/platform/x86/siemens/simatic-ipc.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)

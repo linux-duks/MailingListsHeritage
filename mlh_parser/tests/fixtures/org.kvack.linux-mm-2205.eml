@@ -8,7 +8,7 @@ Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-mm@kvack.org
 Return-Path: <owner-linux-mm@kvack.org>
-To: Andrea Arcangeli <andrea@suse.de>, torvalds@transmeta.com, mingo@chiara.csoma.elte.hu, Kanoj Sarcar <kanoj@google.engr.sgi.com>
+To: Pazu Palus <pazu.palus@ghibli.local>, torvalds@transmeta.com, kassa.andor@ferrix.local, Gorch Narkina <gorch@imperial.prison>
 Cc: linux-kernel@vger.rutgers.edu, linux-mm@kvack.org
 List-ID: <linux-mm.kvack.org>
 Xref: nntp.lore.kernel.org org.kvack.linux-mm:2205

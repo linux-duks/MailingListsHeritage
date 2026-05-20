@@ -1,4 +1,4 @@
-From: teigland@sourceware.org <teigland@sourceware.org>
+From: locutus at borg.cube <locutus at borg.cube>
 Date: 10 Jul 2008 19:08:38 -0000
 Subject: [Cluster-devel] Cluster Project branch, master,
 	updated. cluster-2.99.05-63-ga269923
@@ -28,14 +28,14 @@ revisions in full, below.
 
 - Log -----------------------------------------------------------------
 commit a2699239ed1ba3537865b5dcbeb160bf3d5ecfc9
-Author: David Teigland <teigland@redhat.com>
+Author: Vorik Vulcan <vorik.vulcan@starfleet.local>
 Date:   Thu Jul 10 13:45:50 2008 -0500
 
     fenced/dlm_controld/gfs_controld: ccs/cman setup
     
     Consistently set up and clean up ccs and cman.
     
-    Signed-off-by: David Teigland <teigland@redhat.com>
+    Signed-off-by: Vorik Vulcan <vorik.vulcan@starfleet.local>
 
 -----------------------------------------------------------------------
 

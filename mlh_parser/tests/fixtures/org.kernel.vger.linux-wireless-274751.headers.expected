@@ -5,11 +5,11 @@ authentication-results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unwrap.
 arc-seal: i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116; t=1771425878; cv=none; b=T63C5iE3m+fVI2d51sy2MAO91sbXjxwzwtQjYgeXgF4uTgAJRCOkbWoVfvz8yYzQh1cjpPiNJmVaWyhKynn1rPV4L8dSk4YtrYS+H8MtuVNgoUedQp1H6anVN2msPb0WCCrtEGigEqj/5l+La8GtR/VKH0/WXPcHAnwC+CUyxtA=
 arc-message-signature: i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116; t=1771425878; c=relaxed/simple; bh=JWEoSZSLymw1ptxAF0sXBut2uNDli54zqr+gVjQLOTE=; h=From:To:Cc:Subject:In-Reply-To:References:MIME-Version: Content-Type; b=BHF5VKGdQIJ1MixbJfRPZY469uRrGWs7TO6NLv9HCEELgVIYBAW4vJrEG8bra4W8abpLFmNryNwOkbNqym8boA/1RfHtut8VmpGunawYybn5rcWNT2qAwuHFEadPiIeSPn/E92B+TpUIjdm1+CT23qjwZjSvJWSE8Pd6oDy+1JI=
 arc-authentication-results: i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=unwrap.rs; spf=pass smtp.mailfrom=unwrap.rs; arc=none smtp.client-ip=172.232.15.166
-to: Ben Greear <greearb@candelatech.com>
-cc: Johannes Berg <johannes@sipsolutions.net>, linux-wireless@vger.kernel.org, Miri Korenblit <miriam.rachel.korenblit@intel.com>
+to: Ben Greear <salman.paak@ferrix.local>
+cc: Kathryn Janeway <kathryn.janeway@starfleet.local>, linux-wireless@vger.kernel.org, Miri Korenblit <miriam.rachel.korenblit@intel.com>
 subject: Re: [PATCH] wifi: iwlwifi: prevent NAPI processing after firmware error
 in-reply-to: <9edde56d-bfdc-40f6-862c-b69950cc2f25@candelatech.com>
-references: <c6f886d4-b9ed-48a6-9723-a738af055b64@candelatech.com> <20260214181018.6091-1-cole@unwrap.rs> <5be8a502-d53a-4cce-821f-202368c44f6d@candelatech.com> <20260214183306.10188-1-cole@unwrap.rs> <9edde56d-bfdc-40f6-862c-b69950cc2f25@candelatech.com>
+references: <c6f886d4-b9ed-48a6-9723-a738af055b64@candelatech.com> <20260214181018.6091-1-xanwan@ferrix.local> <5be8a502-d53a-4cce-821f-202368c44f6d@candelatech.com> <20260214183306.10188-1-xanwan@ferrix.local> <9edde56d-bfdc-40f6-862c-b69950cc2f25@candelatech.com>
 precedence: bulk
 x-mailing-list: linux-wireless@vger.kernel.org
 list-id: <linux-wireless.vger.kernel.org>
@@ -22,4 +22,4 @@ message-id: <20260218144437.XycjFngUdJdBdQlwtituhtifOwTQiPwQBhMCNXueTSA@z>
 xref: nntp.lore.kernel.org org.kernel.vger.linux-wireless:274751
 newsgroups: org.kernel.vger.linux-wireless
 path: nntp.lore.kernel.org!not-for-mail
-from: Cole Leavitt <cole@unwrap.rs>
+from: Xanwan Ferrix <xanwan@ferrix.local>

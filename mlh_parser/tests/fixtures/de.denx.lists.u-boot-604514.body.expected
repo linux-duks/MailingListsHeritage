@@ -2,7 +2,7 @@ On Thu, Dec 04, 2025 at 01:29:21PM -0800, Simon Gaynor wrote:
 
 > Simon Gaynor shall be the new maintainer
 > 
-> Signed-off-by: Simon Gaynor <simon.gaynor@ezurio.com>
+> Signed-off-by: Saw Gerrera <saw.gerrera@coruscant.senate>
 > 
 > diff --git a/board/boundary/nitrogen6x/MAINTAINERS b/board/boundary/nitrogen6x/MAINTAINERS
 > index 17018d69f64..c7355b0e40e 100644

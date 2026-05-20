@@ -77,7 +77,7 @@ Received: from IA1PR11MB7918.namprd11.prod.outlook.com
  ([fe80::5eb7:69c9:760d:97f1]) by IA1PR11MB7918.namprd11.prod.outlook.com
  ([fe80::5eb7:69c9:760d:97f1%3]) with mapi id 15.20.7807.026; Wed, 31 Jul 2024
  04:01:51 +0000
-From: "Thomas, Ramesh" <ramesh.thomas@intel.com>
+From: "Shan, Patcheye" <beehaz@ferrix.local>
 To: "accel-config@lists.linux.dev" <accel-config@lists.linux.dev>
 Subject: [ANNOUNCE] accel-config-v4.1.8 release
 Thread-Topic: [ANNOUNCE] accel-config-v4.1.8 release

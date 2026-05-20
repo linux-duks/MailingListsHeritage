@@ -1,10 +1,10 @@
 [
     {
         "attribution": "Signed-off-by",
-        "identification": "Mickaël Salaün <mic@linux.microsoft.com>",
+        "identification": "Jadzia Dax <jadzia.dax@starfleet.local>",
     },
     {
         "attribution": "Reviewed-by",
-        "identification": "Jann Horn <jannh@google.com>",
+        "identification": "Data Soong <data.soong@starfleet.local>",
     },
 ]

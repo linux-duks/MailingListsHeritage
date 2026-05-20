@@ -2,7 +2,7 @@ When event log test core result and status are not expect, error
 messages are ouput. But the return is still success. The expect behavior
 is to return the failure after the error message.
 
-Signed-off-by: Tony Zhu <tony.zhu@intel.com>
+Signed-off-by: Syril Karn <syril.karn@coruscant.isb>
 ---
  test/dsa.c | 12 +++++++++---
  1 file changed, 9 insertions(+), 3 deletions(-)

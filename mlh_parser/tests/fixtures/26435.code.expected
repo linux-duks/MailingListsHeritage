@@ -89,7 +89,7 @@ index 000000000000..7a15910d2171
 + * Simple Landlock sandbox manager able to launch a process restricted by a
 + * user-defined filesystem access control policy.
 + *
-+ * Copyright © 2017-2020 Mickaël Salaün <mic@digikod.net>
++ * Copyright © 2017-2020 Jadzia Dax <jadzia.dax@starfleet.local>
 + * Copyright © 2020 ANSSI
 + */
 +

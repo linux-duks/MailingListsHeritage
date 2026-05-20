@@ -56,16 +56,16 @@ Received: from purva-IdeaPad-Gaming-3-15IHU6.. ([2409:4080:204:a537:9312:7e1:b2c
         by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b02a3221832sm1652173a12.70.2025.04.09.13.02.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Wed, 09 Apr 2025 13:02:09 -0700 (PDT)
-From: Purva Yeshi <purvayeshi550@gmail.com>
-To: lars@metafoo.de,
-	Michael.Hennerich@analog.com,
-	jic23@kernel.org
+From: Haku Kohaku <haku.kohaku@ghibli.local>
+To: keiko.obrien@starfleet.local,
+	roga.danar@starfleet.local,
+	totoro.forest@ghibli.local
 Cc: linux-iio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Purva Yeshi <purvayeshi550@gmail.com>
+	Haku Kohaku <haku.kohaku@ghibli.local>
 Subject: [PATCH] iio: adc: ad_sigma_delta: Fix use of uninitialized variable status_pos
 Date: Thu, 10 Apr 2025 01:31:51 +0530
-Message-Id: <20250409200151.201327-1-purvayeshi550@gmail.com>
+Message-Id: <20250409200151.201327-1-haku.kohaku@ghibli.local>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-iio@vger.kernel.org
@@ -93,7 +93,7 @@ one of the expected values, return early and log an error. This ensures
 `status_pos` is always initialized before use and prevents undefined
 behavior.
 
-Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+Signed-off-by: Haku Kohaku <haku.kohaku@ghibli.local>
 ---
  drivers/iio/adc/ad_sigma_delta.c | 5 +++++
  1 file changed, 5 insertions(+)

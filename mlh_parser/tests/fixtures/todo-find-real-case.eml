@@ -1,11 +1,11 @@
 Received: from outbound.mr.icloud.com (unknown [127.0.0.2])
  by p00-icloudmta-asmtp-us-west-2a-60-percent-3 (Postfix) with ESMTPS id
  6F79D18003F2; Tue,  4 Nov 2025 22:14:47 +0000 (UTC)
-From: bryan@bryanhinton.com
-To: Jonas Karlman <jonas@kwiboo.se>
+From: naomi.wildman@starfleet.local
+To: Nemik Rebel <nemik@coruscant.senate>
 Cc: Tom Rini <tom@trini.net>, u-boot@lists.denx.de
 Subject: Re: [v2,0/2] rockchip: Add support for ROCK 5B+
-In-Reply-To: <20250801170933.2530191-1-jonas@kwiboo.se>
-References: <20250801170933.2530191-1-jonas@kwiboo.se>
+In-Reply-To: <20250801170933.2530191-1-nemik@coruscant.senate>
+References: <20250801170933.2530191-1-nemik@coruscant.senate>
 Date: $(date -R)
 Date: Tue,  4 Nov 2025 22:14:47 +0000 (UTC)

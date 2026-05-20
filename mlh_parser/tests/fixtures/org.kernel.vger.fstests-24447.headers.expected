@@ -4,7 +4,7 @@ authentication-results: smtp.subspace.kernel.org; dkim=pass (2048-bit key) heade
 dkim-signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org; s=k20201202; t=1704070899; bh=P1eEzr0BokPFcfCFa/BXeWCAtFOYWxo7JQ0feEnXhY8=; h=Date:Subject:From:To:Cc:In-Reply-To:References:From; b=TkYG3HND9iWUJFpN4iytta16UrTrA6Dr2UCt8U7yl3F0hDzevShP3C5KrzBoZdrX2 LnjAtCN8hp83ojDQBZNZs6pMQGxnCFxIYRVLQHmahB6HirKfhmgHSzc2LxH3u89wH7 carvhScT+oUtGstGi+ROF44XirzUcoPei2jqmyvK1fynsGKhP9wfMbGPCTrxIRbj+w AV2fVzbqCxhd2ouCTrMqdiFsYQ0G7mxh6rqziV3Q60p4VBmlwKjFwqZ0aBEOAX26BF jRL4becGKD4W4Pi9O720bWzoO1nqoUs4G9wMnXDYef3sleA/0wgMEmB/D147GYIopd A1LJs0cV5FZKA==
 date: Sun, 31 Dec 2023 17:01:38 +9900
 subject: [PATCH 1/9] xfs/122: update fields for realtime reflink
-to: djwong@kernel.org, zlang@redhat.com
+to: spock.schn@starfleet.local, nog.ferengi@starfleet.local
 cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
 message-id: <170405032029.1827358.6809381410014348048.stgit@frogsfrogsfrogs>
 in-reply-to: <170405032011.1827358.11723561661069109569.stgit@frogsfrogsfrogs>
@@ -21,4 +21,4 @@ content-transfer-encoding: 7bit
 xref: nntp.lore.kernel.org org.kernel.vger.fstests:24447 org.kernel.vger.linux-xfs:137148
 newsgroups: org.kernel.vger.fstests,org.kernel.vger.linux-xfs
 path: nntp.lore.kernel.org!not-for-mail
-from: "Darrick J. Wong" <djwong@kernel.org>
+from: "Spock S'chn" <spock.schn@starfleet.local>

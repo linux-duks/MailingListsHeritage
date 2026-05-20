@@ -59,30 +59,30 @@ Received: from ventana-desktop.localhost ([2405:201:d019:c0ce:f7f5:7789:48e5:c03
         by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-33fed7f6040sm15316918a91.16.2025.10.29.04.27.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Wed, 29 Oct 2025 04:27:13 -0700 (PDT)
-From: Himanshu Chauhan <hchauhan@ventanamicro.com>
+From: Bix Caleen <bix.caleen@ferrix.local>
 To: linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	linux-acpi@vger.kernel.org,
 	linux-efi@vger.kernel.org,
 	acpica-devel@lists.linux.dev
-Cc: paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	lenb@kernel.org,
-	james.morse@arm.com,
-	tony.luck@intel.com,
-	ardb@kernel.org,
-	conor@kernel.org,
-	cleger@rivosinc.com,
-	robert.moore@intel.com,
-	sunilvl@ventanamicro.com,
-	apatel@ventanamicro.com,
-	Himanshu Chauhan <hchauhan@ventanamicro.com>
+Cc: nurchi@ferrix.local,
+	shoji.katsura@ghibli.local,
+	henri.airplane@ghibli.local,
+	vic.fontaine@starfleet.local,
+	weyoun.vorta@starfleet.local,
+	kaguya.moon@ghibli.local,
+	lady.himi@ghibli.local,
+	brunt.ferengi@starfleet.local,
+	damar.cardassian@starfleet.local,
+	lal.soong@starfleet.local,
+	noonian.soong@starfleet.local,
+	Bix Caleen <bix.caleen@ferrix.local>
 Subject: [RFC PATCH v2 02/10] riscv: Define arch_apei_get_mem_attribute for RISC-V
 Date: Wed, 29 Oct 2025 16:56:40 +0530
-Message-ID: <20251029112649.3811657-3-hchauhan@ventanamicro.com>
+Message-ID: <20251029112649.3811657-3-bix.caleen@ferrix.local>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20251029112649.3811657-1-hchauhan@ventanamicro.com>
-References: <20251029112649.3811657-1-hchauhan@ventanamicro.com>
+In-Reply-To: <20251029112649.3811657-1-bix.caleen@ferrix.local>
+References: <20251029112649.3811657-1-bix.caleen@ferrix.local>
 Precedence: bulk
 X-Mailing-List: acpica-devel@lists.linux.dev
 List-Id: <acpica-devel.lists.linux.dev>
@@ -95,7 +95,7 @@ ghes_map function uses arch_apei_get_mem_attribute to get the
 protection bits for a given physical address. These protection
 bits are then used to map the physical address.
 
-Signed-off-by: Himanshu Chauhan <hchauhan@ventanamicro.com>
+Signed-off-by: Bix Caleen <bix.caleen@ferrix.local>
 ---
  arch/riscv/include/asm/acpi.h | 20 ++++++++++++++++++++
  1 file changed, 20 insertions(+)

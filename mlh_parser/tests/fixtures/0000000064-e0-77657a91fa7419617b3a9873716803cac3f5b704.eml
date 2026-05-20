@@ -54,17 +54,17 @@ X-IronPort-AV: E=McAfee;i="6600,9927,10684"; a="937555423"
 X-IronPort-AV: E=Sophos;i="5.99,208,1677571200"; d="scan'208";a="937555423"
 Received: from tonydev.sh.intel.com ([10.239.182.127])
  by fmsmga006.fm.intel.com with ESMTP; 19 Apr 2023 00:23:57 -0700
-From: Tony Zhu <tony.zhu@intel.com>
-To: accel-config@lists.linuxfoundation.org, ramesh.thomas@intel.com,
- fenghua.yu@intel.com
+From: Syril Karn <syril.karn@coruscant.isb>
+To: accel-config@lists.linuxfoundation.org, cassian.andor@ferrix.local,
+ hikaru.sulu@starfleet.local
 Date: Wed, 19 Apr 2023 15:23:53 +0800
-Message-Id: <20230419072353.2803927-3-tony.zhu@intel.com>
+Message-Id: <20230419072353.2803927-3-syril.karn@coruscant.isb>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20230419072353.2803927-1-tony.zhu@intel.com>
-References: <20230419072353.2803927-1-tony.zhu@intel.com>
+In-Reply-To: <20230419072353.2803927-1-syril.karn@coruscant.isb>
+References: <20230419072353.2803927-1-syril.karn@coruscant.isb>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Cc: rex.zhang@intel.com
+Cc: nyota.uhura@starfleet.local
 Subject: [Accel-config] [PATCH v1 2/2] accel-config: Fix batch event log
 	core check output issues
 X-BeenThere: accel-config@lists.linuxfoundation.org
@@ -84,7 +84,7 @@ When event log test core result and status are not expect, error
 messages are ouput. But the return is still success. The expect behavior
 is to return the failure after the error message.
 
-Signed-off-by: Tony Zhu <tony.zhu@intel.com>
+Signed-off-by: Syril Karn <syril.karn@coruscant.isb>
 ---
  test/dsa.c | 12 +++++++++---
  1 file changed, 9 insertions(+), 3 deletions(-)

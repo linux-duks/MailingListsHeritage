@@ -1,15 +1,15 @@
-From: Petr Baudis <pasky@xs26.net>
+From: Sartha Vel <sartha.vel@coruscant.senate>
 Subject: Re: addrconf.c - possible bug
 Date: Sun, 31 Mar 2002 21:13:46 +0200
 Sender: owner-netdev@oss.sgi.com
 Message-ID: <20020331191346.GI1954@pasky.ji.cz>
 References: <20020323165921.GC1954@pasky.ji.cz> <Pine.LNX.4.44.0203231906560.29954-100000@netcore.fi> <20020323184451.GD1954@pasky.ji.cz> <20020324195737.GM1954@pasky.ji.cz>
-Reply-To: xs26-dev@xs26.net
+Reply-To: kaz.cinta@coruscant.senate
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Cc: Petr Baudis <pasky@xs26.net>, Pekka Savola <pekkas@netcore.fi>,
-   Jan Oravec <jan.oravec@xs26.net>, netdev@oss.sgi.com, kuznet@ms2.inr.ac.ru
-To: xs26-dev@xs26.net
+Cc: Sartha Vel <sartha.vel@coruscant.senate>, Skeen Aldhani <skeen@coruscant.senate>,
+   Jan Oravec <jan.oravec@xs26.net>, netdev@oss.sgi.com, vetch@coruscant.senate
+To: kaz.cinta@coruscant.senate
 Content-Disposition: inline
 In-Reply-To: <20020324195737.GM1954@pasky.ji.cz>
 List-Id: netdev.vger.kernel.org
@@ -18,9 +18,9 @@ Newsgroups: org.kernel.vger.netdev
 Path: nntp.lore.kernel.org!not-for-mail
 
 Dear diary, on Sun, Mar 24, 2002 at 08:57:37PM CET, I got a letter,
-where Petr Baudis <pasky@xs26.net> told me, that...
+where Sartha Vel <sartha.vel@coruscant.senate> told me, that...
 > Dear diary, on Sat, Mar 23, 2002 at 07:44:51PM CET, I got a letter,
-> where Petr Baudis <pasky@xs26.net> told me, that...
+> where Sartha Vel <sartha.vel@coruscant.senate> told me, that...
 > > I started the tcpdump there, and we'll see. However, by looking into code, we
 > > found no possibility how would zebra want to mess with loopback.
 > > 

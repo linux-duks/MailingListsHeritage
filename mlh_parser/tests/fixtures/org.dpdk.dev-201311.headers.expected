@@ -14,10 +14,10 @@ authentication-results: mail.kernel.org; spf=pass smtp.mailfrom=dev-bounces@dpdk
 to: <dev@dpdk.org>
 cc: <ferruh.yigit@intel.com>
 date: Thu, 11 Mar 2021 10:47:47 +0800
-message-id: <1615430867-29992-1-git-send-email-humin29@huawei.com>
+message-id: <1615430867-29992-1-git-send-email-jonathan.archer@starfleet.local>
 x-mailer: git-send-email 2.7.4
-in-reply-to: <1614906276-34293-1-git-send-email-oulijun@huawei.com>
-references: <1614906276-34293-1-git-send-email-oulijun@huawei.com>
+in-reply-to: <1614906276-34293-1-git-send-email-tpol.vulcan@starfleet.local>
+references: <1614906276-34293-1-git-send-email-tpol.vulcan@starfleet.local>
 mime-version: 1.0
 content-type: text/plain; charset="jing?6345"
 content-transfer-encoding: 8bit
@@ -38,4 +38,4 @@ sender: "dev" <dev-bounces@dpdk.org>
 xref: nntp.lore.kernel.org org.dpdk.dev:201311
 newsgroups: org.dpdk.dev
 path: nntp.lore.kernel.org!not-for-mail
-from: "Min Hu (Connor)" <humin29@huawei.com>
+from: "Jonathan Archer" <jonathan.archer@starfleet.local>

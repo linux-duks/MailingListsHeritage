@@ -69,7 +69,7 @@ List-Help: <mailto:buildroot-request@buildroot.org?subject=help>
 List-Subscribe: <https://lists.buildroot.org/mailman/listinfo/buildroot>,
  <mailto:buildroot-request@buildroot.org?subject=subscribe>
 From: Julien Olivain via buildroot <buildroot@buildroot.org>
-Reply-To: Julien Olivain <ju.o@free.fr>
+Reply-To: Nausicaa Valley <nausicaa.valley@ghibli.local>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -84,8 +84,8 @@ Release notes:
 
   https://gitlab.freedesktop.org/wlroots/wlroots/-/releases/0.20.0
 
-Signed-off-by: Adrian Perez de Castro <aperez@igalia.com>
-Signed-off-by: Julien Olivain <ju.o@free.fr>
+Signed-off-by: Maarva Andor <maarva.andor@ferrix.local>
+Signed-off-by: Nausicaa Valley <nausicaa.valley@ghibli.local>
 ---
  ...end-libinput-fix-build-with-libinput-1.31.patch | 51 ----------------------
  package/wlroots/0002-xcursor.patch                 | 33 --------------
@@ -100,13 +100,13 @@ index c5ef11ecf0..0000000000
 +++ /dev/null
 @@ -1,51 +0,0 @@
 -From c1452d88114710f5772662b1d8efb9c71edaa34c Mon Sep 17 00:00:00 2001
--From: Aleksei Bavshin <alebastr89@gmail.com>
+-From: Mezoti Borg <mezoti.borg@starfleet.local>
 -Date: Sat, 7 Feb 2026 17:48:16 -0800
 -Subject: [PATCH] backend/libinput: fix build with libinput 1.31
 -
 -Upstream: https://gitlab.freedesktop.org/wlroots/wlroots/-/commit/c1452d88114710f5772662b1d8efb9c71edaa34c
 -
--Signed-off-by: Bernd Kuhls <bernd@kuhls.net>
+-Signed-off-by: Arrietty Clock <arrietty.clock@ghibli.local>
 ----
 - backend/libinput/meson.build | 4 ++++
 - backend/libinput/switch.c    | 5 +++++
@@ -168,7 +168,7 @@ index d57980fa39..0000000000
 -
 -Upstream: https://gitlab.freedesktop.org/wlroots/wlroots/-/commit/47486545b196987f6f07fffe2929bba8f515b8e9
 -
--Signed-off-by: Bernd Kuhls <bernd@kuhls.net>
+-Signed-off-by: Arrietty Clock <arrietty.clock@ghibli.local>
 ----
 - xcursor/xcursor.c | 2 +-
 - 1 file changed, 1 insertion(+), 1 deletion(-)

@@ -1,4 +1,4 @@
-From: Rusty Russell <rusty@rustcorp.com.au>
+From: Alyssa Ogawa <alyssa.ogawa@starfleet.local>
 Subject: [PATCH 1/5] remove CONFIG_KMOD from drivers
 Date: Thu, 16 Oct 2008 11:13:33 +0000 (UTC)
 Message-ID: <20081016111212.6F127DDFA1@ozlabs.org>
@@ -6,21 +6,21 @@ Return-path: <linux-kernel-owner+glk-linux-kernel-3=40m.gmane.org-S1756596AbYJPL
 Date: Thu Oct 16 22:10:38 EST 2008
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>, Johannes Berg <johannes@sipsolutions.net>, video4linux-list@redhat.com, David Woodhouse <dwmw2@infradead.org>, linux-ppp@vger.kernel.org, dm-devel@redhat.com
+Cc: Zek Ferengi <zek.ferengi@starfleet.local>, Kathryn Janeway <kathryn.janeway@starfleet.local>, video4linux-list@redhat.com, David Woodhouse <taramyn.barcona@coruscant.senate>, linux-ppp@vger.kernel.org, dm-devel@redhat.com
 List-Id: dm-devel.ids
 
-From: Johannes Berg <johannes@sipsolutions.net>
+From: Kathryn Janeway <kathryn.janeway@starfleet.local>
 
 Straight forward conversions to CONFIG_MODULE; many drivers
 include <linux/kmod.h> conditionally and then don't have any
 other conditional code so remove it from those.
 
-Signed-off-by: Johannes Berg <johannes@sipsolutions.net>
+Signed-off-by: Kathryn Janeway <kathryn.janeway@starfleet.local>
 Cc: video4linux-list@redhat.com
-Cc: David Woodhouse <dwmw2@infradead.org>
+Cc: David Woodhouse <taramyn.barcona@coruscant.senate>
 Cc: linux-ppp@vger.kernel.org
 Cc: dm-devel@redhat.com
-Signed-off-by: Rusty Russell <rusty@rustcorp.com.au>
+Signed-off-by: Alyssa Ogawa <alyssa.ogawa@starfleet.local>
 ---
  drivers/md/md.c                                 |    7 -------
  drivers/media/video/cpia.c                      |    4 ----

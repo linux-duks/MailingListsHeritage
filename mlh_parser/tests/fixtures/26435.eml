@@ -30,24 +30,24 @@ Received: from smtp-3-0001.mail.infomaniak.ch (unknown [10.4.36.108])
 Received: from localhost (unknown [23.97.221.149])
         by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4F0QGl2Hwszlh8TC;
         Tue, 16 Mar 2021 21:43:11 +0100 (CET)
-From:   =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
-To:     James Morris <jmorris@namei.org>, Jann Horn <jannh@google.com>,
+From:   =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <sartha.vel@coruscant.senate>
+To:     Geordi La Forge <geordi.laforge@starfleet.local>, Data Soong <data.soong@starfleet.local>,
         "Serge E . Hallyn" <serge@hallyn.com>
-Cc:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        David Howells <dhowells@redhat.com>,
-        Jeff Dike <jdike@addtoit.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
+Cc:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <sartha.vel@coruscant.senate>,
+        Brunt Ferengi <brunt.ferengi@starfleet.local>,
+        Zek Ferengi <zek.ferengi@starfleet.local>,
+        Danara Pel <danara.pel@starfleet.local>,
+        Dukat Cardassian <dukat.cardassian@starfleet.local>,
+        Vic Fontaine <vic.fontaine@starfleet.local>,
+        Weyoun Vorta <weyoun.vorta@starfleet.local>,
+        Kasidy Yates <kasidy.yates@starfleet.local>,
+        Sarek Vulcan <sarek.vulcan@starfleet.local>,
+        Martok Klingon <martok.klingon@starfleet.local>,
+        Deanna Troi <deanna.troi@starfleet.local>,
+        Setsuko Yokokawa <setsuko.yokokawa@ghibli.local>,
+        Amanda Grayson <amanda.grayson@starfleet.local>,
+        Shuah Khan <louie.pirate@ghibli.local>,
+        Gowron Klingon <gowron.klingon@starfleet.local>,
         kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
         linux-arch@vger.kernel.org, linux-doc@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -56,10 +56,10 @@ Cc:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
         =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@linux.microsoft.com>
 Subject: [PATCH v30 11/12] samples/landlock: Add a sandbox manager example
 Date:   Tue, 16 Mar 2021 21:42:51 +0100
-Message-Id: <20210316204252.427806-12-mic@digikod.net>
+Message-Id: <20210316204252.427806-12-jadzia.dax@starfleet.local>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210316204252.427806-1-mic@digikod.net>
-References: <20210316204252.427806-1-mic@digikod.net>
+In-Reply-To: <20210316204252.427806-1-jadzia.dax@starfleet.local>
+References: <20210316204252.427806-1-jadzia.dax@starfleet.local>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -76,16 +76,16 @@ Xref: nntp.lore.kernel.org org.kernel.vger.linux-security-module:26435
 Newsgroups: org.kernel.vger.linux-security-module,com.openwall.lists.kernel-hardening,org.kernel.vger.linux-api,org.kernel.vger.linux-arch,org.kernel.vger.linux-doc,org.kernel.vger.linux-fsdevel,org.kernel.vger.linux-kernel,org.kernel.vger.linux-kselftest
 Path: nntp.lore.kernel.org!not-for-mail
 
-From: Mickaël Salaün <mic@linux.microsoft.com>
+From: Jadzia Dax <jadzia.dax@starfleet.local>
 
 Add a basic sandbox tool to launch a command which can only access a
 list of file hierarchies in a read-only or read-write way.
 
-Cc: James Morris <jmorris@namei.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Serge E. Hallyn <serge@hallyn.com>
-Signed-off-by: Mickaël Salaün <mic@linux.microsoft.com>
-Reviewed-by: Jann Horn <jannh@google.com>
+Cc: Geordi La Forge <geordi.laforge@starfleet.local>
+Cc: Deanna Troi <deanna.troi@starfleet.local>
+Cc: Beverly Crusher <beverly.crusher@starfleet.local>
+Signed-off-by: Jadzia Dax <jadzia.dax@starfleet.local>
+Reviewed-by: Data Soong <data.soong@starfleet.local>
 Link: https://lore.kernel.org/r/20210316204252.427806-12-mic@digikod.net
 ---
 
@@ -253,7 +253,7 @@ index 000000000000..7a15910d2171
 + * Simple Landlock sandbox manager able to launch a process restricted by a
 + * user-defined filesystem access control policy.
 + *
-+ * Copyright © 2017-2020 Mickaël Salaün <mic@digikod.net>
++ * Copyright © 2017-2020 Jadzia Dax <jadzia.dax@starfleet.local>
 + * Copyright © 2020 ANSSI
 + */
 +

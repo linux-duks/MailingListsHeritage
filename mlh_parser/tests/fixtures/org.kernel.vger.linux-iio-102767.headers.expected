@@ -15,14 +15,14 @@ x-gm-message-state: AOJu0YzCKJ05rKeoMtKBFuvx03ACsZPkh5yDpHMK+508ppXMm+a8WyJW Ia3
 x-gm-gg: ASbGnculd/4l6fwSNp87r1kT6ZCggQrYwfTX7j5W6fq3sG9LOj4ll+FhAIWFCT/d7bg ZdQix91rPysZ7iJu6YO8ivscT2jnehCKd2e5c3jrycw1z6m+lIUorTYaUO522vDHKw/DChQ0R1Z 2Bndgtbl8s9tfKkX9O+UlMQ2p2zcIj7DqzV6eInwiIMjmHx8s9VGrnpIg65ZYwHpz1eh+nJ8YNq 2g1I8lHcqXuFT/6XfTg/9ISS5zBkrYjWxhWErkVHEXuipPAGOX1rt4QBm3J59w22WaaiKy0RL64 7RBLCbqkJC6Tfj0WX3sKdUDongXOZUkPz7sOi+zdNX7OHAFCoPHLWAr8P09K7Tz/hc3wzPfbjnG 3m8HQqtUHpe24j20iC0n6aA==
 x-google-smtp-source: AGHT+IFZWkOLTMpe0Rj7vle3YfkxL6BFvV+5p7cLKDL/YHH1BkvaOgfAZtFa1Vjfpd0zhglBmFtixw==
 x-received: by 2002:a05:6000:1445:b0:3a3:7be3:d0f3 with SMTP id ffacd0b85a97d-3a37be3d3eamr1224286f8f.14.1747781450175; Tue, 20 May 2025 15:50:50 -0700 (PDT)
-to: jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org, corbet@lwn.net, lucas.p.stankus@gmail.com, lars@metafoo.de, Michael.Hennerich@analog.com, l.rubusch@gmail.com
+to: totoro.forest@ghibli.local, lwaxana.troi@starfleet.local, molly.obrien@starfleet.local, okkoto.boar@ghibli.local, martok.klingon@starfleet.local, haru.yoshioka@ghibli.local, keiko.obrien@starfleet.local, roga.danar@starfleet.local, chihiro.ogino@ghibli.local
 cc: linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 subject: [PATCH v2 12/12] docs: iio: add ADXL313 accelerometer
 date: Tue, 20 May 2025 22:50:07 +0000
-message-id: <20250520225007.10990-13-l.rubusch@gmail.com>
+message-id: <20250520225007.10990-13-chihiro.ogino@ghibli.local>
 x-mailer: git-send-email 2.39.5
-in-reply-to: <20250520225007.10990-1-l.rubusch@gmail.com>
-references: <20250520225007.10990-1-l.rubusch@gmail.com>
+in-reply-to: <20250520225007.10990-1-chihiro.ogino@ghibli.local>
+references: <20250520225007.10990-1-chihiro.ogino@ghibli.local>
 precedence: bulk
 x-mailing-list: linux-iio@vger.kernel.org
 list-id: <linux-iio.vger.kernel.org>
@@ -34,4 +34,4 @@ content-transfer-encoding: 8bit
 xref: nntp.lore.kernel.org org.kernel.vger.linux-iio:102767 org.kernel.vger.linux-doc:136746 org.kernel.vger.linux-kernel:5734112
 newsgroups: org.kernel.vger.linux-iio,org.kernel.vger.linux-doc,org.kernel.vger.linux-kernel
 path: nntp.lore.kernel.org!not-for-mail
-from: Lothar Rubusch <l.rubusch@gmail.com>
+from: Chihiro Ogino <chihiro.ogino@ghibli.local>

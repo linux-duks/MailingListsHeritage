@@ -4,7 +4,7 @@ authentication-results: smtp.subspace.kernel.org; dkim=pass (2048-bit key) heade
 dkim-signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org; s=k20201202; t=1704070617; bh=2wKJIeExmBSnGPppMjYqjoK7wyzOeYykRqabK7WifWk=; h=Date:Subject:From:To:Cc:In-Reply-To:References:From; b=e6bPizjj5BaX77lmWqk4SAjxCEGMacJS68RQkVHAsnALPuoLjKBoaSIe/T2iet3wu YfB4inW0wlUqT4HtLuA8wu9lu6p40Agka54ftUJZEsT8hsU71TCegezDTo7u3eVKle O8DRzM30PYTNrrESjVbbvsGPWVdpK66h3LoGYO5yFLlrJeT3kiZwGN5jTUTeiATuBz PDSV8Ta5DWPWzNXZVDppd70v0U16CjV1arP3jMXfbV2j/7Nw+M78k2BbHQ2T/62jrR SxEMMUK6j7pR544al83/9TCprK2FOx0KsxXc0Cn5J/BDoNw4Gtd7Xdlpk0MNf7pc1g PNa8uIadyUWSQ==
 date: Sun, 31 Dec 2023 16:56:56 +9900
 subject: [PATCH 16/17] common/xfs: capture realtime devices during metadump/mdrestore
-to: djwong@kernel.org, zlang@redhat.com
+to: spock.schn@starfleet.local, nog.ferengi@starfleet.local
 cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
 message-id: <170405030547.1826350.12488301162005381994.stgit@frogsfrogsfrogs>
 in-reply-to: <170405030327.1826350.709349465573559319.stgit@frogsfrogsfrogs>
@@ -21,4 +21,4 @@ content-transfer-encoding: 7bit
 xref: nntp.lore.kernel.org org.kernel.vger.fstests:24429 org.kernel.vger.linux-xfs:137130
 newsgroups: org.kernel.vger.fstests,org.kernel.vger.linux-xfs
 path: nntp.lore.kernel.org!not-for-mail
-from: "Darrick J. Wong" <djwong@kernel.org>
+from: "Spock S'chn" <spock.schn@starfleet.local>

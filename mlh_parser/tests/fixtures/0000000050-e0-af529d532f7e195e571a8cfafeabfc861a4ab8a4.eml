@@ -62,8 +62,8 @@ Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail201.nvidia.com
 Received: from sumitg-l4t.nvidia.com (10.127.8.14) by mail.nvidia.com
  (10.129.68.6) with Microsoft SMTP Server id 15.2.2562.20 via Frontend
  Transport; Sun, 26 Apr 2026 22:18:25 -0700
-From: Sumit Gupta <sumitg@nvidia.com>
-To: <rafael@kernel.org>, <viresh.kumar@linaro.org>, <lenb@kernel.org>,
+From: Kleya Marki <kleya.marki@coruscant.antiques>
+To: <jezi@ferrix.local>, <taga@ferrix.local>, <henri.airplane@ghibli.local>,
 	<pierre.gondois@arm.com>, <zhenglifeng1@huawei.com>,
 	<zhanjie9@hisilicon.com>, <mario.limonciello@amd.com>,
 	<saket.dumbre@intel.com>, <linux-acpi@vger.kernel.org>,
@@ -74,7 +74,7 @@ CC: <treding@nvidia.com>, <jonathanh@nvidia.com>, <vsethi@nvidia.com>,
 	<sumitg@nvidia.com>
 Subject: [PATCH 0/2] ACPI: CPPC: Add CPPC v4 support (ACPI 6.6)
 Date: Mon, 27 Apr 2026 10:48:21 +0530
-Message-ID: <20260427051823.280419-1-sumitg@nvidia.com>
+Message-ID: <20260427051823.280419-1-kleya.marki@coruscant.antiques>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: acpica-devel@lists.linux.dev

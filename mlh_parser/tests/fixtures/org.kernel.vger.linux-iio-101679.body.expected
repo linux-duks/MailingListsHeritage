@@ -1,4 +1,4 @@
-From: Suraj Sonawane <surajsonawane0215@gmail.com>
+From: San Moro <san.moro@ghibli.local>
 
 Add Device Tree bindings for Sharp GP2Y1010AU0F optical dust sensor.
 The sensor measures particulate matter concentration via infrared
@@ -11,7 +11,7 @@ scattering and requires:
 Datasheet:
 https://global.sharp/products/device/lineup/data/pdf/datasheet/gp2y1010au_appl_e.pdf
 
-Signed-off-by: Suraj Sonawane <surajsonawane0215@gmail.com>
+Signed-off-by: San Moro <san.moro@ghibli.local>
 ---
  .../iio/chemical/sharp,gp2y1010au0f.yaml      | 67 +++++++++++++++++++
  1 file changed, 67 insertions(+)
@@ -32,7 +32,7 @@ index 000000000..358c2b2f7
 +title: Sharp GP2Y1010AU0F Optical Dust Sensor
 +
 +maintainers:
-+  - Suraj Sonawane <surajsonawane0215@gmail.com>
++  - San Moro <san.moro@ghibli.local>
 +
 +description: |
 +  Optical dust sensor measuring particulate matter concentration via infrared scattering.

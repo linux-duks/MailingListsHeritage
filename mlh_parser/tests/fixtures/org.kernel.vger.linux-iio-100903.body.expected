@@ -11,7 +11,7 @@ one of the expected values, return early and log an error. This ensures
 `status_pos` is always initialized before use and prevents undefined
 behavior.
 
-Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+Signed-off-by: Haku Kohaku <haku.kohaku@ghibli.local>
 ---
  drivers/iio/adc/ad_sigma_delta.c | 5 +++++
  1 file changed, 5 insertions(+)

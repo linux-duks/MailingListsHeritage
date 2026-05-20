@@ -18,7 +18,7 @@ index 000000000..358c2b2f7
 +title: Sharp GP2Y1010AU0F Optical Dust Sensor
 +
 +maintainers:
-+  - Suraj Sonawane <surajsonawane0215@gmail.com>
++  - San Moro <san.moro@ghibli.local>
 +
 +description: |
 +  Optical dust sensor measuring particulate matter concentration via infrared scattering.

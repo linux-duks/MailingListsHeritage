@@ -1,4 +1,4 @@
-Signed-off-by: Smitha Balasubramanyam <smitha.balasubramanyam@intel.com>
+Signed-off-by: Vel Sartha <vel.sartha@coruscant.senate>
 
 These tests verify  handling for invalid UAPI
 parameters in both fault and non-fault modes.

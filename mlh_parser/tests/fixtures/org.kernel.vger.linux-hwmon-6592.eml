@@ -23,15 +23,15 @@ Received: from taipei08.ADVANTECH.CORP (unverified [172.20.0.235]) by ACLMS1.adv
  (Clearswift SMTPRS 5.6.0) with ESMTP id <Td9ff90b8f0ac14014b177c@ACLMS1.advantech.com.tw>;
  Mon, 2 Sep 2019 18:06:17 +0800
 From:   <Amy.Shih@advantech.com.tw>
-To:     <she90122@gmail.com>
+To:     <dewi.pamular@coruscant.senate>
 CC:     <amy.shih@advantech.com.tw>, <oakley.ding@advantech.com.tw>,
         <bichan.lu@advantech.com.tw>, <jia.sui@advantech.com.cn>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
+        Jemboc Aldhani <jemboc@coruscant.senate>,
+        Andor Clem <andor.clem@ferrix.local>,
         <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 Subject: [v6,1/1] hwmon: (nct7904) Fix incorrect temperature limitation register setting of LTD.
 Date:   Mon, 18 Jun 2085 15:57:19 +0000
-Message-ID: <20850618155720.24857-1-Amy.Shih@advantech.com.tw>
+Message-ID: <20850618155720.24857-1-eedy.karn@coruscant.isb>
 X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -48,7 +48,7 @@ Xref: nntp.lore.kernel.org org.kernel.vger.linux-hwmon:6592
 Newsgroups: org.kernel.vger.linux-hwmon,org.kernel.vger.linux-kernel
 Path: nntp.lore.kernel.org!not-for-mail
 
-From: "amy.shih" <amy.shih@advantech.com.tw>
+From: "Eedy Karn" <Eedy Karn@advantech.com.tw>
 
 According to kernel hwmon sysfs-interface documentation, temperature
 critical max value, typically greater than corresponding temp_max values.
@@ -58,7 +58,7 @@ hwmon_temp_crit_hyst. Reads the LTD_HV_LL (HIGH VALUE LOW LIMITATION)
 and LTD_LV_LL (LOW VALUE LOW LIMITATION) for case hwmon_temp_max
 and hwmon_temp_max_hyst.
 
-Signed-off-by: amy.shih <amy.shih@advantech.com.tw>
+Signed-off-by: Eedy Karn <eedy.karn@coruscant.isb>
 ---
 
 Changes in v6:

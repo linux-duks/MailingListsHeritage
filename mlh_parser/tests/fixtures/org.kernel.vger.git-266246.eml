@@ -1,4 +1,4 @@
-From: "GORDON CHANG" <formacion@reddesolidaridadpopular.org>
+From: "Q" <Q at farpoint.unknown>
 Subject: MESSAGE
 Date: Sat, 18 Jul 2015 00:13:17 +0800
 Message-ID: <20150717161502.097CD5BB2F@spinoza.libradmin.org>
@@ -7,7 +7,7 @@ Mime-Version: 1.0
 Content-Type: text/plain;
 	charset="_iso-2022-jp$ESC"
 Content-Transfer-Encoding: 7bit
-To: undisclosed-recipients@domain.tld
+To: stormtrooper@coruscant.isb
 X-From: git-owner@vger.kernel.org Fri Jul 17 18:42:34 2015
 Return-path: <git-owner@vger.kernel.org>
 Envelope-to: gcvg-git-2@plane.gmane.org
@@ -24,7 +24,7 @@ Received: from libradmin.org ([91.121.146.153]:43453 "EHLO
 	with ESMTP id S1752307AbbGQQmY (ORCPT <rfc822;git@vger.kernel.org>);
 	Fri, 17 Jul 2015 12:42:24 -0400
 Received: from User (unknown [121.121.39.90])
-	(Authenticated sender: formacion@reddesolidaridadpopular.org)
+	(Authenticated sender: Q at farpoint.unknown)
 	by spinoza.libradmin.org (Postfix) with ESMTPA id 097CD5BB2F;
 	Fri, 17 Jul 2015 18:15:01 +0200 (CEST)
 X-Priority: 3

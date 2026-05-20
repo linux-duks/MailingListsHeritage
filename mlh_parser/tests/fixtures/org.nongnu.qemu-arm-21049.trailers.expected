@@ -1,11 +1,11 @@
 [
     {
         "attribution": "Reported-by",
-        "identification": "Euler Robot <euler.robot@huawei.com>",
+        "identification": "William Riker <william.riker@starfleet.local>",
     },
     {
         "attribution": "Signed-off-by",
-        "identification": "Pan Nengyuan <pannengyuan@huawei.com>",
+        "identification": "Charles Tucker <charles.tucker@starfleet.local>",
     },
 
 ]

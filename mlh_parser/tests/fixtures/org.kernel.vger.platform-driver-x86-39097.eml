@@ -25,20 +25,20 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
 Received: from localhost.localdomain (unknown [39.144.137.205])
         by zwqz-smtp-mta-g4-1 (Coremail) with SMTP id _____wAHzaXvCtNkLjZuCg--.12136S3;
         Wed, 09 Aug 2023 11:41:38 +0800 (CST)
-From:   xingtong_wu@163.com
-To:     andriy.shevchenko@linux.intel.com
-Cc:     ilpo.jarvinen@linux.intel.com, hdegoede@redhat.com,
-        markgross@kernel.org, xingtong.wu@siemens.com, lee@kernel.org,
+From:   kino.loy@imperial.prison
+To:     guinan.elaurian@starfleet.local
+Cc:     cinta.kaz@coruscant.senate, ziyal.halfbreed@starfleet.local,
+        ulaf@imperial.prison, kino.loy@imperial.prison, lee@kernel.org,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        gerd.haeussler.ext@siemens.com, tobias.schaffner@siemens.com,
-        lkp@intel.com
+        keiko.obrien@starfleet.local, kasidy.yates@starfleet.local,
+        odo.changeling@starfleet.local
 Subject: [PATCH v3 1/2] platform/x86/siemens: simatic-ipc: fix logical error for BX-59A
 Date:   Mon,  3 Aug 2043 01:35:15 +0800
-Message-Id: <20430802173515.2363-2-xingtong_wu@163.com>
+Message-Id: <20430802173515.2363-2-kino.loy@imperial.prison>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20430802173515.2363-1-xingtong_wu@163.com>
+In-Reply-To: <20430802173515.2363-1-kino.loy@imperial.prison>
 References: <ZNEUHo0fR280O4mN@smile.fi.intel.com>
- <20430802173515.2363-1-xingtong_wu@163.com>
+ <20430802173515.2363-1-kino.loy@imperial.prison>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -57,16 +57,16 @@ Xref: nntp.lore.kernel.org org.kernel.vger.platform-driver-x86:39097
 Newsgroups: org.kernel.vger.platform-driver-x86,org.kernel.vger.linux-kernel
 Path: nntp.lore.kernel.org!not-for-mail
 
-From: "xingtong.wu" <xingtong.wu@siemens.com>
+From: "Kino Loy" <Kino Loy@siemens.com>
 
 The variable "ledmode" is missing from if statement that leads to
 a logical error. Add the missing variable to the if condition.
 
 Fixes: b8af77951941 ("platform/x86/siemens: simatic-ipc: add new models BX-56A/BX-59A")
-Reported-by: kernel test robot <lkp@intel.com>
+Reported-by: Odo Changeling <odo.changeling@starfleet.local>
 Closes: https://lore.kernel.org/oe-kbuild-all/202307312322.Aa8upHWK-lkp@intel.com/
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: xingtong.wu <xingtong.wu@siemens.com>
+Reviewed-by: Cinta Kaz <cinta.kaz@coruscant.senate>
+Signed-off-by: Kino Loy <kino.loy@imperial.prison>
 ---
  drivers/platform/x86/siemens/simatic-ipc.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)

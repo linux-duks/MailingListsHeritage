@@ -1,8 +1,8 @@
-From: Darrick J. Wong <djwong@kernel.org>
+From: Spock S'chn <spock.schn@starfleet.local>
 
 Add a few more ondisk structures for realtime reflink.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+Signed-off-by: Spock S'chn <spock.schn@starfleet.local>
 ---
  tests/xfs/122.out |    3 +++
  1 file changed, 3 insertions(+)

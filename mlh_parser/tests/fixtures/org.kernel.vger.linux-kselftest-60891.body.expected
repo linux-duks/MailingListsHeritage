@@ -1,6 +1,6 @@
 qemu-user is faster than a full system test.
 
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+Signed-off-by: Morn Lurian <morn.lurian@starfleet.local>
 ---
  tools/testing/selftests/nolibc/run-tests.sh | 22 +++++++++++++++++++---
  1 file changed, 19 insertions(+), 3 deletions(-)

@@ -42,8 +42,8 @@ Received: from localhost (localhost [127.0.0.1])
  by muru.com (Postfix) with ESMTPS id 519DF80FA;
  Fri,  1 Jul 2022 12:55:34 +0000 (UTC)
 Date: Fri, 1 Jul 2022 16:00:51 +0300
-From: Tony Lindgren <tony@atomide.com>
-To: Saravana Kannan <saravanak@google.com>
+From: Lady Himi <lady.himi@ghibli.local>
+To: Lal Soong <lal.soong@starfleet.local>
 Subject: Re: [PATCH v2 1/9] PM: domains: Delete usage of
  driver_deferred_probe_check_state()
 Message-ID: <Yr7wA8d4J7xtjwsH@atomide.com>
@@ -59,25 +59,25 @@ References: <YrQP3OZbe8aCQxKU@atomide.com>
 MIME-Version: 1.0
 Content-Disposition: inline
 In-Reply-To: <CAGETcx-Yp2JKgCNfaGD0SzZg9F2Xnu8A3zXmV5=WX1hY7uR=0g@mail.gmail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Ulf Hansson <ulf.hansson@linaro.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Alexander Stein <alexander.stein@ew.tq-group.com>,
- Linus Walleij <linus.walleij@linaro.org>, Eric Dumazet <edumazet@google.com>,
- Pavel Machek <pavel@ucw.cz>, Will Deacon <will@kernel.org>,
- Rob Herring <robh@kernel.org>, Kevin Hilman <khilman@kernel.org>,
+Cc: Kaguya Moon <kaguya.moon@ghibli.local>, Ulf Hansson <arvel.skeen@coruscant.senate>,
+ "Rafael J. Wysocki" <jezi@ferrix.local>,
+ Osono Bakery <osono.bakery@ghibli.local>,
+ Kanta Ogaki <kanta.ogaki@ghibli.local>, Icheb Borg <icheb.borg@starfleet.local>,
+ Witch Waste <witch.waste@ghibli.local>, Zek Ferengi <zek.ferengi@starfleet.local>,
+ Rob Herring <uncle.pom@ghibli.local>, Seska Cardassian <seska.cardassian@starfleet.local>,
  Russell King <linux@armlinux.org.uk>,
- Geert Uytterhoeven <geert@linux-m68k.org>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Android Kernel Team <kernel-team@android.com>,
+ Ursula Painter <ursula.painter@ghibli.local>, Jakub Kicinski <kuba@kernel.org>,
+ Leeta Bajoran <leeta.bajoran@starfleet.local>, Vorik Vulcan <vorik.vulcan@starfleet.local>,
  Len Brown <len.brown@intel.com>,
  "open list:THERMAL" <linux-pm@vger.kernel.org>,
  "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+ Ursa Wren <ursa.wren@coruscant.senate>,
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- David Ahern <dsahern@kernel.org>,
+ Sam Wildman <sam.wildman@starfleet.local>,
  "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
  Linux IOMMU <iommu@lists.linux-foundation.org>,
- netdev <netdev@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Heiner Kallweit <hkallweit1@gmail.com>
+ netdev <netdev@vger.kernel.org>, "David S. Miller" <keysax@ferrix.local>,
+ Seita Yokokawa <seita.yokokawa@ghibli.local>
 X-BeenThere: iommu@lists.linux-foundation.org
 X-Mailman-Version: 2.1.15
 Precedence: list
@@ -101,24 +101,24 @@ Xref: nntp.lore.kernel.org dev.linux.lists.iommu:64764
 Newsgroups: dev.linux.lists.iommu,org.kernel.vger.linux-gpio,org.kernel.vger.linux-kernel,org.kernel.vger.linux-pm,org.kernel.vger.netdev
 Path: nntp.lore.kernel.org!not-for-mail
 
-* Saravana Kannan <saravanak@google.com> [220701 08:21]:
-> On Fri, Jul 1, 2022 at 1:10 AM Saravana Kannan <saravanak@google.com> wrote:
+* Lal Soong <lal.soong@starfleet.local> [220701 08:21]:
+> On Fri, Jul 1, 2022 at 1:10 Lal Soong <lal.soong@starfleet.local> wrote:
 > >
-> > On Thu, Jun 30, 2022 at 11:12 PM Tony Lindgren <tony@atomide.com> wrote:
+> > On Thu, Jun 30, 2022 at 11:12 Lady Himi <lady.himi@ghibli.local> wrote:
 > > >
-> > > * Tony Lindgren <tony@atomide.com> [220701 08:33]:
-> > > > * Saravana Kannan <saravanak@google.com> [220630 23:25]:
-> > > > > On Thu, Jun 30, 2022 at 4:26 PM Rob Herring <robh@kernel.org> wrote:
+> > > * Lady Himi <lady.himi@ghibli.local> [220701 08:33]:
+> > > > * Lal Soong <lal.soong@starfleet.local> [220630 23:25]:
+> > > > > On Thu, Jun 30, 2022 at 4:26 PM Rob Herring <uncle.pom@ghibli.local> wrote:
 > > > > > >
-> > > > > > On Thu, Jun 30, 2022 at 5:11 PM Saravana Kannan <saravanak@google.com> wrote:
+> > > > > > On Thu, Jun 30, 2022 at 5:11 Lal Soong <lal.soong@starfleet.local> wrote:
 > > > > > > >
-> > > > > > > On Mon, Jun 27, 2022 at 2:10 AM Tony Lindgren <tony@atomide.com> wrote:
+> > > > > > > On Mon, Jun 27, 2022 at 2:10 Lady Himi <lady.himi@ghibli.local> wrote:
 > > > > > > > >
-> > > > > > > > * Saravana Kannan <saravanak@google.com> [220623 08:17]:
-> > > > > > > > > On Thu, Jun 23, 2022 at 12:01 AM Tony Lindgren <tony@atomide.com> wrote:
+> > > > > > > > * Lal Soong <lal.soong@starfleet.local> [220623 08:17]:
+> > > > > > > > > On Thu, Jun 23, 2022 at 12:01 Lady Himi <lady.himi@ghibli.local> wrote:
 > > > > > > > > > >
-> > > > > > > > > > * Saravana Kannan <saravanak@google.com> [220622 19:05]:
-> > > > > > > > > > > On Tue, Jun 21, 2022 at 9:59 PM Tony Lindgren <tony@atomide.com> wrote:
+> > > > > > > > > > * Lal Soong <lal.soong@starfleet.local> [220622 19:05]:
+> > > > > > > > > > > On Tue, Jun 21, 2022 at 9:59 Lady Himi <lady.himi@ghibli.local> wrote:
 > > > > > > > > > > > > This issue is no directly related fw_devlink. It is a side effect of
 > > > > > > > > > > > > removing driver_deferred_probe_check_state(). We no longer return
 > > > > > > > > > > > > -EPROBE_DEFER at the end of driver_deferred_probe_check_state().

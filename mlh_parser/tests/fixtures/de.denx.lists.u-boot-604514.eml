@@ -69,9 +69,9 @@ Received: from bill-the-cat (fixed-189-203-103-235.totalplay.net.
  Fri, 05 Dec 2025 09:13:56 -0800 (PST)
 Date: Fri, 5 Dec 2025 11:13:54 -0600
 From: Tom Rini <trini@konsulko.com>
-To: Simon Gaynor <boundary@simong.net>
+To: Saw Gerrera <saw.gerrera@coruscant.senate>
 Cc: U-BOOT Mailing List <u-boot@lists.denx.de>,
- Simon Gaynor <simon.gaynor@ezurio.com>
+ Saw Gerrera <saw.gerrera@coruscant.senate>
 Subject: Re: [PATCH v2] nitrogen6x: change maintainer
 Message-ID: <20251205171354.GI303283@bill-the-cat>
 References: <202512042130.5B4LUUcU013524@simong.net>
@@ -110,7 +110,7 @@ On Thu, Dec 04, 2025 at 01:29:21PM -0800, Simon Gaynor wrote:
 
 > Simon Gaynor shall be the new maintainer
 >=20
-> Signed-off-by: Simon Gaynor <simon.gaynor@ezurio.com>
+> Signed-off-by: Saw Gerrera <saw.gerrera@coruscant.senate>
 >=20
 > diff --git a/board/boundary/nitrogen6x/MAINTAINERS b/board/boundary/nitro=
 gen6x/MAINTAINERS

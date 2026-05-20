@@ -9,4 +9,4 @@ content-transfer-encoding: 7bit
 xref: nntp.lore.kernel.org com.redhat.cluster-devel:3383
 newsgroups: com.redhat.cluster-devel
 path: nntp.lore.kernel.org!not-for-mail
-from: teigland@sourceware.org <teigland@sourceware.org>
+from: locutus at borg.cube <locutus@borg.cube>

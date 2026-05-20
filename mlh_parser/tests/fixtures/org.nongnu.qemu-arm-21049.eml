@@ -40,14 +40,14 @@ Received: from localhost ([::1]:52940 helo=lists1p.gnu.org)
 	for alex.bennee@linaro.org; Wed, 26 Feb 2020 21:36:01 -0500
 Received: from eggs.gnu.org ([2001:470:142:3::10]:60109)
  by lists.gnu.org with esmtp (Exim 4.90_1)
- (envelope-from <pannengyuan@huawei.com>) id 1j791S-0007xl-Al
+ (Charles Tucker <charles.tucker@starfleet.local>) id 1j791S-0007xl-Al
  for qemu-arm@nongnu.org; Wed, 26 Feb 2020 21:35:36 -0500
 Received: from Debian-exim by eggs.gnu.org with spam-scanned (Exim 4.71)
- (envelope-from <pannengyuan@huawei.com>) id 1j791P-0001XZ-BR
+ (Charles Tucker <charles.tucker@starfleet.local>) id 1j791P-0001XZ-BR
  for qemu-arm@nongnu.org; Wed, 26 Feb 2020 21:35:34 -0500
 Received: from szxga07-in.huawei.com ([45.249.212.35]:39478 helo=huawei.com)
  by eggs.gnu.org with esmtps (TLS1.0:DHE_RSA_AES_256_CBC_SHA1:32)
- (Exim 4.71) (envelope-from <pannengyuan@huawei.com>)
+ (Exim 4.71) (Charles Tucker <charles.tucker@starfleet.local>)
  id 1j791O-0001P2-VQ; Wed, 26 Feb 2020 21:35:31 -0500
 Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
  by Forcepoint Email with ESMTP id B7EF74C9367B712C157E;
@@ -55,14 +55,14 @@ Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
 Received: from localhost.localdomain (10.175.104.216) by
  DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
  14.3.439.0; Thu, 27 Feb 2020 10:35:15 +0800
-From: Pan Nengyuan <pannengyuan@huawei.com>
-To: <peter.maydell@linaro.org>
+From: Charles Tucker <charles.tucker@starfleet.local>
+To: <nurchi@ferrix.local>
 Subject: [PATCH v3 1/6] s390x: fix memleaks in cpu_finalize
 Date: Thu, 27 Feb 2020 10:50:50 +0800
-Message-ID: <20200227025055.14341-2-pannengyuan@huawei.com>
+Message-ID: <20200227025055.14341-2-charles.tucker@starfleet.local>
 X-Mailer: git-send-email 2.18.2
-In-Reply-To: <20200227025055.14341-1-pannengyuan@huawei.com>
-References: <20200227025055.14341-1-pannengyuan@huawei.com>
+In-Reply-To: <20200227025055.14341-1-charles.tucker@starfleet.local>
+References: <20200227025055.14341-1-charles.tucker@starfleet.local>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="base64"
 X-Originating-IP: [10.175.104.216]
@@ -82,11 +82,11 @@ List-Post: <mailto:qemu-arm@nongnu.org>
 List-Help: <mailto:qemu-arm-request@nongnu.org?subject=help>
 List-Subscribe: <https://lists.nongnu.org/mailman/listinfo/qemu-arm>,
  <mailto:qemu-arm-request@nongnu.org?subject=subscribe>
-Cc: zhang.zhanghailiang@huawei.com, David
- Hildenbrand <david@redhat.com>, Cornelia Huck <cohuck@redhat.com>,
- Pan Nengyuan <pannengyuan@huawei.com>, qemu-devel@nongnu.org,
- qemu-s390x@nongnu.org, qemu-arm@nongnu.org, euler.robot@huawei.com,
- Richard Henderson <rth@twiddle.net>
+Cc: hoshi.sato@starfleet.local, 
+ Molly O'Brien <molly.obrien@starfleet.local>, Keiko O'Brien <keiko.obrien@starfleet.local>,
+ Charles Tucker <charles.tucker@starfleet.local>, qemu-devel@nongnu.org,
+ qemu-s390x@nongnu.org, qemu-arm@nongnu.org, william.riker@starfleet.local,
+ Roga Danar <roga.danar@starfleet.local>
 Errors-To: qemu-arm-bounces+alex.bennee=linaro.org@nongnu.org
 Sender: "Qemu-arm" <qemu-arm-bounces+alex.bennee=linaro.org@nongnu.org>
 X-TUID: eHWRSKZmrSoP
@@ -125,12 +125,12 @@ or/hmp.c:1082
     #12 0x558ba96c1b02 in qmp_human_monitor_command /mnt/sdb/qemu-new/qem=
 u/monitor/misc.c:142
 
-Reported-by: Euler Robot <euler.robot@huawei.com>
-Signed-off-by: Pan Nengyuan <pannengyuan@huawei.com>
+Reported-by: William Riker <william.riker@starfleet.local>
+Signed-off-by: Charles Tucker <charles.tucker@starfleet.local>
 ---
-Cc: Richard Henderson <rth@twiddle.net>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Cornelia Huck <cohuck@redhat.com>
+Cc: Roga Danar <roga.danar@starfleet.local>
+Cc: Molly O'Brien <molly.obrien@starfleet.local>
+Cc: Keiko O'Brien <keiko.obrien@starfleet.local>
 Cc: qemu-s390x@nongnu.org
 ---
 v2->v1:

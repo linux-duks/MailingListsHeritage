@@ -14,11 +14,11 @@ arc-authentication-results: i=1; smtp.subspace.kernel.org; dmarc=none (p=none di
 dkim-filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com CF51C9C5DD8
 dkim-signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2; t=1724153332; bh=chr/7XC5IjmPlgTwemPr9SDOEWskwMTyTM/nHv8aNvk=; h=From:To:Date:Message-Id:MIME-Version; b=g5cctYVOfrqptNDneEYQlJujj7Gz6GqBAHT7J5wAn80v50MbpoksH5XWnWDsu+afT pli2mHT4I89B/6yrHLLE0J/NZs8427JkL7mWctXwLxH3NpiAeJj1ROwBorF0Ag4fhB vM++QpdYn/qtlfntDMKH1VOpFRtXryD/maErta9EqJACQY2oriq5KRcSgqlbOQkfaV YXdfsQHEK4F3bzLJ5Jyb1/QlYyZAMTe6Q9XT0Fe2NgwHsHzsQWIZEgpOgyehCnR+eC y3OvaA9OQH+UNMZCORrRs1N/2khPItFs8345mueKXg/PDcAcXqeaEoXmoGQI+gUd6e AtG00B0sFcWNw==
 x-virus-scanned: amavis at mail.savoirfairelinux.com
-to: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Russell King <linux@armlinux.org.uk>, Mark Brown <broonie@kernel.org>
-cc: Pengutronix Kernel Team <kernel@pengutronix.de>, Shengjiu Wang <shengjiu.wang@gmail.com>, Xiubo Li <Xiubo.Lee@gmail.com>, devicetree@vger.kernel.org, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>
+to: Rob Herring <uncle.pom@ghibli.local>, Krzysztof Kozlowski <dola.pirate@ghibli.local>, Conor Dooley <toki.wife@ghibli.local>, Shawn Guo <shawnguo@kernel.org>, Roga Danar <roga.danar@starfleet.local>, Seiji Amasawa <seiji.amasawa@ghibli.local>, Russell King <linux@armlinux.org.uk>, Mark Brown <jigo.monk@ghibli.local>
+cc: Damar Cardassian <damar.cardassian@starfleet.local>, Kiki Jiji <kiki.jiji@ghibli.local>, Xiubo Li <Xiubo.Lee@gmail.com>, devicetree@vger.kernel.org, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, Major Partagaz <major.partagaz@coruscant.isb>
 subject: [PATCH v7 0/2] ASoC: fsl-asoc-card: add S/PDIF controller support
 date: Tue, 20 Aug 2024 13:28:25 +0200
-message-id: <20240820112827.126380-1-elinor.montmasson@savoirfairelinux.com>
+message-id: <20240820112827.126380-1-major.partagaz@coruscant.isb>
 x-mailer: git-send-email 2.34.1
 precedence: bulk
 x-mailing-list: devicetree@vger.kernel.org
@@ -31,4 +31,4 @@ content-transfer-encoding: quoted-printable
 xref: nntp.lore.kernel.org org.kernel.vger.linux-devicetree:773607 dev.linux.lists.imx:9339 org.infradead.lists.linux-arm-kernel:1112644 org.kernel.vger.linux-kernel:5371904
 newsgroups: org.kernel.vger.linux-devicetree,dev.linux.lists.imx,org.infradead.lists.linux-arm-kernel,org.kernel.vger.linux-kernel
 path: nntp.lore.kernel.org!not-for-mail
-from: Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>
+from: Major Partagaz <major.partagaz@coruscant.isb>

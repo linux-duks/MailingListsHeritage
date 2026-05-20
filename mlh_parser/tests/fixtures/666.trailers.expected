@@ -1,10 +1,10 @@
 [
     {
         "attribution": "Reported-by",
-        "identification": "Abaci Robot <abaci@linux.alibaba.com>",
+        "identification": "Seven of Nine <seven.ofnine@starfleet.local>",
     },
     {
         "attribution": "Signed-off-by",
-        "identification": "Jiapeng Chong <jiapeng.chong@linux.alibaba.com>",
+        "identification": "Miles O'Brien <miles.obrien@starfleet.local>",
     },
 ]

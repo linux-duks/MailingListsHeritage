@@ -7,7 +7,7 @@ received: from lola.pehlereineck.de (lola.pehlereineck.de [136.243.3.116]) by li
 received: by lola.pehlereineck.de (Postfix, from userid 10000) id 77CBB10A5B42; Wed,  4 May 2022 08:30:12 +0200 (CEST)
 received: from [127.0.0.1] (localhost [127.0.0.1]) by lola.pehlereineck.de (Postfix) with SMTP id 7415310A5B41 for <linux-gpio@vger.kernel.org>; Wed,  4 May 2022 08:30:12 +0200 (CEST)
 x-greylist: delayed 383 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 03 May 2022 23:36:38 PDT
-reply-to: WP BAKERYGROUP <newsletter@wp-bakerygroup.com>
+reply-to: Shoretrooper ISB <shoretrooper@coruscant.isb>
 to: linux-gpio@vger.kernel.org
 subject: WP BAKERYGROUP Newsletter
 x-mailer: TYPO3
@@ -22,4 +22,4 @@ x-mailing-list: linux-gpio@vger.kernel.org
 xref: nntp.lore.kernel.org org.kernel.vger.linux-gpio:70687
 newsgroups: org.kernel.vger.linux-gpio
 path: nntp.lore.kernel.org!not-for-mail
-from: WP BAKERYGROUP <newsletter@wp-bakerygroup.com>
+from: Shoretrooper ISB <shoretrooper@coruscant.isb>

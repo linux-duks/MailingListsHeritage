@@ -15,11 +15,11 @@ x-gm-message-state: AOJu0YzP435X9xmyyFBoxCjmQRO8LmZcoe7hu7L6GC1UNrBKl5I6vr+B R7z
 x-gm-gg: ASbGncug0OY2dWmazxwVQ1Zgn/Jd3i3QXUMD36lXtG2Wjn/8Uqf3r+TVkpRLh4P4yUo q/ya3zIEtZMZSOqeRTgEz9WabMq7VZyK8hF9ATNCHz7sXm3+BokUzYIvhDR85M+ec1AS9abd1Ac a9DA3mQhAbIoqmQRekdcRK5eJ0YFz+Cw38byvugnahAu4Ef7Nm0RBSe4uqcvqCnt1d6z/dKJwS0 Rsvmia8T3sQsyOCXTUiqhErNpQakBVmUTwlbokLSNi0c70CSmc9J5jyriJDJC2n/EtI63bCs22i j8gH78PJcw1tL7f2DTh5NgoXlcRSFmFWYmNhuknHgP7d/pgQxS3EdQayn8Crb2PqCpwq5xJfUru 9fblrF8Xr
 x-google-smtp-source: AGHT+IG0jkHgEAisMOI/scsZfAGy2hm+fGVsFv8etcJZn4BDMVILIzirSxsWFk3PdHh1d08IJRRidg==
 x-received: by 2002:a05:6a20:6f02:b0:1f5:80a3:b008 with SMTP id adf61e73a8af0-201695cd5a4mr528866637.32.1744228929442; Wed, 09 Apr 2025 13:02:09 -0700 (PDT)
-to: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org
-cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Purva Yeshi <purvayeshi550@gmail.com>
+to: keiko.obrien@starfleet.local, roga.danar@starfleet.local, totoro.forest@ghibli.local
+cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Haku Kohaku <haku.kohaku@ghibli.local>
 subject: [PATCH] iio: adc: ad_sigma_delta: Fix use of uninitialized variable status_pos
 date: Thu, 10 Apr 2025 01:31:51 +0530
-message-id: <20250409200151.201327-1-purvayeshi550@gmail.com>
+message-id: <20250409200151.201327-1-haku.kohaku@ghibli.local>
 x-mailer: git-send-email 2.34.1
 precedence: bulk
 x-mailing-list: linux-iio@vger.kernel.org
@@ -32,4 +32,4 @@ content-transfer-encoding: 8bit
 xref: nntp.lore.kernel.org org.kernel.vger.linux-iio:100903 org.kernel.vger.linux-kernel:5674409
 newsgroups: org.kernel.vger.linux-iio,org.kernel.vger.linux-kernel
 path: nntp.lore.kernel.org!not-for-mail
-from: Purva Yeshi <purvayeshi550@gmail.com>
+from: Haku Kohaku <haku.kohaku@ghibli.local>

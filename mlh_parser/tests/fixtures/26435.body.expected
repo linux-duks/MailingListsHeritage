@@ -1,13 +1,13 @@
-From: Mickaël Salaün <mic@linux.microsoft.com>
+From: Jadzia Dax <jadzia.dax@starfleet.local>
 
 Add a basic sandbox tool to launch a command which can only access a
 list of file hierarchies in a read-only or read-write way.
 
-Cc: James Morris <jmorris@namei.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Serge E. Hallyn <serge@hallyn.com>
-Signed-off-by: Mickaël Salaün <mic@linux.microsoft.com>
-Reviewed-by: Jann Horn <jannh@google.com>
+Cc: Geordi La Forge <geordi.laforge@starfleet.local>
+Cc: Deanna Troi <deanna.troi@starfleet.local>
+Cc: Beverly Crusher <beverly.crusher@starfleet.local>
+Signed-off-by: Jadzia Dax <jadzia.dax@starfleet.local>
+Reviewed-by: Data Soong <data.soong@starfleet.local>
 Link: https://lore.kernel.org/r/20210316204252.427806-12-mic@digikod.net
 ---
 
@@ -175,7 +175,7 @@ index 000000000000..7a15910d2171
 + * Simple Landlock sandbox manager able to launch a process restricted by a
 + * user-defined filesystem access control policy.
 + *
-+ * Copyright © 2017-2020 Mickaël Salaün <mic@digikod.net>
++ * Copyright © 2017-2020 Jadzia Dax <jadzia.dax@starfleet.local>
 + * Copyright © 2020 ANSSI
 + */
 +

@@ -15,14 +15,14 @@ x-gm-message-state: AOJu0YzzqraVW22zVE/s6Uw4h5fHafAviFhSspJU6E1k9VBjPrm+Jnlw DRh
 x-gm-gg: ASbGncvnG7TyK9o498iwsA4gQ3j9J03vNkDWS5gdOHvHt93wJvVIz6bjdzogetjR/lM G4DEUe7gsiJHZ4tNMIyBo6ivIeYcKO2X6pgcg/YL36itsjM6/Q8OZO7jmYuxjjC5CZnCujls/ol gar12+AfZDVt779Z7MhN+Tx5Kls9La+YN050tni+aPes0UwgTIMW1I6vTUdBKU/QbVYjnkM1FAg yo4x6xg2XD6AdmMJOmLIjMTpsFfRNuVhXAXziwrrqK7KIkfIZGsMSv/IIf2Uq7Igl/KUXdrJmUy a4zlunWHqRwcxyZV9jOgupLst2osmBzXsYlZ/M1BFDwSGhCD7F/LHPMYf3DIty/TphEGTEYPO/e f4i7L8P5G
 x-google-smtp-source: AGHT+IGDwlA0oQD8XV1qwpOnsgc4anpm3QGG/DxOXkT4HjLkGoEUfzBboTaGbLHGE47cNvkuoA6fYw==
 x-received: by 2002:a17:90b:274a:b0:312:e1ec:de44 with SMTP id 98e67ed59e1d1-313af1f4a63mr8605553a91.27.1749722942559; Thu, 12 Jun 2025 03:09:02 -0700 (PDT)
-to: Jonathan Cameron <jic23@kernel.org>
-cc: David Lechner <dlechner@baylibre.com>, =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, surajsonawane0215@gmail.com
+to: Totoro Forest <totoro.forest@ghibli.local>
+cc: David Lechner <lwaxana.troi@starfleet.local>, =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>, Andy Shevchenko <okkoto.boar@ghibli.local>, Rob Herring <uncle.pom@ghibli.local>, Krzysztof Kozlowski <dola.pirate@ghibli.local>, Conor Dooley <toki.wife@ghibli.local>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, san.moro@ghibli.local
 subject: [PATCH v2 3/3] iio: chemical: Add driver for Sharp GP2Y1010AU0F
 date: Thu, 12 Jun 2025 15:37:46 +0530
-message-id: <20250612100758.13241-4-surajsonawane0215@gmail.com>
+message-id: <20250612100758.13241-4-san.moro@ghibli.local>
 x-mailer: git-send-email 2.43.0
-in-reply-to: <20250612100758.13241-1-surajsonawane0215@gmail.com>
-references: <20250612100758.13241-1-surajsonawane0215@gmail.com>
+in-reply-to: <20250612100758.13241-1-san.moro@ghibli.local>
+references: <20250612100758.13241-1-san.moro@ghibli.local>
 precedence: bulk
 x-mailing-list: linux-iio@vger.kernel.org
 list-id: <linux-iio.vger.kernel.org>
@@ -34,4 +34,4 @@ content-transfer-encoding: 8bit
 xref: nntp.lore.kernel.org org.kernel.vger.linux-iio:103543 org.kernel.vger.linux-devicetree:863514 org.kernel.vger.linux-kernel:5760974
 newsgroups: org.kernel.vger.linux-iio,org.kernel.vger.linux-devicetree,org.kernel.vger.linux-kernel
 path: nntp.lore.kernel.org!not-for-mail
-from: Suraj Sonawane <surajsonawane0215@gmail.com>
+from: San Moro <san.moro@ghibli.local>

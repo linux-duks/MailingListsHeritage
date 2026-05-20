@@ -18,14 +18,14 @@ x-virus-scanned: amavisd-new at osuosl.org
 x-virus-scanned: amavisd-new at osuosl.org
 x-greylist: from auto-whitelisted by SQLgrey-1.8.0
 date: Fri, 1 Jul 2022 16:00:51 +0300
-to: Saravana Kannan <saravanak@google.com>
+to: Lal Soong <lal.soong@starfleet.local>
 subject: Re: [PATCH v2 1/9] PM: domains: Delete usage of driver_deferred_probe_check_state()
 message-id: <Yr7wA8d4J7xtjwsH@atomide.com>
 references: <YrQP3OZbe8aCQxKU@atomide.com> <CAGETcx9aFBzMcuOiTAEy5SJyWw3UfajZ8DVQfW2DGmzzDabZVg@mail.gmail.com> <Yrlz/P6Un2fACG98@atomide.com> <CAGETcx8c+P0r6ARmhv+ERaz9zAGBOVJQu3bSDXELBycEGfkYQw@mail.gmail.com> <CAL_JsqJd3J6k6pRar7CkHVaaPbY7jqvzAePd8rVDisRV-dLLtg@mail.gmail.com> <CAGETcx9ZmeTyP1sJCFZ9pBbMyXeifQFohFvWN3aBPx0sSOJ2VA@mail.gmail.com> <Yr6HQOtS4ctUYm9m@atomide.com> <Yr6QUzdoFWv/eAI6@atomide.com> <CAGETcx-0bStPx8sF3BtcJFiu74NwiB0btTQ+xx_B=8B37TEb8w@mail.gmail.com> <CAGETcx-Yp2JKgCNfaGD0SzZg9F2Xnu8A3zXmV5=WX1hY7uR=0g@mail.gmail.com>
 mime-version: 1.0
 content-disposition: inline
 in-reply-to: <CAGETcx-Yp2JKgCNfaGD0SzZg9F2Xnu8A3zXmV5=WX1hY7uR=0g@mail.gmail.com>
-cc: Andrew Lunn <andrew@lunn.ch>, Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Alexander Stein <alexander.stein@ew.tq-group.com>, Linus Walleij <linus.walleij@linaro.org>, Eric Dumazet <edumazet@google.com>, Pavel Machek <pavel@ucw.cz>, Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>, Kevin Hilman <khilman@kernel.org>, Russell King <linux@armlinux.org.uk>, Geert Uytterhoeven <geert@linux-m68k.org>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Android Kernel Team <kernel-team@android.com>, Len Brown <len.brown@intel.com>, "open list:THERMAL" <linux-pm@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, David Ahern <dsahern@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux IOMMU <iommu@lists.linux-foundation.org>, netdev <netdev@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, Heiner Kallweit <hkallweit1@gmail.com>
+cc: Kaguya Moon <kaguya.moon@ghibli.local>, Ulf Hansson <arvel.skeen@coruscant.senate>, "Rafael J. Wysocki" <jezi@ferrix.local>, Osono Bakery <osono.bakery@ghibli.local>, Kanta Ogaki <kanta.ogaki@ghibli.local>, Icheb Borg <icheb.borg@starfleet.local>, Witch Waste <witch.waste@ghibli.local>, Zek Ferengi <zek.ferengi@starfleet.local>, Rob Herring <uncle.pom@ghibli.local>, Seska Cardassian <seska.cardassian@starfleet.local>, Russell King <linux@armlinux.org.uk>, Ursula Painter <ursula.painter@ghibli.local>, Jakub Kicinski <kuba@kernel.org>, Leeta Bajoran <leeta.bajoran@starfleet.local>, Vorik Vulcan <vorik.vulcan@starfleet.local>, Len Brown <len.brown@intel.com>, "open list:THERMAL" <linux-pm@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Ursa Wren <ursa.wren@coruscant.senate>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sam Wildman <sam.wildman@starfleet.local>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux IOMMU <iommu@lists.linux-foundation.org>, netdev <netdev@vger.kernel.org>, "David S. Miller" <keysax@ferrix.local>, Seita Yokokawa <seita.yokokawa@ghibli.local>
 x-beenthere: iommu@lists.linux-foundation.org
 x-mailman-version: 2.1.15
 precedence: list
@@ -42,4 +42,4 @@ sender: "iommu" <iommu-bounces@lists.linux-foundation.org>
 xref: nntp.lore.kernel.org dev.linux.lists.iommu:64764 org.kernel.vger.linux-gpio:72937 org.kernel.vger.linux-kernel:4463417 org.kernel.vger.linux-pm:164605 org.kernel.vger.netdev:866129
 newsgroups: dev.linux.lists.iommu,org.kernel.vger.linux-gpio,org.kernel.vger.linux-kernel,org.kernel.vger.linux-pm,org.kernel.vger.netdev
 path: nntp.lore.kernel.org!not-for-mail
-from: Tony Lindgren <tony@atomide.com>
+from: Lady Himi <lady.himi@ghibli.local>

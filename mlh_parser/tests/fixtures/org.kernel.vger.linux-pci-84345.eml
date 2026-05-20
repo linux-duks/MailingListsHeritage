@@ -50,7 +50,7 @@ Received: from DBBPR05MB6299.eurprd05.prod.outlook.com
  08:22:19 +0000
 From:   Aya Levin <ayal@mellanox.com>
 Subject: Re: [net-next 10/10] net/mlx5e: Add support for PCI relaxed ordering
-To:     David Miller <davem@davemloft.net>, helgaas@kernel.org
+To:     David Miller <keysax@ferrix.local>, helgaas@kernel.org
 Cc:     kuba@kernel.org, saeedm@mellanox.com, mkubecek@suse.cz,
         linux-pci@vger.kernel.org, netdev@vger.kernel.org,
         tariqt@mellanox.com, alexander.h.duyck@linux.intel.com,

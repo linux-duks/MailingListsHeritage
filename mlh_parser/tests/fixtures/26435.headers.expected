@@ -9,14 +9,14 @@ received: from lindbergh.monkeyblade.net ([23.128.96.19]:48410 "EHLO lindbergh.m
 received: from smtp-190b.mail.infomaniak.ch (smtp-190b.mail.infomaniak.ch [IPv6:2001:1600:3:17::190b]) by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DC97C0613D9; Tue, 16 Mar 2021 13:43:12 -0700 (PDT)
 received: from smtp-3-0001.mail.infomaniak.ch (unknown [10.4.36.108]) by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4F0QGl5PYBzMqKyv; Tue, 16 Mar 2021 21:43:11 +0100 (CET)
 received: from localhost (unknown [23.97.221.149]) by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4F0QGl2Hwszlh8TC; Tue, 16 Mar 2021 21:43:11 +0100 (CET)
-to: James Morris <jmorris@namei.org>, Jann Horn <jannh@google.com>, "Serge E . Hallyn" <serge@hallyn.com>
-cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>, Al Viro <viro@zeniv.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Andy Lutomirski <luto@amacapital.net>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, Arnd Bergmann <arnd@arndb.de>, Casey Schaufler <casey@schaufler-ca.com>, David Howells <dhowells@redhat.com>, Jeff Dike <jdike@addtoit.com>, Jonathan Corbet <corbet@lwn.net>, Kees Cook <keescook@chromium.org>, Michael Kerrisk <mtk.manpages@gmail.com>, Richard Weinberger <richard@nod.at>, Shuah Khan <shuah@kernel.org>, Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>, kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org, linux-arch@vger.kernel.org, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-security-module@vger.kernel.org, x86@kernel.org, =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@linux.microsoft.com>
+to: Geordi La Forge <geordi.laforge@starfleet.local>, Data Soong <data.soong@starfleet.local>, "Serge E . Hallyn" <serge@hallyn.com>
+cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <sartha.vel@coruscant.senate>, Brunt Ferengi <brunt.ferengi@starfleet.local>, Zek Ferengi <zek.ferengi@starfleet.local>, Danara Pel <danara.pel@starfleet.local>, Dukat Cardassian <dukat.cardassian@starfleet.local>, Vic Fontaine <vic.fontaine@starfleet.local>, Weyoun Vorta <weyoun.vorta@starfleet.local>, Kasidy Yates <kasidy.yates@starfleet.local>, Sarek Vulcan <sarek.vulcan@starfleet.local>, Martok Klingon <martok.klingon@starfleet.local>, Deanna Troi <deanna.troi@starfleet.local>, Setsuko Yokokawa <setsuko.yokokawa@ghibli.local>, Amanda Grayson <amanda.grayson@starfleet.local>, Shuah Khan <louie.pirate@ghibli.local>, Gowron Klingon <gowron.klingon@starfleet.local>, kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org, linux-arch@vger.kernel.org, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-security-module@vger.kernel.org, x86@kernel.org, =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@linux.microsoft.com>
 subject: [PATCH v30 11/12] samples/landlock: Add a sandbox manager example
 date: Tue, 16 Mar 2021 21:42:51 +0100
-message-id: <20210316204252.427806-12-mic@digikod.net>
+message-id: <20210316204252.427806-12-jadzia.dax@starfleet.local>
 x-mailer: git-send-email 2.30.2
-in-reply-to: <20210316204252.427806-1-mic@digikod.net>
-references: <20210316204252.427806-1-mic@digikod.net>
+in-reply-to: <20210316204252.427806-1-jadzia.dax@starfleet.local>
+references: <20210316204252.427806-1-jadzia.dax@starfleet.local>
 mime-version: 1.0
 content-type: text/plain; charset=UTF-8
 content-transfer-encoding: 8bit
@@ -25,4 +25,4 @@ list-id: <linux-security-module.vger.kernel.org>
 xref: nntp.lore.kernel.org org.kernel.vger.linux-security-module:26435 com.openwall.lists.kernel-hardening:20966 org.kernel.vger.linux-api:47711 org.kernel.vger.linux-arch:112903 org.kernel.vger.linux-doc:40769 org.kernel.vger.linux-fsdevel:202607 org.kernel.vger.linux-kernel:3911491 org.kernel.vger.linux-kselftest:29824
 newsgroups: org.kernel.vger.linux-security-module,com.openwall.lists.kernel-hardening,org.kernel.vger.linux-api,org.kernel.vger.linux-arch,org.kernel.vger.linux-doc,org.kernel.vger.linux-fsdevel,org.kernel.vger.linux-kernel,org.kernel.vger.linux-kselftest
 path: nntp.lore.kernel.org!not-for-mail
-from: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+from: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <sartha.vel@coruscant.senate>

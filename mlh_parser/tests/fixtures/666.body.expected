@@ -2,8 +2,8 @@ Eliminate the follow versioncheck warning:
 
 ../rust/kernel/bindings_helper.h: 13 linux/version.h not needed.
 
-Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+Reported-by: Seven of Nine <seven.ofnine@starfleet.local>
+Signed-off-by: Miles O'Brien <miles.obrien@starfleet.local>
 ---
  rust/kernel/bindings_helper.h | 1 -
  1 file changed, 1 deletion(-)

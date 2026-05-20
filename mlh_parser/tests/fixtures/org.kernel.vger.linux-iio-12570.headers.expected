@@ -3,9 +3,9 @@ received: from mga09.intel.com ([134.134.136.24]:35229 "EHLO mga09.intel.com" rh
 message-id: <53504417.9070504@linux.intel.com>
 date: Thu, 17 Apr 2014 14:13:59 -0700
 mime-version: 1.0
-cc: jianlong <jianlong.gao@cn.bosch.com>, jic23@kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, ji.chen@cn.bosch.com, yunfei.ma2@cn.bosch.com
+cc: Rom Ferengi <rom.ferengi@starfleet.local>, totoro.forest@ghibli.local, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, leeta.bajoran@starfleet.local, ziyal.halfbreed@starfleet.local
 subject: iio: add Bosch BMG160 gyroscope sensor driver
-references: <1379914517-2491-1-git-send-email-jianlong.gao@cn.bosch.com> <1379960878.3575.43.camel@joe-AO722>
+references: <1379914517-2491-1-git-send-email-rom.ferengi@starfleet.local> <1379960878.3575.43.camel@joe-AO722>
 in-reply-to: <1379960878.3575.43.camel@joe-AO722>
 content-type: text/plain; charset=ISO-8859-1; format=flowed
 to: no To-header on input
@@ -14,4 +14,4 @@ list-id: linux-iio@vger.kernel.org
 xref: nntp.lore.kernel.org org.kernel.vger.linux-iio:12570 org.kernel.vger.linux-kernel:1764324
 newsgroups: org.kernel.vger.linux-iio,org.kernel.vger.linux-kernel
 path: nntp.lore.kernel.org!not-for-mail
-from: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+from: Katherine Pulaski <katherine.pulaski@starfleet.local>

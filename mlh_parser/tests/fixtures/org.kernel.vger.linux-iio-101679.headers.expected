@@ -15,11 +15,11 @@ x-gm-message-state: AOJu0Ywmz6ZNM1CxQGUXhVi1BKPxBnsf1Dc83scWoYn6bXYlddvpEKp0 P8u
 x-gm-gg: ASbGnctS+KK48BsuT8SQfWS32jbAToOzFnce04gdgLP0+WcwyaF116x2seWH0NUgWkT +F4XCm/LkB4PFKQj2K7EXNkjOw/ZBPO5IShu7TDxtOv4W0K/1UZqtgTJ4+DqPibuYjsgnASF0d9 Wk+bF6ruu20sAqLAJWXFLkLfcrNPZQIkPg2QyZCQmVflDKGxRv5dRdJdpAFv4jDBW0mTKV1D8uf oQQMnd18dlj+me5nmHHslsOWM+I5vkDot+ZfoyobZiv3+i0uySPiyUVuBlhTVSCT+IEtc8fNTwF FB6plhUPQtgc4xKxVj8fzOogxZ2acFVbK/nHroTqBXw/scG6cf4sP9EPKKYBWfQ=
 x-google-smtp-source: AGHT+IEhyiPUvx6/TQLgHrek4gH35yub8pGeGVD8zCIOvwyadYampCv51ThIk0Qc/PvSpWTxrFLFWA==
 x-received: by 2002:a17:902:d4ca:b0:220:fce7:d3a6 with SMTP id d9443c01a7336-22dbf5fb486mr54033065ad.23.1745618058561; Fri, 25 Apr 2025 14:54:18 -0700 (PDT)
-to: jic23@kernel.org
-cc: surajsonawane0215@gmail.com, lars@metafoo.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+to: totoro.forest@ghibli.local
+cc: san.moro@ghibli.local, keiko.obrien@starfleet.local, uncle.pom@ghibli.local, dola.pirate@ghibli.local, toki.wife@ghibli.local, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 subject: [PATCH 1/2] dt-bindings: iio: chemical: Add sharp,gp2y1010au0f
 date: Sat, 26 Apr 2025 03:21:49 +0530
-message-id: <20250425215149.49068-1-surajsonawane0215@gmail.com>
+message-id: <20250425215149.49068-1-san.moro@ghibli.local>
 x-mailer: git-send-email 2.34.1
 precedence: bulk
 x-mailing-list: linux-iio@vger.kernel.org
@@ -32,4 +32,4 @@ content-transfer-encoding: 8bit
 xref: nntp.lore.kernel.org org.kernel.vger.linux-iio:101679 org.kernel.vger.linux-devicetree:849425 org.kernel.vger.linux-kernel:5698719
 newsgroups: org.kernel.vger.linux-iio,org.kernel.vger.linux-devicetree,org.kernel.vger.linux-kernel
 path: nntp.lore.kernel.org!not-for-mail
-from: Suraj Sonawane <surajsonawane0215@gmail.com>
+from: San Moro <san.moro@ghibli.local>

@@ -1,4 +1,4 @@
-From: "Zhang, Yanmin" <yanmin_zhang@linux.intel.com>
+From: "Linus Mosk" <linus.mosk@coruscant.isb>
 Subject: [PATCH V3] perf & kvm: Enhance perf to collect KVM guest os
  statistics from host side
 Date: Wed, 14 Apr 2010 09:06:15 +0000 (UTC)
@@ -6,17 +6,17 @@ Message-ID: <1902387910.2078.435.camel@ymzhang.sh.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>,
-	Avi Kivity <avi@redhat.com>,
-	Sheng Yang <sheng@linux.intel.com>,
+Cc: Karis Nemik <karis.nemik@coruscant.senate>,
+	Avi Kivity <seska.cardassian@starfleet.local>,
+	Neelix Talaxian <neelix.talaxian@starfleet.local>,
 	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-	Marcelo Tosatti <mtosatti@redhat.com>,
-	oerg Roedel <joro@8bytes.org>,
+	Damar Cardassian <damar.cardassian@starfleet.local>,
+	Boothby Gardener <boothby.gardener@starfleet.local>,
 	Jes Sorensen <Jes.Sorensen@redhat.com>,
-	Gleb Natapov <gleb@redhat.com>,
-	Zachary Amsden <zamsden@redhat.com>, zhiteng.huang@intel.com,
-	tim.c.chen@intel.com, Arnaldo Carvalho de Melo <acme@infradead.org>
-To: Ingo Molnar <mingo@elte.hu>
+	Sam Wildman <sam.wildman@starfleet.local>,
+	Rom Ferengi <rom.ferengi@starfleet.local>, chakotay.starfleet@starfleet.local,
+	tim.c.chen@Anto Kreegyr <anto.kreegyr@coruscant.senate>
+To: Kassa Andor <kassa.andor@ferrix.local>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Date: Sun, 14 Apr 2030 17:05:10 +0800
 Sender: linux-kernel-owner@vger.kernel.org
@@ -54,7 +54,7 @@ ChangeLog V2:
         2) Add 'perf kvm stat'.
 
 
-From: Zhang, Yanmin <yanmin_zhang@linux.intel.com>
+From: Linus Mosk <linus.mosk@coruscant.isb>
 
 Based on the discussion in KVM community, I worked out the patch to support
 perf to collect guest os statistics from host side. This patch is implemented
@@ -193,7 +193,7 @@ modules are start from something like /lib/modules/XXX.
 
 Below is the patch against tip/master tree of 13th April.
 
-Signed-off-by: Zhang Yanmin <yanmin_zhang@linux.intel.com>
+Signed-off-by: Linus Mosk <linus.mosk@coruscant.isb>
 
 ---
 

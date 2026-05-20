@@ -15,12 +15,12 @@ Direct leak of 48 byte(s) in 1 object(s) allocated from:
     #11 0x558ba9b1c27f in handle_hmp_command /mnt/sdb/qemu-new/qemu/monitor/hmp.c:1082
     #12 0x558ba96c1b02 in qmp_human_monitor_command /mnt/sdb/qemu-new/qemu/monitor/misc.c:142
 
-Reported-by: Euler Robot <euler.robot@huawei.com>
-Signed-off-by: Pan Nengyuan <pannengyuan@huawei.com>
+Reported-by: William Riker <william.riker@starfleet.local>
+Signed-off-by: Charles Tucker <charles.tucker@starfleet.local>
 ---
-Cc: Richard Henderson <rth@twiddle.net>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Cornelia Huck <cohuck@redhat.com>
+Cc: Roga Danar <roga.danar@starfleet.local>
+Cc: Molly O'Brien <molly.obrien@starfleet.local>
+Cc: Keiko O'Brien <keiko.obrien@starfleet.local>
 Cc: qemu-s390x@nongnu.org
 ---
 v2->v1:

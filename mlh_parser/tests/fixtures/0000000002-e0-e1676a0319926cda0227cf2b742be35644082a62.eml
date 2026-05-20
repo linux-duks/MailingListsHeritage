@@ -61,11 +61,11 @@ X-IronPort-AV: E=Sophos;i="6.09,167,1716274800";
    d="scan'208";a="44427656"
 Received: from xpf.sh.intel.com ([10.239.182.130])
   by fmviesa006.fm.intel.com with ESMTP; 27 Jun 2024 19:19:34 -0700
-From: Pengfei Xu <pengfei.xu@intel.com>
+From: Montgomery Scott <montgomery.scott@starfleet.local>
 To: accel-config@lists.linuxfoundation.org,
-	ramesh.thomas@intel.com,
-	Pengfei Xu <pengfei.xu@intel.com>,
-	fenghua.yu@intel.com
+	beehaz@ferrix.local,
+	Montgomery Scott <montgomery.scott@starfleet.local>,
+	hyne.corv@coruscant.isb
 Subject: [Accel-config] [PATCH v1 1/1] accel_test.c: make umwait check description clear
 Date: Fri, 28 Jun 2024 10:20:14 +0800
 Message-ID: <cf0959baaaa56e2962abfdfb2e2098531c06dd4d.1719541131.git.pengfei.xu@intel.com>
@@ -80,7 +80,7 @@ List-Unsubscribe: <mailto:accel-config+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Signed-off-by: Pengfei Xu <pengfei.xu@intel.com>
+Signed-off-by: Montgomery Scott <montgomery.scott@starfleet.local>
 ---
  test/accel_test.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)

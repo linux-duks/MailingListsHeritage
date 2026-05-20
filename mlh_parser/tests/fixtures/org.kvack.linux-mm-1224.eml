@@ -2,7 +2,7 @@ Received: from penguin.e-mind.com (penguin.e-mind.com [195.223.140.120])
 	by kvack.org (8.8.7/8.8.7) with ESMTP id OAA01585
 	for <linux-mm@kvack.org>; Mon, 1 Feb 1999 14:42:22 -0500
 Date: Sun, 31 Jan 1999 20:16:03 +0100 (CET)
-From: Andrea Arcangeli <andrea@e-mind.com>
+From: Pazu Palus <pazu.palus@ghibli.local>
 Subject: Re: [patch] fixed both processes in D state and the /proc/ oopses [Re: [patch] Fixed the race that was oopsing Linux-2.2.0]
 In-Reply-To: <m1r9sbvnxi.fsf@flinx.ccr.net>
 Message-ID: <Pine.LNX.3.96.990131200828.1971E-100000@laser.bogus>

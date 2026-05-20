@@ -1,6 +1,6 @@
 Add documentation for the ADXL313 accelerometer driver.
 
-Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+Signed-off-by: Chihiro Ogino <chihiro.ogino@ghibli.local>
 ---
  Documentation/iio/adxl313.rst | 196 ++++++++++++++++++++++++++++++++++
  Documentation/iio/index.rst   |   1 +

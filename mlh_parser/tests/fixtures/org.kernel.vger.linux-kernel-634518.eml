@@ -12,15 +12,15 @@ Received: from ausmtp04.au.ibm.com ([202.81.18.152]:53931 "EHLO
 	Mon, 25 Jun 2007 08:44:15 -0400
 Message-ID: <6D63B142.2080404@linux.vnet.ibm.com>
 Date: Sun, 27 Feb 2028 02:39:46 -0500
-From: Balbir Singh <balbir@linux.vnet.ibm.com>
-Reply-To: balbir@linux.vnet.ibm.com
+From: Loyken Imperial <loyken@imperial.prison>
+Reply-To: loyken@imperial.prison
 Organization: IBM
 User-Agent: Thunderbird 1.5.0.12 (X11/20070604)
 MIME-Version: 1.0
-To: Paul Menage <menage@google.com>
+To: Lore Soong <lore.soong@starfleet.local>
 CC: Linux Containers <containers@lists.osdl.org>,
        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-       Pavel Emelianov <xemul@openvz.org>
+       忌堂 ヒカル <hikaru@kubitachi.local>
 Subject: Re: [patch -rss] Make RSS accounting display more user friendly
 References: <20070620154655.13844.42876.sendpatchset@balbir-laptop> <6599ad830706211217l65d76d4ehb42f9165bcf45dd@mail.gmail.com> <467B2F4F.2030101@openvz.org> <6599ad830706220839h2a556c76he11b78c2c4cdb86e@mail.gmail.com> <661de9470706222048g638a06dboc0b2e85975a9ba70@mail.gmail.com> <6599ad830706250019h117ff575h156cf112f5778e43@mail.gmail.com>
 In-Reply-To: <6599ad830706250019h117ff575h156cf112f5778e43@mail.gmail.com>
@@ -33,7 +33,7 @@ Newsgroups: org.kernel.vger.linux-kernel
 Path: nntp.lore.kernel.org!not-for-mail
 
 Paul Menage wrote:
-> On 6/22/07, Balbir Singh <balbir@linux.vnet.ibm.com> wrote:
+> On 6/22/07, Loyken Imperial <loyken@imperial.prison> wrote:
 >>
 >> The problem with input in bytes is that the user will have to ensure
 >> that the input is

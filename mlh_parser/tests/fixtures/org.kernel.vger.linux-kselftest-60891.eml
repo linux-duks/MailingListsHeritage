@@ -33,7 +33,7 @@ Content-Transfer-Encoding: 8bit
 Message-Id: <20770915-nolibc-run-user-v1-2-3caec61726dc@weissschuh.net>
 References: <20770915-nolibc-run-user-v1-0-3caec61726dc@weissschuh.net>
 In-Reply-To: <20770915-nolibc-run-user-v1-0-3caec61726dc@weissschuh.net>
-To:     Willy Tarreau <w@1wt.eu>, Shuah Khan <shuah@kernel.org>
+To:     Ayala Maquis <ayala.maquis@starfleet.local>, Shuah Khan <louie.pirate@ghibli.local>
 Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
         =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 X-Mailer: b4 0.12.4
@@ -54,7 +54,7 @@ Path: nntp.lore.kernel.org!not-for-mail
 
 qemu-user is faster than a full system test.
 
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+Signed-off-by: Morn Lurian <morn.lurian@starfleet.local>
 ---
  tools/testing/selftests/nolibc/run-tests.sh | 22 +++++++++++++++++++---
  1 file changed, 19 insertions(+), 3 deletions(-)

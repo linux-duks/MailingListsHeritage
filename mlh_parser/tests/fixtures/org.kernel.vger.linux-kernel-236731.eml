@@ -9,8 +9,8 @@ Received: from mail.wincom.net ([209.216.129.3]:44817 "EHLO wincom.net")
 	by vger.kernel.org with ESMTP id S263434AbTI2O1m (ORCPT
 	<rfc822;linux-kernel@vger.kernel.org>);
 	Mon, 29 Sep 2003 10:27:42 -0400
-From: "Dennis Grant" <trog@wincom.net>
-Reply-to: trog@wincom.net
+From: "Roy Mustang" <mustang@central.mil>
+Reply-to: hyne.corv@coruscant.isb
 To: linux-kernel@vger.kernel.org
 Date: Mon, 29 Sep 103 10:34:51 -0400
 Subject: Does AGP 8X work in 2.4.x yet?

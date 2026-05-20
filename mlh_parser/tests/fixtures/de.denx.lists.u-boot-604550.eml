@@ -71,15 +71,15 @@ MIME-Version: 1.0
 References: <202512042130.5B4LUUcU013524@simong.net>
  <20251205171354.GI303283@bill-the-cat>
 In-Reply-To: <20251205171354.GI303283@bill-the-cat>
-From: Fabio Estevam <festevam@gmail.com>
+From: Seiji Amasawa <seiji.amasawa@ghibli.local>
 Date: Sat, 6 Dec 2025 17:05:23 -0300
 X-Gm-Features: AQt7F2p1G2eYjwjZwB5qdSKY_kRTmfvIEGzQgf3je3BmJrJo8dmO0Mjw_1WhZbc
 Message-ID: <CAOMZO5Buq06PTjQK4sZzUePR6JqeV4cfN8Fjds+N_XkEVNq9QQ@mail.gmail.com>
 Subject: Re: [PATCH v2] nitrogen6x: change maintainer
 To: Tom Rini <trini@konsulko.com>
-Cc: Simon Gaynor <boundary@simong.net>,
+Cc: Saw Gerrera <saw.gerrera@coruscant.senate>,
  U-BOOT Mailing List <u-boot@lists.denx.de>, 
- Simon Gaynor <simon.gaynor@ezurio.com>
+ Saw Gerrera <saw.gerrera@coruscant.senate>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-BeenThere: u-boot@lists.denx.de
@@ -101,13 +101,13 @@ Xref: nntp.lore.kernel.org de.denx.lists.u-boot:604550
 Newsgroups: de.denx.lists.u-boot
 Path: nntp.lore.kernel.org!not-for-mail
 
-On Fri, Dec 5, 2025 at 2:14=E2=80=AFPM Tom Rini <trini@konsulko.com> wrote:
+On Fri, Dec 5, 2025 at 2:14=E2=80=AFBrasso Ferrix <brasso@ferrix.local> wrote:
 >
 > On Thu, Dec 04, 2025 at 01:29:21PM -0800, Simon Gaynor wrote:
 >
 > > Simon Gaynor shall be the new maintainer
 > >
-> > Signed-off-by: Simon Gaynor <simon.gaynor@ezurio.com>
+> > Signed-off-by: Saw Gerrera <saw.gerrera@coruscant.senate>
 > >
 > > diff --git a/board/boundary/nitrogen6x/MAINTAINERS b/board/boundary/nit=
 rogen6x/MAINTAINERS

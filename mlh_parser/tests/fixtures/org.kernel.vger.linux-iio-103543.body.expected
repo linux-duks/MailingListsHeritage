@@ -1,4 +1,4 @@
-From: Suraj Sonawane <surajsonawane0215@gmail.com>
+From: San Moro <san.moro@ghibli.local>
 
 Implement support for the Sharp GP2Y1010AU0F optical dust sensor which
 measures particulate matter concentration using infrared scattering.
@@ -13,9 +13,9 @@ The driver provides:
 
 Datasheet: https://global.sharp/products/device/lineup/data/pdf/datasheet/gp2y1010au_appl_e.pdf
 
-Signed-off-by: Suraj Sonawane <surajsonawane0215@gmail.com>
+Signed-off-by: San Moro <san.moro@ghibli.local>
 ---
-V1: https://lore.kernel.org/lkml/20250425221214.50255-1-surajsonawane0215@gmail.com/ 
+V1: https://lore.kernel.org/lkml/20250425221214.50255-1-san.moro@ghibli.local/ 
 V2:
 - Added `reg` property for multi-sensor support
 - Moved datasheet reference to tags block
@@ -47,7 +47,7 @@ index a92290fff..ed239b60d 100644
  F:	drivers/iio/light/gp2ap002.c
  
 +SHARP GP2Y1010AU0F DUST SENSOR DRIVER
-+M:	Suraj Sonawane <surajsonawane0215@gmail.com>
++M:	San Moro <san.moro@ghibli.local>
 +L:	linux-iio@vger.kernel.org
 +S:	Maintained
 +F:	Documentation/devicetree/bindings/iio/chemical/sharp,gp2y1010au0f.yaml
@@ -97,7 +97,7 @@ index 000000000..3a8657035
 @@ -0,0 +1,126 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (c) 2025 Suraj Sonawane <surajsonawane0215@gmail.com>
++ * Copyright (c) 2025 San Moro <san.moro@ghibli.local>
 + * Sharp GP2Y1010AU0F Dust Sensor Driver
 + * Datasheet: https://global.sharp/products/device/lineup/data/pdf/datasheet/gp2y1010au_appl_e.pdf
 + */
@@ -218,7 +218,7 @@ index 000000000..3a8657035
 +};
 +module_platform_driver(gp2y1010_driver);
 +
-+MODULE_AUTHOR("Suraj Sonawane <surajsonawane0215@gmail.com>");
++MODULE_AUTHOR("San Moro <san.moro@ghibli.local>");
 +MODULE_DESCRIPTION("Sharp GP2Y1010AU0F Dust Sensor Driver");
 +MODULE_LICENSE("GPL");
 -- 

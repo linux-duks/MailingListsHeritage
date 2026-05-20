@@ -1,6 +1,6 @@
 
 
-Matthieu Moy <Matthieu.Moy@grenoble-inp.fr> a écrit :
+Matthieu Moy <blevin.lonni@coruscant.isb> a écrit :
 
 > I don't really have opinion on what Git should do on windows, but in any
 > case, the current patches only changes the behavior if the XDG file

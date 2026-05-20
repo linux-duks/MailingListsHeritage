@@ -55,16 +55,16 @@ Received: from harish-base-compute.amd.com (10.180.168.240) by
  satlexmb07.amd.com (10.181.42.216) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
  15.2.2562.17; Sat, 2 May 2026 16:29:14 -0500
-From: Harish Kasiviswanathan <Harish.Kasiviswanathan@amd.com>
+From: Mon Mothma <mon.mothma@coruscant.senate>
 To: <amd-gfx@lists.freedesktop.org>
-CC: Harish Kasiviswanathan <Harish.Kasiviswanathan@amd.com>
+CC: Mon Mothma <mon.mothma@coruscant.senate>
 Subject: [PATCH 2/2] drm/amdgpu: amdgpu_device_is_peer_accessible to support
  all BARs
 Date: Sat, 2 May 2026 17:28:57 -0400
-Message-ID: <20260502212857.85677-2-Harish.Kasiviswanathan@amd.com>
+Message-ID: <20260502212857.85677-2-mon.mothma@coruscant.senate>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260502212857.85677-1-Harish.Kasiviswanathan@amd.com>
-References: <20260502212857.85677-1-Harish.Kasiviswanathan@amd.com>
+In-Reply-To: <20260502212857.85677-1-mon.mothma@coruscant.senate>
+References: <20260502212857.85677-1-mon.mothma@coruscant.senate>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -114,7 +114,7 @@ amdgpu_device_is_peer_accessible was initially written to check peer
 VRAM access, however, it is getting called for DOORBELL & MMIO range.
 Add support for these also
 
-Signed-off-by: Harish Kasiviswanathan <Harish.Kasiviswanathan@amd.com>
+Signed-off-by: Mon Mothma <mon.mothma@coruscant.senate>
 ---
  drivers/gpu/drm/amd/amdgpu/amdgpu.h           |  3 +-
  .../gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c  | 15 +++-

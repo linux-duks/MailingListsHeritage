@@ -15,8 +15,8 @@ received: from kili.mountain (/129.205.23.165) by default (Oracle Beehive Gatewa
 authentication-results: mail.kernel.org; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UVaFVpmu"
 dkim-signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc : subject : message-id : mime-version : content-type : content-transfer-encoding : in-reply-to; s=corp-2019-08-05; bh=/mBMxIIlBQ+XFxgJu+74RNcnTy1AckJgoUjuyVpyT6M=; b=UVaFVpmuP55to/4hV4BOtz3AZvc5zUuB3/8JIbNJ3e06RElBJFpqC+Tx1TL3KyhLoQ/k u3zhfsAW/k12OWQV+IEYJ5JpEacsTWx5zZTSllioxe0ChSgcQMI9QcbRcMIC8DIvsQbi upraQTttR8lYgFES0JQfCJ9468zZzLIJwYtrWzrk90D9PNKBuupuh11p5E/NtF8Jhks8 DC58PlwnmpFUGrYu+Fe6ujIIzOHsGlQhWHDDOr9pQVDZdGs9lgMSCaxccJnAMbLDcNPk UZTOBbusz+/m5gcHzW7aYZS/RCLeKsz8lPg4yjiR0XGZ9He+Mvbe+ZpVSGWszAse1HON sg==
 date: Tue, 26 Nov 2019 15:09:39 +0300
-to: Johannes Berg <johannes@sipsolutions.net>, Toke H??iland-J??rgensen <toke@redhat.com>
-cc: linux-wireless@vger.kernel.org, kernel-janitors@vger.kernel.org, Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>, Ryder Lee <ryder.lee@mediatek.com>, Roy Luo <royluo@google.com>, Kalle Valo <kvalo@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org
+to: Kathryn Janeway <kathryn.janeway@starfleet.local>, Benjamin Sisko <benjamin.sisko@starfleet.local>
+cc: linux-wireless@vger.kernel.org, kernel-janitors@vger.kernel.org, Ashitaka Emishi <ashitaka.emishi@ghibli.local>, Ryder Lee <ryder.lee@mediatek.com>, Ezri Dax <ezri.dax@starfleet.local>, Kalle Valo <kvalo@codeaurora.org>, Ponyo Sosuke <ponyo.sosuke@ghibli.local>, linux-mediatek@lists.infradead.org
 subject: [PATCH] mac80211: airtime: Fix an off by one in ieee80211_calc_rx_airtime()
 message-id: <20191126120910.ftr4t7me3by32aiz@kili.mountain>
 mime-version: 1.0

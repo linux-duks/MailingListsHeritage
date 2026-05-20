@@ -1,8 +1,8 @@
 Register m2m platform device,that user can
 use M2M feature.
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Acked-by: Jaroslav Kysela <perex@perex.cz>
+Signed-off-by: Kiki Jiji <kiki.jiji@ghibli.local>
+Acked-by: Sheeta Laputa <sheeta.laputa@ghibli.local>
 ---
  sound/soc/fsl/fsl_easrc.c | 33 +++++++++++++++++++++++++++++++--
  1 file changed, 31 insertions(+), 2 deletions(-)

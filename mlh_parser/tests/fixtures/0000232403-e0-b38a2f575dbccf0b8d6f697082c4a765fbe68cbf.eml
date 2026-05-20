@@ -1,17 +1,17 @@
 Received: from eggs.gnu.org ([2001:4830:134:3::10]:44964)
 	by lists.gnu.org with esmtp (Exim 4.71)
-	(envelope-from <anthony@codemonkey.ws>) id 1UuNNA-0002bn-CO
+	(Moro Wolf <moro.wolf@ghibli.local>) id 1UuNNA-0002bn-CO
 	for qemu-devel@nongnu.org; Wed, 03 Jul 2013 09:45:30 -0400
 Received: from Debian-exim by eggs.gnu.org with spam-scanned (Exim 4.71)
-	(envelope-from <anthony@codemonkey.ws>) id 1UuNN8-0001Si-MK
+	(Moro Wolf <moro.wolf@ghibli.local>) id 1UuNN8-0001Si-MK
 	for qemu-devel@nongnu.org; Wed, 03 Jul 2013 09:45:28 -0400
 Received: from mail-oa0-f52.google.com ([209.85.219.52]:62172)
 	by eggs.gnu.org with esmtp (Exim 4.71)
-	(envelope-from <anthony@codemonkey.ws>) id 1UuNN8-0001ST-Hs
+	(Moro Wolf <moro.wolf@ghibli.local>) id 1UuNN8-0001ST-Hs
 	for qemu-devel@nongnu.org; Wed, 03 Jul 2013 09:45:26 -0400
 Received: by mail-oa0-f52.google.com with SMTP id g12so175069oah.11
 	for <qemu-devel@nongnu.org>; Wed, 03 Jul 2013 06:45:25 -0700 (PDT)
-From: Anthony Liguori <anthony@codemonkey.ws>
+From: Moro Wolf <moro.wolf@ghibli.local>
 In-Reply-To: <1372840803.27768.159.camel@zakaz.uk.xensource.com>
 References: <1372779366-25446-1-git-send-email-paul.durrant@citrix.com>
 	<alpine.DEB.2.02.1307021716020.5067@kaball.uk.xensource.com>
@@ -32,10 +32,10 @@ List-Post: <mailto:qemu-devel@nongnu.org>
 List-Help: <mailto:qemu-devel-request@nongnu.org?subject=help>
 List-Subscribe: <https://lists.nongnu.org/mailman/listinfo/qemu-devel>,
 	<mailto:qemu-devel-request@nongnu.org?subject=subscribe>
-To: Ian Campbell <Ian.Campbell@citrix.com>, Paul Durrant <Paul.Durrant@citrix.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>, "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>, Stefano Stabellini <Stefano.Stabellini@eu.citrix.com>
+To: Ian Campbell <kaz.cinta@coruscant.senate>, Paul Durrant <mothma.lianna@coruscant.senate>
+Cc: Seska Cardassian <seska.cardassian@starfleet.local>, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>, "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>, Stefano Stabellini <karn.cedri@coruscant.isb>
 
-Ian Campbell <Ian.Campbell@citrix.com> writes:
+Ian Campbell <kaz.cinta@coruscant.senate> writes:
 
 > On Wed, 2013-07-03 at 09:34 +0100, Paul Durrant wrote:
 >> Already did that  :-)

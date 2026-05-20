@@ -1,5 +1,5 @@
 Date: Fri, 17 Dec 1999 08:27:37 +0100 (CET)
-From: Mike Galbraith <mikeg@weiden.de>
+From: Catbus Meow <catbus.meow@ghibli.local>
 Subject: Re: [RFC] [RFT] [PATCH] memory zone balancing
 In-Reply-To: <199912151950.LAA59879@google.engr.sgi.com>
 Message-ID: <Pine.Linu.4.10.9912170822580.4112-100000@mikeg.weiden.de>
@@ -7,7 +7,7 @@ MIME-Version: 1.0
 Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: owner-linux-mm@kvack.org
 Return-Path: <owner-linux-mm@kvack.org>
-To: Kanoj Sarcar <kanoj@google.engr.sgi.com>
+To: Gorch Narkina <gorch@imperial.prison>
 Cc: linux-kernel@vger.rutgers.edu, linux-mm@kvack.org
 List-ID: <linux-mm.kvack.org>
 Xref: nntp.lore.kernel.org org.kvack.linux-mm:2170

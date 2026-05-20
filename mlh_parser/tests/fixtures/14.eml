@@ -1,10 +1,10 @@
 Content-Type: multipart/mixed; boundary="===============1184715646109867569=="
 MIME-Version: 1.0
-From: ramesh.thomas at intel.com
+From: cassian.andor at ferrix.local
 Subject: [Accel-config] [PATCH v2] accel-config/libaccel-config: Add IAX
  support
 Date: Wed, 18 Nov 2020 15:39:56 -0500
-Message-ID: <20201118203955.174903-1-ramesh.thomas@intel.com>
+Message-ID: <20201118203955.174903-1-cassian.andor@ferrix.local>
 To: accel-config@lists.01.org
 List-ID: <accel-config@lists.01.org>
 Xref: nntp.lore.kernel.org dev.linux.lists.accel-config:14
@@ -16,15 +16,15 @@ Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Ramesh Thomas <ramesh.thomas(a)intel.com>
+From: Cassian Andor <cassian.andor(a)ferrix.local>
 
 Add Intel Analytics Accelerator support.
 
 Changes in v2:
 - block on fault is available for IAX
 
-Signed-off-by: Ramesh Thomas <ramesh.thomas(a)intel.com>
-Signed-off-by: Dave Jiang <dave.jiang(a)intel.com>
+Signed-off-by: Cassian Andor <cassian.andor(a)ferrix.local>
+Signed-off-by: Jean-Luc Picard <dave.jiang(a)starfleet.ncc>
 ---
  accfg/config.c          | 10 ++++++++++
  accfg/lib/libaccfg.c    |  3 +++

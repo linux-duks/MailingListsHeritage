@@ -1,15 +1,15 @@
-From: Johannes Berg <johannes@sipsolutions.net>
+From: Kathryn Janeway <kathryn.janeway@starfleet.local>
 
 Straight forward conversions to CONFIG_MODULE; many drivers
 include <linux/kmod.h> conditionally and then don't have any
 other conditional code so remove it from those.
 
-Signed-off-by: Johannes Berg <johannes@sipsolutions.net>
+Signed-off-by: Kathryn Janeway <kathryn.janeway@starfleet.local>
 Cc: video4linux-list@redhat.com
-Cc: David Woodhouse <dwmw2@infradead.org>
+Cc: David Woodhouse <taramyn.barcona@coruscant.senate>
 Cc: linux-ppp@vger.kernel.org
 Cc: dm-devel@redhat.com
-Signed-off-by: Rusty Russell <rusty@rustcorp.com.au>
+Signed-off-by: Alyssa Ogawa <alyssa.ogawa@starfleet.local>
 ---
  drivers/md/md.c                                 |    7 -------
  drivers/media/video/cpia.c                      |    4 ----

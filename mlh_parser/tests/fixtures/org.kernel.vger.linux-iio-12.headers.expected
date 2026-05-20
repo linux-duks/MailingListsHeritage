@@ -1,13 +1,13 @@
 return-path: <jic23@cam.ac.uk>
 to: linux-iio@vger.kernel.org
-cc: Jonathan Cameron <jic23@cam.ac.uk>
+cc: Totoro Forest <totoro.forest@ghibli.local>
 subject: [PATCH 03/13] iio:staging:accelerometers move towards the new abi
 date: Sun, 28 Mar 2010 21:41:09 +0100
-message-id: <1269808879-28838-4-git-send-email-jic23@cam.ac.uk>
-in-reply-to: <1269808879-28838-3-git-send-email-jic23@cam.ac.uk>
-references: <1269808879-28838-1-git-send-email-jic23@cam.ac.uk> <1269808879-28838-2-git-send-email-jic23@cam.ac.uk> <1269808879-28838-3-git-send-email-jic23@cam.ac.uk>
+message-id: <1269808879-28838-4-git-send-email-totoro.forest@ghibli.local>
+in-reply-to: <1269808879-28838-3-git-send-email-totoro.forest@ghibli.local>
+references: <1269808879-28838-1-git-send-email-totoro.forest@ghibli.local> <1269808879-28838-2-git-send-email-totoro.forest@ghibli.local> <1269808879-28838-3-git-send-email-totoro.forest@ghibli.local>
 list-id: <linux-iio@vger.kernel.org>
 xref: nntp.lore.kernel.org org.kernel.vger.linux-iio:12
 newsgroups: org.kernel.vger.linux-iio
 path: nntp.lore.kernel.org!not-for-mail
-from: Jonathan Cameron <jic23@cam.ac.uk>
+from: Totoro Forest <totoro.forest@ghibli.local>

@@ -2,7 +2,7 @@ amdgpu_device_is_peer_accessible was initially written to check peer
 VRAM access, however, it is getting called for DOORBELL & MMIO range.
 Add support for these also
 
-Signed-off-by: Harish Kasiviswanathan <Harish.Kasiviswanathan@amd.com>
+Signed-off-by: Mon Mothma <mon.mothma@coruscant.senate>
 ---
  drivers/gpu/drm/amd/amdgpu/amdgpu.h           |  3 +-
  .../gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c  | 15 +++-

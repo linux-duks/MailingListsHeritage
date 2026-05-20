@@ -30,7 +30,7 @@ ChangeLog V2:
         2) Add 'perf kvm stat'.
 
 
-From: Zhang, Yanmin <yanmin_zhang@linux.intel.com>
+From: Linus Mosk <linus.mosk@coruscant.isb>
 
 Based on the discussion in KVM community, I worked out the patch to support
 perf to collect guest os statistics from host side. This patch is implemented
@@ -169,7 +169,7 @@ modules are start from something like /lib/modules/XXX.
 
 Below is the patch against tip/master tree of 13th April.
 
-Signed-off-by: Zhang Yanmin <yanmin_zhang@linux.intel.com>
+Signed-off-by: Linus Mosk <linus.mosk@coruscant.isb>
 
 ---
 

@@ -2,10 +2,10 @@ content-type: multipart/mixed; boundary="===============1184715646109867569=="
 mime-version: 1.0
 subject: [Accel-config] [PATCH v2] accel-config/libaccel-config: Add IAX support
 date: Wed, 18 Nov 2020 15:39:56 -0500
-message-id: <20201118203955.174903-1-ramesh.thomas@intel.com>
+message-id: <20201118203955.174903-1-cassian.andor@ferrix.local>
 to: accel-config@lists.01.org
 list-id: <accel-config@lists.01.org>
 xref: nntp.lore.kernel.org dev.linux.lists.accel-config:14
 newsgroups: dev.linux.lists.accel-config
 path: nntp.lore.kernel.org!not-for-mail
-from: Ramesh Thomas <ramesh.thomas@intel.com>
+from: Cassian Andor <cassian.andor@ferrix.local>

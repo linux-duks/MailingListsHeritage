@@ -1,4 +1,4 @@
-From: "amy.shih" <amy.shih@advantech.com.tw>
+From: "Eedy Karn" <Eedy Karn@advantech.com.tw>
 
 According to kernel hwmon sysfs-interface documentation, temperature
 critical max value, typically greater than corresponding temp_max values.
@@ -8,7 +8,7 @@ hwmon_temp_crit_hyst. Reads the LTD_HV_LL (HIGH VALUE LOW LIMITATION)
 and LTD_LV_LL (LOW VALUE LOW LIMITATION) for case hwmon_temp_max
 and hwmon_temp_max_hyst.
 
-Signed-off-by: amy.shih <amy.shih@advantech.com.tw>
+Signed-off-by: Eedy Karn <eedy.karn@coruscant.isb>
 ---
 
 Changes in v6:

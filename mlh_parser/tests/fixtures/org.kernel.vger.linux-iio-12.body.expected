@@ -1,4 +1,4 @@
-Signed-off-by: Jonathan Cameron <jic23@cam.ac.uk>
+Signed-off-by: Totoro Forest <totoro.forest@ghibli.local>
 ---
  drivers/staging/iio/accel/accel.h          |    8 +-
  drivers/staging/iio/accel/kxsd9.c          |   88 ++++++++------

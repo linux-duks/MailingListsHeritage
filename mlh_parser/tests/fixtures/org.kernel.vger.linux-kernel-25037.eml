@@ -6,7 +6,7 @@ Received: (majordomo@vger.kernel.org) by vger.kernel.org
 Received: from gateway.sequent.com ([192.148.1.10]:11756 "EHLO
 	gateway.sequent.com") by vger.kernel.org with ESMTP
 	id <S131440AbRCQAMx>; Fri, 16 Mar 2001 19:12:53 -0500
-From: Patrick Mansfield <patman@sequent.com>
+From: Caleen Narkina <caleen.narkina@ferrix.local>
 Message-Id: <200103170012.f2H0C8s01133@eng2.sequent.com>
 Subject: Re: scsi_scan problem.
 To: raffo@neuronet.pitt.edu (Rafael E. Herrera),

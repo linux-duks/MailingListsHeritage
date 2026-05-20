@@ -14,17 +14,17 @@ ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=unwrap.rs; spf=pass smtp.mailfrom=unwrap.rs; arc=none smtp.client-ip=172.232.15.166
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=unwrap.rs
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unwrap.rs
-From: Cole Leavitt <cole@unwrap.rs>
-To: Ben Greear <greearb@candelatech.com>
-Cc: Johannes Berg <johannes@sipsolutions.net>,
+From: Xanwan Ferrix <xanwan@ferrix.local>
+To: Ben Greear <salman.paak@ferrix.local>
+Cc: Kathryn Janeway <kathryn.janeway@starfleet.local>,
  linux-wireless@vger.kernel.org,
  Miri Korenblit <miriam.rachel.korenblit@intel.com>
 Subject: Re: [PATCH] wifi: iwlwifi: prevent NAPI processing after firmware error
 In-Reply-To: <9edde56d-bfdc-40f6-862c-b69950cc2f25@candelatech.com>
 References: <c6f886d4-b9ed-48a6-9723-a738af055b64@candelatech.com>
- <20260214181018.6091-1-cole@unwrap.rs>
+ <20260214181018.6091-1-xanwan@ferrix.local>
  <5be8a502-d53a-4cce-821f-202368c44f6d@candelatech.com>
- <20260214183306.10188-1-cole@unwrap.rs>
+ <20260214183306.10188-1-xanwan@ferrix.local>
  <9edde56d-bfdc-40f6-862c-b69950cc2f25@candelatech.com>
 Precedence: bulk
 X-Mailing-List: linux-wireless@vger.kernel.org

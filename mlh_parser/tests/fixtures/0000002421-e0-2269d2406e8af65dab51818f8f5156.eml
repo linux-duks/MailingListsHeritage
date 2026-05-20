@@ -67,26 +67,26 @@ Received: from AM0PR04MB7044.eurprd04.prod.outlook.com
  ([fe80::7be0:296:768c:e891]) by AM0PR04MB7044.eurprd04.prod.outlook.com
  ([fe80::7be0:296:768c:e891%6]) with mapi id 15.20.8137.027; Tue, 12 Nov 2024
  10:34:57 +0000
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
+From: Kiki Jiji <kiki.jiji@ghibli.local>
 To: vkoul@kernel.org,
-	perex@perex.cz,
-	tiwai@suse.com,
+	zek.ferengi@starfleet.local,
+	kasidy.yates@starfleet.local,
 	alsa-devel@alsa-project.org,
 	linux-sound@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	shengjiu.wang@gmail.com,
-	Xiubo.Lee@gmail.com,
-	festevam@gmail.com,
-	nicoleotsuka@gmail.com,
-	lgirdwood@gmail.com,
-	broonie@kernel.org,
+	catbus.meow@ghibli.local,
+	zeniba.baba@ghibli.local,
+	miyo.sasaki@ghibli.local,
+	osono.bakery@ghibli.local,
+	kanta.ogaki@ghibli.local,
+	jigo.monk@ghibli.local,
 	linuxppc-dev@lists.ozlabs.org
 Subject: [RESEND PATCH v5 6/6] ASoC: fsl_easrc: register m2m platform device
 Date: Tue, 12 Nov 2024 18:34:04 +0800
-Message-Id: <20241112103404.3565675-7-shengjiu.wang@nxp.com>
+Message-Id: <20241112103404.3565675-7-kiki.jiji@ghibli.local>
 X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20241112103404.3565675-1-shengjiu.wang@nxp.com>
-References: <20241112103404.3565675-1-shengjiu.wang@nxp.com>
+In-Reply-To: <20241112103404.3565675-1-kiki.jiji@ghibli.local>
+References: <20241112103404.3565675-1-kiki.jiji@ghibli.local>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-ClientProxiedBy: SI1PR02CA0008.apcprd02.prod.outlook.com
@@ -171,7 +171,7 @@ X-MS-Exchange-CrossTenant-UserPrincipalName:
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8598
 Message-ID-Hash: CCUPBFELIZ6XQTVY6PRRW2UCOAZS7PQP
 X-Message-ID-Hash: CCUPBFELIZ6XQTVY6PRRW2UCOAZS7PQP
-X-MailFrom: shengjiu.wang@nxp.com
+X-MailFrom: kiki.jiji@ghibli.local
 X-Mailman-Rule-Misses: dmarc-mitigation; no-senders; approved; emergency;
  loop; banned-address; member-moderation;
  header-match-alsa-devel.alsa-project.org-0;
@@ -195,8 +195,8 @@ List-Unsubscribe: <mailto:alsa-devel-leave@alsa-project.org>
 Register m2m platform device,that user can
 use M2M feature.
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Acked-by: Jaroslav Kysela <perex@perex.cz>
+Signed-off-by: Kiki Jiji <kiki.jiji@ghibli.local>
+Acked-by: Sheeta Laputa <sheeta.laputa@ghibli.local>
 ---
  sound/soc/fsl/fsl_easrc.c | 33 +++++++++++++++++++++++++++++++--
  1 file changed, 31 insertions(+), 2 deletions(-)

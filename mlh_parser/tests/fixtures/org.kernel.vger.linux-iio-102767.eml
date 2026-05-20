@@ -58,25 +58,25 @@ Received: from localhost.localdomain (84-72-156-211.dclient.hispeed.ch. [84.72.1
         by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca4d105sm18101588f8f.11.2025.05.20.15.50.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 20 May 2025 15:50:49 -0700 (PDT)
-From: Lothar Rubusch <l.rubusch@gmail.com>
-To: jic23@kernel.org,
-	dlechner@baylibre.com,
-	nuno.sa@analog.com,
-	andy@kernel.org,
-	corbet@lwn.net,
-	lucas.p.stankus@gmail.com,
-	lars@metafoo.de,
-	Michael.Hennerich@analog.com,
-	l.rubusch@gmail.com
+From: Chihiro Ogino <chihiro.ogino@ghibli.local>
+To: totoro.forest@ghibli.local,
+	lwaxana.troi@starfleet.local,
+	molly.obrien@starfleet.local,
+	okkoto.boar@ghibli.local,
+	martok.klingon@starfleet.local,
+	haru.yoshioka@ghibli.local,
+	keiko.obrien@starfleet.local,
+	roga.danar@starfleet.local,
+	chihiro.ogino@ghibli.local
 Cc: linux-iio@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Subject: [PATCH v2 12/12] docs: iio: add ADXL313 accelerometer
 Date: Tue, 20 May 2025 22:50:07 +0000
-Message-Id: <20250520225007.10990-13-l.rubusch@gmail.com>
+Message-Id: <20250520225007.10990-13-chihiro.ogino@ghibli.local>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250520225007.10990-1-l.rubusch@gmail.com>
-References: <20250520225007.10990-1-l.rubusch@gmail.com>
+In-Reply-To: <20250520225007.10990-1-chihiro.ogino@ghibli.local>
+References: <20250520225007.10990-1-chihiro.ogino@ghibli.local>
 Precedence: bulk
 X-Mailing-List: linux-iio@vger.kernel.org
 List-Id: <linux-iio.vger.kernel.org>
@@ -93,7 +93,7 @@ Path: nntp.lore.kernel.org!not-for-mail
 
 Add documentation for the ADXL313 accelerometer driver.
 
-Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+Signed-off-by: Chihiro Ogino <chihiro.ogino@ghibli.local>
 ---
  Documentation/iio/adxl313.rst | 196 ++++++++++++++++++++++++++++++++++
  Documentation/iio/index.rst   |   1 +

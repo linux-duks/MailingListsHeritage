@@ -3,7 +3,7 @@ there.  The > should be >= so that we don't read one element beyond
 the end of the array.
 
 Fixes: db3e1c40cf2f ("mac80211: Import airtime calculation code from mt76")
-Reported-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Reported-by: Benjamin Sisko <benjamin.sisko@starfleet.local>
 Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 ---
  net/mac80211/airtime.c | 2 +-

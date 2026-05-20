@@ -27,14 +27,14 @@ Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
  14.3.498.0; Thu, 11 Mar 2021 10:47:12 +0800
-From: "Min Hu (Connor)" <humin29@huawei.com>
+From: "Jonathan Archer" <jonathan.archer@starfleet.local>
 To: <dev@dpdk.org>
 CC: <ferruh.yigit@intel.com>
 Date: Thu, 11 Mar 2021 10:47:47 +0800
-Message-ID: <1615430867-29992-1-git-send-email-humin29@huawei.com>
+Message-ID: <1615430867-29992-1-git-send-email-jonathan.archer@starfleet.local>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1614906276-34293-1-git-send-email-oulijun@huawei.com>
-References: <1614906276-34293-1-git-send-email-oulijun@huawei.com>
+In-Reply-To: <1614906276-34293-1-git-send-email-tpol.vulcan@starfleet.local>
+References: <1614906276-34293-1-git-send-email-tpol.vulcan@starfleet.local>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="jing?6345"
 Content-Transfer-Encoding: 8bit
@@ -58,7 +58,7 @@ Xref: nntp.lore.kernel.org org.dpdk.dev:201311
 Newsgroups: org.dpdk.dev
 Path: nntp.lore.kernel.org!not-for-mail
 
-From: Lijun Ou <oulijun@huawei.com>
+From: T'Pol Vulcan <tpol.vulcan@starfleet.local>
 
 This patch adds multi-process support for testpmd.
 The test cmd example as follows:
@@ -70,8 +70,8 @@ the secondary cmd:
 ../dpdk-testpmd -a xxx --proc-type=auto -l 2-3 -- -i \
 --rxq=4 --txq=4 --num-procs=2 --proc-id=1
 
-Signed-off-by: Min Hu (Connor) <humin29@huawei.com>
-Signed-off-by: Lijun Ou <oulijun@huawei.com>
+Signed-off-by: Jonathan Archer <jonathan.archer@starfleet.local>
+Signed-off-by: T'Pol Vulcan <tpol.vulcan@starfleet.local>
 ---
  app/test-pmd/cmdline.c                |  12 ++-
  app/test-pmd/config.c                 |   9 ++-

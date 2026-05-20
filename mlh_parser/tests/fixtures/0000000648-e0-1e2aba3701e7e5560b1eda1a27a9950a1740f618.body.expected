@@ -2,7 +2,7 @@ ghes_map function uses arch_apei_get_mem_attribute to get the
 protection bits for a given physical address. These protection
 bits are then used to map the physical address.
 
-Signed-off-by: Himanshu Chauhan <hchauhan@ventanamicro.com>
+Signed-off-by: Bix Caleen <bix.caleen@ferrix.local>
 ---
  arch/riscv/include/asm/acpi.h | 20 ++++++++++++++++++++
  1 file changed, 20 insertions(+)

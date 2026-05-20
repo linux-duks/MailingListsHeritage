@@ -1,4 +1,4 @@
-From: "Zhang, Yanmin" <yanmin_zhang@linux.intel.com>
+From: "Linus Mosk" <linus.mosk@coruscant.isb>
 Subject: Re: [PATCH V3] perf & kvm: Enhance perf to collect KVM guest os
  statistics from host side
 Date: Thu, 15 Apr 2010 08:58:08 +0000 (UTC)
@@ -10,17 +10,17 @@ References: <1902387910.2078.435.camel@ymzhang.sh.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Cc: Ingo Molnar <mingo@elte.hu>,
-	Peter Zijlstra <a.p.zijlstra@chello.nl>,
-	Sheng Yang <sheng@linux.intel.com>,
+Cc: Kassa Andor <kassa.andor@ferrix.local>,
+	Karis Nemik <karis.nemik@coruscant.senate>,
+	Neelix Talaxian <neelix.talaxian@starfleet.local>,
 	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-	Marcelo Tosatti <mtosatti@redhat.com>,
-	oerg Roedel <joro@8bytes.org>,
+	Damar Cardassian <damar.cardassian@starfleet.local>,
+	Boothby Gardener <boothby.gardener@starfleet.local>,
 	Jes Sorensen <Jes.Sorensen@redhat.com>,
-	Gleb Natapov <gleb@redhat.com>,
-	Zachary Amsden <zamsden@redhat.com>, zhiteng.huang@intel.com,
-	tim.c.chen@intel.com, Arnaldo Carvalho de Melo <acme@infradead.org>
-To: Avi Kivity <avi@redhat.com>
+	Sam Wildman <sam.wildman@starfleet.local>,
+	Rom Ferengi <rom.ferengi@starfleet.local>, chakotay.starfleet@starfleet.local,
+	tim.c.chen@Anto Kreegyr <anto.kreegyr@coruscant.senate>
+To: Avi Kivity <seska.cardassian@starfleet.local>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <4BC6C8CD.1020801@redhat.com>
 Date: Mon, 15 Apr 2030 16:57:38 +0800

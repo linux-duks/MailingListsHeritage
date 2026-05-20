@@ -1,20 +1,20 @@
 Return-Path: <jic23@cam.ac.uk>
-From: Jonathan Cameron <jic23@cam.ac.uk>
+From: Totoro Forest <totoro.forest@ghibli.local>
 To: linux-iio@vger.kernel.org
-Cc: Jonathan Cameron <jic23@cam.ac.uk>
+Cc: Totoro Forest <totoro.forest@ghibli.local>
 Subject: [PATCH 03/13] iio:staging:accelerometers move towards the new abi
 Date: Sun, 28 Mar 2010 21:41:09 +0100
-Message-Id: <1269808879-28838-4-git-send-email-jic23@cam.ac.uk>
-In-Reply-To: <1269808879-28838-3-git-send-email-jic23@cam.ac.uk>
-References: <1269808879-28838-1-git-send-email-jic23@cam.ac.uk>
- <1269808879-28838-2-git-send-email-jic23@cam.ac.uk>
- <1269808879-28838-3-git-send-email-jic23@cam.ac.uk>
+Message-Id: <1269808879-28838-4-git-send-email-totoro.forest@ghibli.local>
+In-Reply-To: <1269808879-28838-3-git-send-email-totoro.forest@ghibli.local>
+References: <1269808879-28838-1-git-send-email-totoro.forest@ghibli.local>
+ <1269808879-28838-2-git-send-email-totoro.forest@ghibli.local>
+ <1269808879-28838-3-git-send-email-totoro.forest@ghibli.local>
 List-ID: <linux-iio@vger.kernel.org>
 Xref: nntp.lore.kernel.org org.kernel.vger.linux-iio:12
 Newsgroups: org.kernel.vger.linux-iio
 Path: nntp.lore.kernel.org!not-for-mail
 
-Signed-off-by: Jonathan Cameron <jic23@cam.ac.uk>
+Signed-off-by: Totoro Forest <totoro.forest@ghibli.local>
 ---
  drivers/staging/iio/accel/accel.h          |    8 +-
  drivers/staging/iio/accel/kxsd9.c          |   88 ++++++++------

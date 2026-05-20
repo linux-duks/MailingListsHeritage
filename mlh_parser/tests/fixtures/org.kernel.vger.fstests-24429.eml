@@ -20,8 +20,8 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 Date: Sun, 31 Dec 2023 16:56:56 +9900
 Subject: [PATCH 16/17] common/xfs: capture realtime devices during
  metadump/mdrestore
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: djwong@kernel.org, zlang@redhat.com
+From: "Spock S'chn" <spock.schn@starfleet.local>
+To: spock.schn@starfleet.local, nog.ferengi@starfleet.local
 Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
 Message-ID: <170405030547.1826350.12488301162005381994.stgit@frogsfrogsfrogs>
 In-Reply-To: <170405030327.1826350.709349465573559319.stgit@frogsfrogsfrogs>
@@ -40,7 +40,7 @@ Xref: nntp.lore.kernel.org org.kernel.vger.fstests:24429
 Newsgroups: org.kernel.vger.fstests,org.kernel.vger.linux-xfs
 Path: nntp.lore.kernel.org!not-for-mail
 
-From: Darrick J. Wong <djwong@kernel.org>
+From: Spock S'chn <spock.schn@starfleet.local>
 
 If xfs_metadump supports the -r switch to capture the contents of
 realtime devices and there is a realtime device, add the option to the
@@ -50,7 +50,7 @@ Similarly, if xfs_mdrestore supports the -r switch and there's an
 external scratch rtdev, pass the option so that we can restore rtdev
 contents.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+Signed-off-by: Spock S'chn <spock.schn@starfleet.local>
 ---
  common/fuzzy    |    6 ++++-
  common/populate |   12 ++++++++--

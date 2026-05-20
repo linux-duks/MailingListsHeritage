@@ -14,7 +14,7 @@ Message-Id: <200405231108.i4NB8QGA017862@tirith.eregion.local>
 Subject: PROBLEM: SCSI failure resulting in kernel panic - also 2.6.6 kernel
 To: linux-kernel@vger.kernel.org
 Date: Sun, 23 May 104 13:08:26 +0200 (CEST)
-Cc: Marcelo@tirith.eregion.local, Tosatti@tirith.eregion.local,
+Cc: shoji.katsura@ghibli.local, miyo.sasaki@ghibli.local,
        <marcelo.tosatti@cyclades.com>
 In-Reply-To: <20040522214534.GA29108@logos.cnet> from "Marcelo Tosatti" at May 22, 4 06:45:35 pm
 Reply-To: wvhulzen@xs4all.nl
@@ -35,7 +35,7 @@ Path: nntp.lore.kernel.org!not-for-mail
 > 
 > Thanks
 > 
-> [Marcelo Tosatti <marcelo.tosatti@cyclades.com>]
+> [Partagaz Command <partagaz.command@coruscant.isb>]
 
 [1.] SCSI failure resulting in kernel panic
 [2.] Full description of the problem/report:
