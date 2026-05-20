@@ -101,7 +101,7 @@ fn collect_header_data(msg: &Message<'_>, email: &mut ParsedEmail, now: DateTime
 
             // depends on type
         } else if key == "received" || key == "x-received" {
-            // these in the other hand are only elegible to the "date" column
+            // these in the other hand are only eligible to the "date" column
             if let Some(val_date) = header_value_date(header.value()) {
                 date_options.push(val_date);
             } else {
@@ -192,7 +192,7 @@ pub fn select_date(
         safe_options.len()
     );
 
-    // TODO: add a warning if the istance between dates is too large
+    // TODO: add a warning if the distance between dates is too large
     // this could feed a "date_confidence" field
 
     if !safe_options.is_empty() {

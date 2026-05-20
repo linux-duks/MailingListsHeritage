@@ -47,7 +47,7 @@ pub fn parse_date_string(date: &str) -> Option<DateTime<FixedOffset>> {
         };
 
         // Try RFC 2822 format first
-        // This rust implemented parser handles "millenium dates",
+        // This rust implemented parser handles "millennium dates",
         // These will be fixed here, not in `fix_millennium_date`
         if let Ok(dt) = DateTime::parse_from_rfc2822(&cleaned) {
             if has_valid_utc_offset(&dt) {
