@@ -8,7 +8,7 @@ from mlh_anonymizer.constants import N_PROC_DEFAULT_MAX
 
 # ── Determine concurrency split ───────────────────────────────────
 # Strategy: keep worker-process count low, give Polars a healthy
-# share of threads per process for I/O and native parallelism.
+# share of threads per process for I/O and anative parallelism.
 # Multiplier / N_PROC_DEFAULT_MAX control the balance.
 # Both values are overridable via environment variables.
 
@@ -26,7 +26,9 @@ def _parse_n_proc() -> int:
     n_proc_env = os.getenv("N_PROC", "")
     if n_proc_env.isdecimal():
         return int(n_proc_env)
-    return max(1, min(math.ceil(_cpu_count / _proc_multiplier_denominator), N_PROC_DEFAULT_MAX))
+    return max(
+        1, min(math.ceil(_cpu_count / _proc_multiplier_denominator), N_PROC_DEFAULT_MAX)
+    )
 
 
 # Set POLARS_MAX_THREADS in the environment *before* any polars import.
@@ -63,6 +65,6 @@ LISTS_TO_PARSE: list[str] = [
     item for item in os.getenv("LISTS_TO_PARSE", "").split(",") if item
 ]
 
-# Directory paths (required environment variables)
-INPUT_DIR_PATH: str = os.environ["INPUT_DIR"]
-OUTPUT_DIR_PATH: str = os.environ["OUTPUT_DIR"]
+# Directory paths (required at runtime, optional at import time for tests)
+INPUT_DIR_PATH: str = os.getenv("INPUT_DIR", "")
+OUTPUT_DIR_PATH: str = os.getenv("OUTPUT_DIR", "")

@@ -4,6 +4,8 @@ import logging
 from typing import Any, Union
 
 from mlh_anonymizer.hasher import generate_sha1_hash
+from mlh_anonymizer.body_anonymizer import anonymize_body
+from mlh_anonymizer.identity_map import IdentityMap
 
 logger = logging.getLogger(__name__)
 
@@ -59,3 +61,18 @@ def anonymize_map(col: Any, map_key: str) -> Union[list[dict], dict]:
         return newcol
     else:
         raise Exception(f"Unsupported type for anonymize_map: {type(col)}")
+
+def anonymize_identification(col: Any, identity_map: IdentityMap) -> list[dict] | dict:
+    """Anonimiza o campo 'identification' dos trailers usando anonymize_body,
+    para tratar corretamente o formato 'Name <email>'."""
+    if hasattr(col, "__iter__") and not isinstance(col, dict):
+        result = []
+        for part in col:
+            part = dict(part)  # cópia para não mutar o original
+            if "identification" in part and part["identification"]:
+                part["identification"], _ = anonymize_body(
+                    part["identification"], identity_map
+                )
+            result.append(part)
+        return result
+    raise Exception(f"Unsupported type for anonymize_identification: {type(col)}")

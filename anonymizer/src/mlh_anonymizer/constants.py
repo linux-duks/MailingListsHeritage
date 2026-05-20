@@ -22,3 +22,16 @@ SPLIT_DATASET_COLUMNS = ["from"]
 ANONYMIZE_MAP = [
     "trailers.identification",
 ]
+
+# Column whose free-form text content is scanned for emails (issue #17)
+RAW_BODY_COLUMN = "raw_body"
+
+# Filename written inside each mailing-list output directory.
+# Stores the per-(email, name) occurrence counts split by location.
+IDENTITY_MAP_FILENAME = "identity_map.json"
+
+# Campos de string livre que contêm emails embutidos
+FREE_TEXT_COLUMNS = [
+    "message-id",
+    "in-reply-to",
+]
