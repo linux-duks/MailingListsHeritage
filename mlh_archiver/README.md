@@ -171,7 +171,7 @@ read_lists:
 #### Public-Inbox Options (under `public_inbox:` block)
 
 If using a large number of public-inbox repositores, we recommend cloning them with [Grokmirror](https://github.com/mricon/grokmirror).
-We have our complete guide available in the [linux-duks/Public-Inbox-Stack](https://github.com/linux-duks/Public-Inbox-Stack). If using only for this, follow the mirroring steps only.
+We have our complete guide available in the [linux-duks/Public-Inbox-Stack](https://gitlab.com/ccsl-usp/codev/Public-Inbox-Stack). If using only for this, follow the mirroring steps only.
 
 It is expected that
 
@@ -185,7 +185,7 @@ It is expected that
 #### Public-Inbox Options (under `public_inbox:` block)
 
 If using a large number of public-inbox repositores, we recommend cloning them with [Grokmirror](https://github.com/mricon/grokmirror).
-We have our complete guide available in the [linux-duks/Public-Inbox-Stack](https://github.com/linux-duks/Public-Inbox-Stack). If using only for this, follow the mirroring steps only.
+We have our complete guide available in the [linux-duks/Public-Inbox-Stack](https://gitlab.com/ccsl-usp/codev/Public-Inbox-Stack). If using only for this, follow the mirroring steps only.
 
 It is expected that
 

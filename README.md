@@ -44,18 +44,18 @@ Each component has its own detailed documentation:
 One of the dependencies is a git submodule. To build correctly
 
    ```bash
-   git clone --recurse-submodules git@github.com:linux-duks/MLH-archiver.git
+   git clone --recurse-submodules git@gitlab.com/ccsl-usp/codev/MLH-archiver.git
    ```
 
    Or if you dont have your ssh keys configured in GitHub,
 
    ```bash
-   git clone https://github.com/linux-duks/MLH-archiver.git
+   git clone https://gitlab.com/ccsl-usp/codev/MLH-archiver.git
    cd MLH-archiver
-   git config --global url."https://github.com/".insteadOf "git@github.com:"
+   git config --global url."https://gitlab.com/".insteadOf "git@gitlab.com:"
    git submodule update --init --recursive
    # and to revert the config:
-   git config --global --remove-section url."https://github.com/"
+   git config --global --remove-section url."https://gitlab.com/"
    ```
 
 1. Copy the example configuration file:

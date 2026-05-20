@@ -1,6 +1,6 @@
 [submodule "rust-nntp"]
 	path = mlh_archiver/rust-nntp
-	url = https://github.com/auyer/rust-nntp
+	url = https://gitlab.com/ccsl-usp/codev/rust-nntp
 [submodule "mlh_archiver/tests/test_public_inbox/public-inbox"]
 	path = mlh_archiver/tests/test_public_inbox/public-inbox
-	url = https://github.com/linux-duks/public-inbox
+	url = https://gitlab.com/ccsl-usp/codev/public-inbox

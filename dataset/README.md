@@ -2,7 +2,7 @@
 
 The Linux kernel, like other large and long-lived Free Software projects, utilizes mailing lists as the traditional medium for all development, bug reporting, and pivotal discussions on the project's future. However, as a consequence of the decentralized development model used in the Linux kernel, these emails are spread over hundreds of different mailing lists, with different communities and code maintainership models. This paper presents the LKML5Ws dataset. With over 20 million emails from 345 different mailing lists, our massive relational dataset provides a comprehensive overview of the last 20 years of Linux kernel development. Beyond shedding light on the awe-inspiring number of patches, discussions, and contributors involved in the project, our dataset serves as a basis for those interested in studying the intricate and knowledge-dense nature of the Linux kernel development process.
 
-<https://github.com/linux-duks/Mailing-Lists-Archiver>
+<https://gitlab.com/ccsl-usp/codev/MLH-archiver>
 
 ## Using this Dataset
 
@@ -74,4 +74,4 @@ archiver_build_info: "Archiver v='0.1.0' commit='abc123' build_time_utc='2025-01
 
 In our repository, which contains the software used to create this dataset, we also provide scripts that we used to develop example analyses.
 
-- Script Example: [analysis/src](https://archive.softwareheritage.org/browse/origin/directory/?branch=refs/heads/fix-attributions-parser&origin_url=https://github.com/linux-duks/MLH-archiver&path=analysis)
+- Script Example: [analysis/src](https://archive.softwareheritage.org/browse/origin/directory/?branch=refs/heads/fix-attributions-parser&origin_url=https://gitlab.com/ccsl-usp/codev/MLH-archiver&path=analysis)
