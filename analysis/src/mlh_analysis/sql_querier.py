@@ -46,4 +46,4 @@ def main(input_map, output_dir):
         else:
             print(f"An unexpected error occurred: {e}")
 
-    df.write_csv(output_dir)
+    df.write_csv(output_dir +"/sql_results/")

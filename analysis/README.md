@@ -46,11 +46,11 @@ The analysis scripts expect the anonymized dataset from the MLH Anonymizer.
 
 ```bash
 # Using Make (runs all analyses)
-make -C analysis run
+make run-analysis
 
 # Run a single analysis by name
-make -C analysis run ANALYSIS_SCRIPT=unique_authors
-make -C analysis run ANALYSIS_SCRIPT=list_comparison LISTS_OF_INTEREST=amd-gfx,intel-gfx
+make run-analysis ANALYSIS_SCRIPT=unique_authors
+make run-analysis ANALYSIS_SCRIPT=list_comparison LISTS_OF_INTEREST=amd-gfx,intel-gfx
 
 # Debug mode (native execution)
 INPUT_DIR="../output/parser/dataset,../output/anonymizer" OUTPUT_DIR="results" uv run src/main.py
@@ -111,6 +111,8 @@ Interactive SQL query interface using [Apache DataFusion](https://datafusion.apa
 
 ```bash
 ANALYSIS_SCRIPT=sql_querier uv run src/main.py
+or
+make run-analysis ANALYSIS_SCRIPT=sql_querier
 ```
 
 ## Output
