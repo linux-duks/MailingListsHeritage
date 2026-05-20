@@ -62,7 +62,7 @@ pub fn addr_to_string(addr: &mail_parser::Addr<'_>) -> String {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub struct AddressScore {
-    has_name: bool,
+    pub has_name: bool,
     is_standard: bool,
     obfuscation: Option<&'static str>,
 }

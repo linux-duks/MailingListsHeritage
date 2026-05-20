@@ -17,7 +17,7 @@ pub fn header_value_to_string(val: &mail_parser::HeaderValue<'_>) -> Option<Stri
         mail_parser::HeaderValue::Address(a) => {
             if let Some(addrs) = a.as_list() {
                 if addrs.len() > 1 {
-                    log::error!("Converting many addresses to a single string: {:?}", val);
+                    log::warn!("Converting many addresses to a single string: {:?}", val);
                     let addrs_concat: String = addrs
                         .iter()
                         .map(|a| addr_to_string(a))

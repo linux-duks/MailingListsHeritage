@@ -1,0 +1,23 @@
+We need to look closely at this patch, and have not had the time to do this.
+
+
+-----Original Message-----
+From: Fio Pikkoro <fio.Pikkoro(a)adriatic.sea> 
+Sent: Tuesday, May 31, 2022 12:07 AM
+To: devel(a)acpica.org
+Subject: [Devel] Why the patch against CVE-2017-13693 not be merged?
+
+Hi all,
+
+There have a old patch against CVE-2017-13693 which is subumitted by kkamagui:
+
+acpi: acpica: fix acpi operand cache leak in dsutils.c
+https://github.com/acpica/acpica/pull/295
+
+Why this patch not be merged? Does there have any conern?
+
+Thanks a lot!
+Joey Lee
+_______________________________________________
+Devel mailing list -- devel(a)acpica.org
+To unsubscribe send an email to devel-leave(a)acpica.org %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s

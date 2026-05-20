@@ -141,9 +141,14 @@ fn collect_header_data(msg: &Message<'_>, email: &mut ParsedEmail, now: DateTime
     }
 
     // some malformed messages put their "FROM" header in the body.
-    let body_from = email_reader::extract_all_from_from_body(&msg.raw_message);
-
-    from_candidates.extend(body_from);
+    if from_candidates.is_empty()
+        || from_candidates
+            .iter()
+            .all(|c| !score_email_address(c).has_name)
+    {
+        let body_from = email_reader::extract_all_from_from_body(&msg.raw_message);
+        from_candidates.extend(body_from);
+    }
 
     if !from_candidates.is_empty() {
         email.from = select_best_from_header(&from_candidates);
