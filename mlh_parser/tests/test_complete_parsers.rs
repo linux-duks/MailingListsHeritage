@@ -28,18 +28,23 @@ fn test_complete_parser() {
 
         match parse_email(&mail_bytes, now) {
             Ok(r) => {
-                if r.raw_body.is_empty() {
-                    eprintln!("Skipping {:?}: empty body", email_file);
-                    continue;
-                }
-                for trailer in &r.trailers {
-                    assert!(
-                        trailer.attribution.ends_with("-by"),
-                        "Invalid attribution: {:?}",
-                        trailer.attribution
-                    );
+                if !r.raw_body.is_empty() {
+                    for trailer in &r.trailers {
+                        assert!(
+                            trailer.attribution.ends_with("-by"),
+                            "Invalid attribution: {:?}",
+                            trailer.attribution
+                        );
+                    }
                 }
                 assert!(r.date.is_some(), "Date missing for email {:?}", email_file);
+                assert!(
+                    !r.from.is_empty(),
+                    "From missing for email {:?}",
+                    email_file
+                );
+                assert!(!r.to.is_empty(), "TO missing for email {:?}", email_file);
+                assert!(!r.subject.is_empty(), "Subject missing for email {:?}", email_file);
             }
             Err(e) => {
                 eprintln!("Failed to parse {:?}: {}", email_file, e);

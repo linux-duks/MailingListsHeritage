@@ -7,7 +7,7 @@ Mime-Version: 1.0
 Content-Type: text/plain;
 	charset="_iso-2022-jp$ESC"
 Content-Transfer-Encoding: 7bit
-To: undisclosed-recipients:;
+To: undisclosed-recipients@domain.tld
 X-From: git-owner@vger.kernel.org Fri Jul 17 18:42:34 2015
 Return-path: <git-owner@vger.kernel.org>
 Envelope-to: gcvg-git-2@plane.gmane.org
