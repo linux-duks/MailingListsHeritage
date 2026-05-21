@@ -23,7 +23,7 @@ test:
 		nox; \
 	else \
 		echo "==> Python Testing toolchain not found, running with $(CONTAINER) (Image: $(PYTHON_DOCKER_IMAGE))..."; \
-		$(CONTAINER) run --rm \
+		$(CONTAINER) run --rm -it \
 			-u $$(id -u):$$(id -g) \
 			--network=host \
 			-e UV_CACHE_DIR=/tmp/.cache/uv \
@@ -52,7 +52,7 @@ run: create-output-dir
 		else \
 			echo "==> uv toolchain not found, running with $(CONTAINER) (Image: $(PYTHON_DOCKER_IMAGE))..."; \
 			echo "==> Host UID:GID = $$(id -u):$$(id -g)"; \
-			$(CONTAINER) run --rm \
+			$(CONTAINER) run --rm -it \
 				--network=host \
 				-e INPUT_DIR=/data/dataset \
 				-e OUTPUT_DIR=/data/output \
