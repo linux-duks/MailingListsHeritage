@@ -440,6 +440,273 @@ fn test_multiple_emails_varied_to_cc_row_count() {
     assert_eq!(cc_lengths, vec![0, 2, 3]);
 }
 
+/// Verifies that a display name containing a comma inside quotes
+/// (e.g. `"Locutus, of Borg"`) is preserved as a single name and
+/// not split into multiple addresses by the parser.
+#[test]
+fn test_quoted_display_name_with_comma() {
+    let temp_dir = TempDir::new().unwrap();
+    let input_base = temp_dir.path().to_path_buf();
+    let list_dir = input_base.join("quotedcomma");
+    fs::create_dir_all(&list_dir).unwrap();
+    let output_base = temp_dir.path().join("output");
+
+    let eml_content = concat!(
+        "From: \"Locutus, of Borg\" <locutus.borg@borg.collective>\r\n",
+        "To: \"Picard, Jean-Luc\" <picard.jl@starfleet.sf>, \"Riker, William\" <riker.w@starfleet.sf>\r\n",
+        "CC: \"La Forge, Geordi\" <geordi.lf@starfleet.sf>\r\n",
+        "Subject: Quoted comma names\r\n",
+        "Date: Mon, 10 Feb 2025 12:00:00 +0000\r\n",
+        "Message-ID: <quoted-comma@borg.collective>\r\n",
+        "\r\n",
+        "Body.\r\n"
+    );
+    fs::write(list_dir.join("quoted.eml"), eml_content).unwrap();
+
+    let result = process_mailing_list(
+        "quotedcomma",
+        &input_base,
+        &output_base,
+        false,
+        BATCH_MAX_RECORDS,
+    );
+    assert!(result.is_ok());
+
+    let parquet_path = output_base
+        .join("dataset")
+        .join("list=quotedcomma")
+        .join("list_data.parquet");
+    assert!(parquet_path.exists());
+
+    let file = fs::File::open(&parquet_path).unwrap();
+    let builder = ParquetRecordBatchReaderBuilder::try_new(file).unwrap();
+    let reader = builder.build().unwrap();
+
+    let mut row_count = 0;
+    for batch in reader {
+        let batch = batch.unwrap();
+        row_count += batch.num_rows();
+
+        // From: name is Locutus, of Borg (quotes stripped by parser, comma sanitized)
+        let from_col = batch
+            .column_by_name("from")
+            .unwrap()
+            .as_any()
+            .downcast_ref::<StringArray>()
+            .unwrap();
+        for r in 0..batch.num_rows() {
+            assert_eq!(
+                from_col.value(r),
+                "Locutus of Borg <locutus.borg@borg.collective>"
+            );
+        }
+
+        // To: two addresses with comma-names sanitized
+        let to_col = batch
+            .column_by_name("to")
+            .unwrap()
+            .as_any()
+            .downcast_ref::<ListArray>()
+            .unwrap();
+        for r in 0..batch.num_rows() {
+            let to_offsets = to_col.value_offsets();
+            let to_start = to_offsets[r] as usize;
+            let to_end = to_offsets[r + 1] as usize;
+            assert_eq!(to_end - to_start, 2, "`to` list should have 2 entries");
+
+            let to_values = to_col
+                .values()
+                .as_any()
+                .downcast_ref::<StringArray>()
+                .unwrap();
+            assert_eq!(
+                to_values.value(to_start),
+                "Picard Jean-Luc <picard.jl@starfleet.sf>"
+            );
+            assert_eq!(
+                to_values.value(to_start + 1),
+                "Riker William <riker.w@starfleet.sf>"
+            );
+        }
+
+        // CC: single address with comma-name sanitized
+        let cc_col = batch
+            .column_by_name("cc")
+            .unwrap()
+            .as_any()
+            .downcast_ref::<ListArray>()
+            .unwrap();
+        for r in 0..batch.num_rows() {
+            let cc_offsets = cc_col.value_offsets();
+            let cc_start = cc_offsets[r] as usize;
+            let cc_end = cc_offsets[r + 1] as usize;
+            assert_eq!(cc_end - cc_start, 1, "`cc` list should have 1 entry");
+
+            let cc_values = cc_col
+                .values()
+                .as_any()
+                .downcast_ref::<StringArray>()
+                .unwrap();
+            assert_eq!(
+                cc_values.value(cc_start),
+                "La Forge Geordi <geordi.lf@starfleet.sf>"
+            );
+        }
+    }
+
+    assert_eq!(row_count, 1);
+}
+
+/// Verifies that a display name containing a comma without quotes,
+/// combined with "at" obfuscation, is correctly reconstructed and
+/// de-obfuscated in the `from` column.
+#[test]
+fn test_unquoted_comma_name_with_at_obfuscation() {
+    let temp_dir = TempDir::new().unwrap();
+    let input_base = temp_dir.path().to_path_buf();
+    let list_dir = input_base.join("commaobfs");
+    fs::create_dir_all(&list_dir).unwrap();
+    let output_base = temp_dir.path().join("output");
+
+    // The comma in the display name causes mail_parser to split into
+    // two addresses; header_value_to_string joins them back.
+    // The "at" in the angle-addr is de-obfuscated by normalize_address.
+    let eml_content = concat!(
+        "From: Locutus, of Borg <locutus.borg at borg.collective>\r\n",
+        "To: simple@test.local\r\n",
+        "Subject: Comma name with at obfuscation\r\n",
+        "Date: Tue, 11 Feb 2025 12:00:00 +0000\r\n",
+        "Message-ID: <comma-obfs@borg.collective>\r\n",
+        "\r\n",
+        "Body.\r\n"
+    );
+    fs::write(list_dir.join("comma_obfs.eml"), eml_content).unwrap();
+
+    let result = process_mailing_list(
+        "commaobfs",
+        &input_base,
+        &output_base,
+        false,
+        BATCH_MAX_RECORDS,
+    );
+    assert!(result.is_ok());
+
+    let parquet_path = output_base
+        .join("dataset")
+        .join("list=commaobfs")
+        .join("list_data.parquet");
+    assert!(parquet_path.exists());
+
+    let file = fs::File::open(&parquet_path).unwrap();
+    let builder = ParquetRecordBatchReaderBuilder::try_new(file).unwrap();
+    let reader = builder.build().unwrap();
+
+    let mut row_count = 0;
+    for batch in reader {
+        let batch = batch.unwrap();
+        row_count += batch.num_rows();
+
+        // From: comma-name joined and "at" de-obfuscated
+        let from_col = batch
+            .column_by_name("from")
+            .unwrap()
+            .as_any()
+            .downcast_ref::<StringArray>()
+            .unwrap();
+        for r in 0..batch.num_rows() {
+            assert_eq!(
+                from_col.value(r),
+                "Locutus of Borg <locutus.borg@borg.collective>"
+            );
+        }
+    }
+
+    assert_eq!(row_count, 1);
+}
+
+/// Verifies that unquoted comma-names in `To` with obfuscation are
+/// correctly merged and de-obfuscated.
+///
+/// The `mail_parser` splits `Picard, Jean-Luc <...>` into two addresses
+/// because of the unquoted comma. `normalize_address_list` merges the
+/// incomplete identity (name-only) with the following complete one,
+/// strips the comma, and normalizes obfuscated emails.
+#[test]
+fn test_unquoted_comma_name_in_to_with_obfuscation() {
+    let temp_dir = TempDir::new().unwrap();
+    let input_base = temp_dir.path().to_path_buf();
+    let list_dir = input_base.join("commato");
+    fs::create_dir_all(&list_dir).unwrap();
+    let output_base = temp_dir.path().join("output");
+
+    let eml_content = concat!(
+        "From: sender@test.local\r\n",
+        "To: Picard, Jean-Luc <picard.jl at starfleet.sf>, Riker, William <riker.w(a)starfleet.sf>\r\n",
+        "Subject: Comma names in To with obfuscation\r\n",
+        "Date: Tue, 11 Feb 2025 12:00:00 +0000\r\n",
+        "Message-ID: <comma-to-obfs@starfleet.sf>\r\n",
+        "\r\n",
+        "Body.\r\n"
+    );
+    fs::write(list_dir.join("comma_to.eml"), eml_content).unwrap();
+
+    let result = process_mailing_list(
+        "commato",
+        &input_base,
+        &output_base,
+        false,
+        BATCH_MAX_RECORDS,
+    );
+    assert!(result.is_ok());
+
+    let parquet_path = output_base
+        .join("dataset")
+        .join("list=commato")
+        .join("list_data.parquet");
+    assert!(parquet_path.exists());
+
+    let file = fs::File::open(&parquet_path).unwrap();
+    let builder = ParquetRecordBatchReaderBuilder::try_new(file).unwrap();
+    let reader = builder.build().unwrap();
+
+    let mut row_count = 0;
+    for batch in reader {
+        let batch = batch.unwrap();
+        row_count += batch.num_rows();
+
+        let to_col = batch
+            .column_by_name("to")
+            .unwrap()
+            .as_any()
+            .downcast_ref::<ListArray>()
+            .unwrap();
+
+        for r in 0..batch.num_rows() {
+            let to_offsets = to_col.value_offsets();
+            let to_start = to_offsets[r] as usize;
+            let to_end = to_offsets[r + 1] as usize;
+            assert_eq!(to_end - to_start, 2, "should be two merged identities");
+
+            let to_values = to_col
+                .values()
+                .as_any()
+                .downcast_ref::<StringArray>()
+                .unwrap();
+
+            assert_eq!(
+                to_values.value(to_start),
+                "Picard Jean-Luc <picard.jl@starfleet.sf>"
+            );
+            assert_eq!(
+                to_values.value(to_start + 1),
+                "Riker William <riker.w@starfleet.sf>"
+            );
+        }
+    }
+
+    assert_eq!(row_count, 1);
+}
+
 /// Creates 100 numbered emails split across two mailing lists
 /// (list_a: 0-49, list_b: 50-99), runs `start()` under 1-5 local
 /// rayon thread pools, then reads both Parquet outputs and verifies

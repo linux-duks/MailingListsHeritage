@@ -10,6 +10,7 @@ use crate::errors::ParseError;
 use crate::extractors::{self};
 
 use crate::address_parser::normalize_address;
+use crate::address_parser::normalize_raw_address_header;
 use chrono::{DateTime, FixedOffset, Utc};
 use mail_parser::Message;
 use parquet::errors::Result;
@@ -69,13 +70,27 @@ fn collect_header_data(msg: &Message<'_>, email: &mut ParsedEmail, now: DateTime
             if let Some(val_str) = header_value_to_string(header.value()) {
                 from_candidates.push(val_str);
             }
-        } else if key == "to" {
-            if let Some(mut val_vec) = header_value_to_string_list(header.value()) {
-                email.to.append(&mut val_vec);
-            }
-        } else if key == "cc" {
-            if let Some(mut val_vec) = header_value_to_string_list(header.value()) {
-                email.cc.append(&mut val_vec);
+        } else if key == "to" || key == "cc" {
+            // Read raw header text to pre-normalize obfuscation, since
+            // mail_parser strips (a) comments inside angle brackets.
+            let raw = read_raw_offset(
+                msg.raw_message(),
+                header.offset_start(),
+                header.offset_end(),
+            );
+            let has_obfuscation =
+                raw.contains("(a)") || raw.contains("(A)") || raw.contains(" at ");
+            let mut addrs = if has_obfuscation {
+                normalize_raw_address_header(&raw)
+            } else if let Some(val_vec) = header_value_to_string_list(header.value()) {
+                val_vec
+            } else {
+                Vec::new()
+            };
+            if key == "to" {
+                email.to.append(&mut addrs);
+            } else {
+                email.cc.append(&mut addrs);
             }
         } else if key == "subject" {
             if let Some(val_str) = header_value_to_string(header.value()) {

@@ -1,0 +1,56 @@
+From mboxrd@z Thu Jan  1 00:00:00 1970
+Content-Type: multipart/mixed; boundary="===============0131387499742392986=="
+MIME-Version: 1.0
+From: Locutus, of Borg <locutus.borg at borg.collective>
+Subject: [tpm2] Re: Installing on FreeBSD?
+Date: Thu, 31 Mar 2022 11:16:23 +0000
+Message-ID: <AS8P194MB16694511F3CB4C3A21A5D48AA6E19@AS8P194MB1669.EURP194.PROD.OUTLOOK.COM>
+In-Reply-To: e2d89678-8b03-6159-7f0f-b5e258ed6f1f@skylon.me.uk
+List-ID: <tpm2@lists.01.org>
+To: tpm2@lists.01.org
+
+--===============0131387499742392986==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+
+Could you give us the complete Error message ?
+
+Typical fault No1 is that the tpm pseudo-file is not accessible by the curr=
+ent user.
+
+Under linux this is /dev/tpm0 I don't know if it's the same on FreeBSD.
+
+Cheers,
+Andreas
+
+________________________________________
+Von: John Connett <jrc(a)skylon.me.uk>
+Gesendet: Donnerstag, 31. M=C3=A4rz 2022 12:55
+An: tpm2(a)lists.01.org
+Betreff: [tpm2] Installing on FreeBSD?
+
+Is there a simple, step-by-step guide for installing tpm2 on FreeBSD?
+
+I started with a FreeBSD 13.0-RELEASE-p10 installation on x86_64 and instal=
+led the following with "pkg install":
+
+  *   tpm2-abrmd-2.4.0
+  *   tpm2-tools-5.2
+  *   tpm2-tss-3.1.0
+
+then added tpm2_abrmd_enable=3D"YES" and dbus_enable=3D"YES" to /etc/rc.con=
+f. The user includes "_tss" in its groups.
+
+Attempts to run tpm2_getrandom fail with "Could not initialize TCTI file".
+
+It appears that I have missed some important steps!
+
+The equivalent on Ubuntu just works.
+
+Thanks
+--
+John
+--===============0131387499742392986==--
+
+

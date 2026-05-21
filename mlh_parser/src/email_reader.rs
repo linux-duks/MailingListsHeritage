@@ -8,27 +8,19 @@ use regex::Regex;
 
 use std::collections::HashMap;
 
-use crate::address_parser::addr_to_string;
-
 pub fn header_value_to_string(val: &mail_parser::HeaderValue<'_>) -> Option<String> {
     match val {
         mail_parser::HeaderValue::Text(s) => Some(s.to_string()),
         mail_parser::HeaderValue::TextList(v) => Some(v.join(", ")),
         mail_parser::HeaderValue::Address(a) => {
-            if let Some(addrs) = a.as_list() {
-                if addrs.len() > 1 {
-                    log::warn!("Converting many addresses to a single string: {:?}", val);
-                    let addrs_concat: String = addrs
-                        .iter()
-                        .map(|a| addr_to_string(a))
-                        .collect::<Vec<String>>()
-                        .join(", ");
-                    Some(addrs_concat)
-                } else {
-                    a.first().map(|first| addr_to_string(first))
-                }
-            } else {
+            let merged = crate::address_parser::normalize_address_list(a);
+            if merged.is_empty() {
                 None
+            } else if merged.len() > 1 {
+                log::warn!("Converting many addresses to a single string: {:?}", val);
+                Some(merged.join(" "))
+            } else {
+                Some(merged.into_iter().next().unwrap())
             }
         }
         mail_parser::HeaderValue::ContentType(ct) => {
@@ -72,11 +64,11 @@ pub fn header_value_to_string_list(val: &mail_parser::HeaderValue<'_>) -> Option
             Some(v.iter().map(|c| c.clone().into_owned()).collect())
         }
         mail_parser::HeaderValue::Address(a) => {
-            let addrs_concat: Vec<String> = a.iter().map(|a| addr_to_string(a)).collect();
-            if addrs_concat.is_empty() {
+            let addrs = crate::address_parser::normalize_address_list(a);
+            if addrs.is_empty() {
                 None
             } else {
-                Some(addrs_concat)
+                Some(addrs)
             }
         }
         mail_parser::HeaderValue::ContentType(ct) => {
