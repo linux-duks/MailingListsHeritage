@@ -1,4 +1,4 @@
-use arrow::array::{Array, StringArray};
+use arrow::array::{Array, ListArray, StringArray};
 use mlh_parser::{config::AppConfig, constants::BATCH_MAX_RECORDS, process_mailing_list, start};
 use parquet::arrow::arrow_reader::ParquetRecordBatchReaderBuilder;
 use std::fs;
@@ -137,6 +137,307 @@ fn test_parse_errors_csv_forwarding_newlines() {
         !csv_content.contains("\"\n\""),
         "fields should not contain raw newlines"
     );
+}
+
+/// Creates a single EML with five To addresses, runs the pipeline,
+/// then reads the Parquet output and verifies that the row count is
+/// 1 (not expanded per address) and the `to` list column contains
+/// all five addresses in order.
+#[test]
+fn test_multiple_to_addresses_in_parquet() {
+    let temp_dir = TempDir::new().unwrap();
+    let input_base = temp_dir.path().to_path_buf();
+    let list_dir = input_base.join("manyto");
+    fs::create_dir_all(&list_dir).unwrap();
+    let output_base = temp_dir.path().join("output");
+
+    let eml_content = concat!(
+        "From: Cass Andor <cass@ferrix.local>\r\n",
+        "To: one@test.local, two@test.local, three@test.local, four@test.local, five@test.local\r\n",
+        "Subject: Many To\r\n",
+        "Date: Mon, 10 Feb 2025 12:00:00 +0000\r\n",
+        "Message-ID: <many-to@ferrix.local>\r\n",
+        "\r\n",
+        "Body text.\r\n"
+    );
+    fs::write(list_dir.join("many_to.eml"), eml_content).unwrap();
+
+    let result = process_mailing_list(
+        "manyto",
+        &input_base,
+        &output_base,
+        false,
+        BATCH_MAX_RECORDS,
+    );
+    assert!(result.is_ok());
+
+    let parquet_path = output_base
+        .join("dataset")
+        .join("list=manyto")
+        .join("list_data.parquet");
+    assert!(parquet_path.exists());
+
+    let file = fs::File::open(&parquet_path).unwrap();
+    let builder = ParquetRecordBatchReaderBuilder::try_new(file).unwrap();
+    let reader = builder.build().unwrap();
+
+    let mut row_count = 0;
+    for batch in reader {
+        let batch = batch.unwrap();
+        row_count += batch.num_rows();
+
+        let to_col = batch
+            .column_by_name("to")
+            .unwrap()
+            .as_any()
+            .downcast_ref::<ListArray>()
+            .unwrap();
+
+        for r in 0..batch.num_rows() {
+            let offsets = to_col.value_offsets();
+            let start = offsets[r] as usize;
+            let end = offsets[r + 1] as usize;
+            let list_len = end - start;
+            assert_eq!(list_len, 5, "`to` list should have 5 entries");
+
+            let values = to_col
+                .values()
+                .as_any()
+                .downcast_ref::<StringArray>()
+                .unwrap();
+
+            let expected = [
+                "one@test.local",
+                "two@test.local",
+                "three@test.local",
+                "four@test.local",
+                "five@test.local",
+            ];
+            for (i, expected_addr) in expected.iter().enumerate() {
+                assert_eq!(values.value(start + i), *expected_addr);
+            }
+        }
+    }
+
+    assert_eq!(row_count, 1, "one input email should produce exactly one row");
+}
+
+/// Creates a single EML with four CC addresses and one To address,
+/// then verifies the Parquet output has one row with the correct
+/// `cc` list length and content.
+#[test]
+fn test_multiple_cc_addresses_in_parquet() {
+    let temp_dir = TempDir::new().unwrap();
+    let input_base = temp_dir.path().to_path_buf();
+    let list_dir = input_base.join("manycc");
+    fs::create_dir_all(&list_dir).unwrap();
+    let output_base = temp_dir.path().join("output");
+
+    let eml_content = concat!(
+        "From: Mon Mothma <mon@chandrila.gov>\r\n",
+        "To: recipient@test.local\r\n",
+        "CC: cc-one@test.local, cc-two@test.local, cc-three@test.local, cc-four@test.local\r\n",
+        "Subject: Many CC\r\n",
+        "Date: Tue, 11 Feb 2025 14:30:00 +0000\r\n",
+        "Message-ID: <many-cc@chandrila.gov>\r\n",
+        "\r\n",
+        "Body text.\r\n"
+    );
+    fs::write(list_dir.join("many_cc.eml"), eml_content).unwrap();
+
+    let result = process_mailing_list(
+        "manycc",
+        &input_base,
+        &output_base,
+        false,
+        BATCH_MAX_RECORDS,
+    );
+    assert!(result.is_ok());
+
+    let parquet_path = output_base
+        .join("dataset")
+        .join("list=manycc")
+        .join("list_data.parquet");
+    assert!(parquet_path.exists());
+
+    let file = fs::File::open(&parquet_path).unwrap();
+    let builder = ParquetRecordBatchReaderBuilder::try_new(file).unwrap();
+    let reader = builder.build().unwrap();
+
+    let mut row_count = 0;
+    for batch in reader {
+        let batch = batch.unwrap();
+        row_count += batch.num_rows();
+
+        // Check `to` list: single entry
+        let to_col = batch
+            .column_by_name("to")
+            .unwrap()
+            .as_any()
+            .downcast_ref::<ListArray>()
+            .unwrap();
+
+        for r in 0..batch.num_rows() {
+            let to_offsets = to_col.value_offsets();
+            let to_start = to_offsets[r] as usize;
+            let to_end = to_offsets[r + 1] as usize;
+            let to_len = to_end - to_start;
+            assert_eq!(to_len, 1, "`to` list should have 1 entry");
+
+            let to_values = to_col
+                .values()
+                .as_any()
+                .downcast_ref::<StringArray>()
+                .unwrap();
+            assert_eq!(to_values.value(to_start), "recipient@test.local");
+        }
+
+        // Check `cc` list: four entries
+        let cc_col = batch
+            .column_by_name("cc")
+            .unwrap()
+            .as_any()
+            .downcast_ref::<ListArray>()
+            .unwrap();
+
+        for r in 0..batch.num_rows() {
+            let cc_offsets = cc_col.value_offsets();
+            let cc_start = cc_offsets[r] as usize;
+            let cc_end = cc_offsets[r + 1] as usize;
+            let cc_len = cc_end - cc_start;
+            assert_eq!(cc_len, 4, "`cc` list should have 4 entries");
+
+            let cc_values = cc_col
+                .values()
+                .as_any()
+                .downcast_ref::<StringArray>()
+                .unwrap();
+
+            let expected_cc = [
+                "cc-one@test.local",
+                "cc-two@test.local",
+                "cc-three@test.local",
+                "cc-four@test.local",
+            ];
+            for (i, expected_addr) in expected_cc.iter().enumerate() {
+                assert_eq!(cc_values.value(cc_start + i), *expected_addr);
+            }
+        }
+    }
+
+    assert_eq!(row_count, 1, "one input email should produce exactly one row");
+}
+
+/// Creates three EML files with varying To/CC counts, processes
+/// them, and asserts that the Parquet output has exactly three rows
+/// and that the list column lengths match their input.
+#[test]
+fn test_multiple_emails_varied_to_cc_row_count() {
+    let temp_dir = TempDir::new().unwrap();
+    let input_base = temp_dir.path().to_path_buf();
+    let list_dir = input_base.join("varied");
+    fs::create_dir_all(&list_dir).unwrap();
+    let output_base = temp_dir.path().join("output");
+
+    // Email 1: 3 To, no CC
+    let eml1 = concat!(
+        "From: a@test.local\r\n",
+        "To: alpha@test.local, beta@test.local, gamma@test.local\r\n",
+        "Subject: Three To\r\n",
+        "Date: Mon, 01 Jan 2025 12:00:00 +0000\r\n",
+        "Message-ID: <three-to@test.local>\r\n",
+        "\r\n",
+        "Three To addresses.\r\n"
+    );
+
+    // Email 2: 1 To, 2 CC
+    let eml2 = concat!(
+        "From: b@test.local\r\n",
+        "To: delta@test.local\r\n",
+        "CC: epsilon@test.local, zeta@test.local\r\n",
+        "Subject: Two CC\r\n",
+        "Date: Tue, 02 Jan 2025 12:00:00 +0000\r\n",
+        "Message-ID: <two-cc@test.local>\r\n",
+        "\r\n",
+        "Two CC addresses.\r\n"
+    );
+
+    // Email 3: 2 To, 3 CC
+    let eml3 = concat!(
+        "From: c@test.local\r\n",
+        "To: iota@test.local, kappa@test.local\r\n",
+        "CC: lambda@test.local, mu@test.local, nu@test.local\r\n",
+        "Subject: Mixed\r\n",
+        "Date: Wed, 03 Jan 2025 12:00:00 +0000\r\n",
+        "Message-ID: <mixed@test.local>\r\n",
+        "\r\n",
+        "Mixed addresses.\r\n"
+    );
+
+    fs::write(list_dir.join("email_01.eml"), eml1).unwrap();
+    fs::write(list_dir.join("email_02.eml"), eml2).unwrap();
+    fs::write(list_dir.join("email_03.eml"), eml3).unwrap();
+
+    let result = process_mailing_list(
+        "varied",
+        &input_base,
+        &output_base,
+        false,
+        BATCH_MAX_RECORDS,
+    );
+    assert!(result.is_ok());
+
+    let parquet_path = output_base
+        .join("dataset")
+        .join("list=varied")
+        .join("list_data.parquet");
+    assert!(parquet_path.exists());
+
+    let file = fs::File::open(&parquet_path).unwrap();
+    let builder = ParquetRecordBatchReaderBuilder::try_new(file).unwrap();
+    let reader = builder.build().unwrap();
+
+    let mut row_count = 0;
+    let mut to_lengths: Vec<usize> = Vec::new();
+    let mut cc_lengths: Vec<usize> = Vec::new();
+
+    for batch in reader {
+        let batch = batch.unwrap();
+        row_count += batch.num_rows();
+
+        let to_col = batch
+            .column_by_name("to")
+            .unwrap()
+            .as_any()
+            .downcast_ref::<ListArray>()
+            .unwrap();
+
+        let cc_col = batch
+            .column_by_name("cc")
+            .unwrap()
+            .as_any()
+            .downcast_ref::<ListArray>()
+            .unwrap();
+
+        for r in 0..batch.num_rows() {
+            {
+                let to_offsets = to_col.value_offsets();
+                to_lengths.push((to_offsets[r + 1] - to_offsets[r]) as usize);
+            }
+            {
+                let cc_offsets = cc_col.value_offsets();
+                cc_lengths.push((cc_offsets[r + 1] - cc_offsets[r]) as usize);
+            }
+        }
+    }
+
+    assert_eq!(row_count, 3, "three input emails should produce three rows");
+
+    // Email 1: 3 To, 0 CC
+    // Email 2: 1 To, 2 CC
+    // Email 3: 2 To, 3 CC
+    assert_eq!(to_lengths, vec![3, 1, 2]);
+    assert_eq!(cc_lengths, vec![0, 2, 3]);
 }
 
 /// Creates 100 numbered emails split across two mailing lists

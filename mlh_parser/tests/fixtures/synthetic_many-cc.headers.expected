@@ -1,0 +1,9 @@
+from: Mon Mothma <mon@chandrila.gov>
+to: recipient@test.local
+cc: cc-one@test.local, cc-two@test.local, cc-three@test.local, cc-four@test.local
+subject: Test email with many CC recipients
+date: Tue, 11 Feb 2025 14:30:00 +0000
+message-id: <synthetic-many-cc@chandrila.gov>
+xref: localhost test.groups.synthetic:202
+newsgroups: test.groups.synthetic
+path: nntp.lore.kernel.org!not-for-mail

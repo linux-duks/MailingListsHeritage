@@ -1,0 +1,3 @@
+This email has three To recipients and three CC recipients,
+including addresses with display names in angle brackets.
+Verifies that the parser handles mixed formats correctly.

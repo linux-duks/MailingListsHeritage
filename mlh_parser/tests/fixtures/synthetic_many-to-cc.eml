@@ -1,0 +1,13 @@
+From: Bail Organa <bail@alderaan.royal>
+To: Senator One <one@senate.galactic>, two@senate.galactic, Senator Three <three@senate.galactic>
+CC: Aide Alpha <alpha@alderaan.staff>, beta@alderaan.staff, Aide Gamma <gamma@alderaan.staff>
+Subject: Test email with many To and CC with display names
+Date: Wed, 12 Feb 2025 09:00:00 +0000
+Message-ID: <synthetic-many-to-cc@alderaan.royal>
+Xref: localhost test.groups.synthetic:203
+Newsgroups: test.groups.synthetic
+Path: nntp.lore.kernel.org!not-for-mail
+
+This email has three To recipients and three CC recipients,
+including addresses with display names in angle brackets.
+Verifies that the parser handles mixed formats correctly.

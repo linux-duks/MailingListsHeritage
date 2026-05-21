@@ -1,0 +1,8 @@
+from: Cass Andor <cass@ferrix.local>
+to: one@test.local, two@test.local, three@test.local, four@test.local, five@test.local
+subject: Test email with many To recipients
+date: Mon, 10 Feb 2025 12:00:00 +0000
+message-id: <synthetic-many-to@ferrix.local>
+xref: localhost test.groups.synthetic:201
+newsgroups: test.groups.synthetic
+path: nntp.lore.kernel.org!not-for-mail

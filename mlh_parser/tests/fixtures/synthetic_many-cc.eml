@@ -1,0 +1,12 @@
+From: Mon Mothma <mon@chandrila.gov>
+To: recipient@test.local
+CC: cc-one@test.local, cc-two@test.local, cc-three@test.local, cc-four@test.local
+Subject: Test email with many CC recipients
+Date: Tue, 11 Feb 2025 14:30:00 +0000
+Message-ID: <synthetic-many-cc@chandrila.gov>
+Xref: localhost test.groups.synthetic:202
+Newsgroups: test.groups.synthetic
+Path: nntp.lore.kernel.org!not-for-mail
+
+This email has a single To recipient and four CC recipients.
+Verifies that the parser extracts all CC addresses correctly.

@@ -1,0 +1,2 @@
+This email has a single To recipient and four CC recipients.
+Verifies that the parser extracts all CC addresses correctly.

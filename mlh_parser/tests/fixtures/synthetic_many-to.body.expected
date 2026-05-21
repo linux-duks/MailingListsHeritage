@@ -1,0 +1,2 @@
+This email is sent to five recipients on the To line.
+Verifies that the parser extracts all of them correctly.

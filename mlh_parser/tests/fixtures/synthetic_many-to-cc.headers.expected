@@ -1,0 +1,9 @@
+from: Bail Organa <bail@alderaan.royal>
+to: Senator One <one@senate.galactic>, two@senate.galactic, Senator Three <three@senate.galactic>
+cc: Aide Alpha <alpha@alderaan.staff>, beta@alderaan.staff, Aide Gamma <gamma@alderaan.staff>
+subject: Test email with many To and CC with display names
+date: Wed, 12 Feb 2025 09:00:00 +0000
+message-id: <synthetic-many-to-cc@alderaan.royal>
+xref: localhost test.groups.synthetic:203
+newsgroups: test.groups.synthetic
+path: nntp.lore.kernel.org!not-for-mail
