@@ -8,13 +8,13 @@ from mlh_anonymizer.hasher import generate_sha1_hash
 logger = logging.getLogger(__name__)
 
 
-def mlh_anonymizer(col: Any) -> Union[str, list[str]]:
-    """Apply SHA-1 anonymization to a column value.
+def anonymize_string(row_val: Any) -> Union[str, list[str]]:
+    """Apply SHA-1 anonymization to a row value.
 
     Handles strings and lists of strings.
 
     Args:
-        col: Value to anonymize (str or list[str])
+        row_val: Value to anonymize (str or list[str])
 
     Returns:
         Anonymized value (SHA-1 hash or list of hashes)
@@ -22,40 +22,40 @@ def mlh_anonymizer(col: Any) -> Union[str, list[str]]:
     Raises:
         Exception: If type is not supported
     """
-    if isinstance(col, str):
-        return generate_sha1_hash(col)
-    if hasattr(col, "__iter__"):
-        return [generate_sha1_hash(val) for val in col]
-    raise Exception(f"Unmapped type for {type(col)}")
+    if isinstance(row_val, str):
+        return generate_sha1_hash(row_val)
+    if hasattr(row_val, "__iter__"):
+        return [generate_sha1_hash(val) for val in row_val]
+    raise Exception(f"Unmapped type for {type(row_val)}")
 
 
-def anonymize_map(col: Any, map_key: str) -> Union[list[dict], dict]:
+def anonymize_map(row_val: Any, map_key: str) -> Union[list[dict], dict]:
     """Anonymize a specific key within map/list structures.
 
     Used for nested structures like trailers.identification.
 
     Args:
-        col: Column value (list[dict] or dict)
+        row_val: row value (list[dict] or dict)
         map_key: Key within the dict to anonymize
 
     Returns:
-        Column with specified key anonymized
+        row value with specified key anonymized
 
     Raises:
         Exception: If type is not supported
     """
-    if hasattr(col, "__iter__") and not isinstance(col, dict):
-        parts = len(col)
-        newcol = [{}] * parts
+    if hasattr(row_val, "__iter__") and not isinstance(row_val, dict):
+        parts = len(row_val)
+        newrow_val = [{}] * parts
         for part_i in range(parts):
-            part = col[part_i]
+            part = row_val[part_i]
             # Anonymize the specified key
-            part[map_key] = mlh_anonymizer(part[map_key])
-            newcol[part_i] = part
-        return newcol
-    elif isinstance(col, dict):
-        newcol = {}
-        newcol[map_key] = mlh_anonymizer(col[map_key])
-        return newcol
+            part[map_key] = anonymize_string(part[map_key])
+            newrow_val[part_i] = part
+        return newrow_val
+    elif isinstance(row_val, dict):
+        newrow_val = {}
+        newrow_val[map_key] = anonymize_string(row_val[map_key])
+        return newrow_val
     else:
-        raise Exception(f"Unsupported type for anonymize_map: {type(col)}")
+        raise Exception(f"Unsupported type for anonymize_map: {type(row_val)}")

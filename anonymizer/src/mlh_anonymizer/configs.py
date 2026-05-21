@@ -102,3 +102,7 @@ LISTS_TO_PARSE: list[str] = [
 # Directory paths (required environment variables)
 INPUT_DIR_PATH: str = os.environ["INPUT_DIR"]
 OUTPUT_DIR_PATH: str = os.environ["OUTPUT_DIR"]
+
+# defaults to maximum compression for efficient storage
+# this is very resource intensive, and high levels come with diminishing returns
+COMPRESSION_LEVEL: int = int(os.getenv("COMPRESSION_LEVEL", "22"))

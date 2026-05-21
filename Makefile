@@ -3,10 +3,12 @@ LISTS_OF_INTEREST ?=
 ANALYSIS_SCRIPT ?=
 N_PROC ?=
 MAX_TOTAL_THREADS ?=
+COMPRESSION_LEVEL ?=
 export LISTS_OF_INTEREST
 export ANALYSIS_SCRIPT
 export N_PROC
 export MAX_TOTAL_THREADS
+export COMPRESSION_LEVEL
 # end of variables for the analysis script
 
 # By default, 'make' will run the 'all' target

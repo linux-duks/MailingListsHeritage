@@ -5,8 +5,8 @@ import logging
 
 import polars as pl
 
-from mlh_anonymizer.anonymizer import mlh_anonymizer, anonymize_map
-from mlh_anonymizer.constants import ANONYMIZE_COLUMNS, ANONYMIZE_MAP
+from mlh_anonymizer.anonymizer import anonymize_string, anonymize_map
+from mlh_anonymizer.configs import COMPRESSION_LEVEL
 
 logger = logging.getLogger(__name__)
 
@@ -17,6 +17,7 @@ def process_dataframe(
     input_path: str,
     mailing_list: str,
     output_dir_path: str,
+    columns_to_anomimyze: dict[str : list[str]],
 ) -> None:
     """Process a DataFrame by anonymizing configured columns and writing to parquet.
 
@@ -36,22 +37,24 @@ def process_dataframe(
 
     df_columns = df.collect_schema().names()
 
-    # Anonymize standard columns
-    for col in ANONYMIZE_COLUMNS:
+    # Anonymize string columns
+    string_columns = columns_to_anomimyze.get("str", [])
+    for col in string_columns:
         if col not in df_columns:
             logger.warning(f"Column {col} not available in dataset {dataset_name}")
             continue
         logger.info(f"Running '{col}'.'{dataset_name}'.'{input_path}'")
         df = df.with_columns(
             pl.col(col)
-            .map_elements(lambda x: mlh_anonymizer(x), return_dtype=pl.self_dtype())
+            .map_elements(lambda x: anonymize_string(x), return_dtype=pl.self_dtype())
             .alias(col),
         )
 
     # Anonymize mapped columns (nested structures)
-    for col in ANONYMIZE_MAP:
+    map_columns = columns_to_anomimyze.get("map", [])
+    for col in map_columns:
         col_parts = col.split(".")
-        if col not in df_columns:
+        if col_parts[0] not in df_columns:
             logger.warning(f"Column {col} not available in dataset {dataset_name}")
             continue
         logger.info(f"Running '{col}'.'{dataset_name}'.'{input_path}'")
@@ -76,5 +79,5 @@ def process_dataframe(
         compression="zstd",
         row_group_size=1024**2,  # double the default
         data_page_size=(1024 * 2) ** 2,
-        compression_level=22,  # maximum compression for Zenodo
+        compression_level=COMPRESSION_LEVEL,
     )

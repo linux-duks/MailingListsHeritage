@@ -4,8 +4,10 @@ ANONYMIZER_OUTPUT_DIR=$(REPO_ROOT)/output/anonymizer
 
 N_PROC ?=
 MAX_TOTAL_THREADS ?=
+COMPRESSION_LEVEL ?=
 export N_PROC
 export MAX_TOTAL_THREADS
+export COMPRESSION_LEVEL
 
 # Include shared container runtime detection
 include ../containers.mk
@@ -46,7 +48,7 @@ run: create-output-dir
 	else \
 		if command -v uv >/dev/null 2>&1; then \
 			echo "==> Found uv toolchain, running natively..."; \
-			INPUT_DIR="../output/parser/dataset" OUTPUT_DIR="../output/anonymizer" N_PROC="$${N_PROC:-}" MAX_TOTAL_THREADS="$${MAX_TOTAL_THREADS:-}" uv run src/main.py; \
+			INPUT_DIR="../output/parser/dataset" OUTPUT_DIR="../output/anonymizer" N_PROC="$${N_PROC:-}" MAX_TOTAL_THREADS="$${MAX_TOTAL_THREADS:-}" COMPRESSION_LEVEL="$${COMPRESSION_LEVEL:-}" uv run src/main.py; \
 		else \
 			echo "==> uv toolchain not found, running with $(CONTAINER) (Image: $(PYTHON_DOCKER_IMAGE))..."; \
 			echo "==> Host UID:GID = $$(id -u):$$(id -g)"; \
@@ -58,6 +60,7 @@ run: create-output-dir
 				-e GIT_DATE=$${GIT_DATE:-unknown} \
 				-e N_PROC=$${N_PROC:-} \
 				-e MAX_TOTAL_THREADS=$${MAX_TOTAL_THREADS:-} \
+				-e COMPRESSION_LEVEL=$${COMPRESSION_LEVEL:-} \
 				-e UV_CACHE_DIR=/tmp/.cache/uv \
 				-e UV_PROJECT_ENVIRONMENT=/tmp/.venv \
 				-v $(PARSER_OUTPUT_DIR):/data/dataset \
@@ -74,7 +77,7 @@ run: create-output-dir
 debug:
 	@if command -v uv >/dev/null 2>&1; then \
 		echo "==> Found uv toolchain, running natively..."; \
-		INPUT_DIR="../output/parser/dataset" OUTPUT_DIR="../output/anonymizer" N_PROC="$${N_PROC:-}" MAX_TOTAL_THREADS="$${MAX_TOTAL_THREADS:-}" uv run src/main.py; \
+		INPUT_DIR="../output/parser/dataset" OUTPUT_DIR="../output/anonymizer" N_PROC="$${N_PROC:-}" MAX_TOTAL_THREADS="$${MAX_TOTAL_THREADS:-}" COMPRESSION_LEVEL="1" uv run src/main.py; \
 	else \
 		echo "==> uv toolchain not found, running with $(CONTAINER) (Image: $(PYTHON_DOCKER_IMAGE))..."; \
 		$(CONTAINER) run --rm  -it\
@@ -85,6 +88,7 @@ debug:
 			-e OUTPUT_DIR=/data/output \
 			-e N_PROC=$${N_PROC:-} \
 			-e MAX_TOTAL_THREADS=$${MAX_TOTAL_THREADS:-} \
+			-e COMPRESSION_LEVEL="1" \
 			-e UV_CACHE_DIR=/tmp/.cache/uv \
 			-e UV_PROJECT_ENVIRONMENT=/tmp/.venv \
 			-v $(PARSER_OUTPUT_DIR):/data/dataset \
