@@ -62,6 +62,49 @@ string_test_cases = [
         Cc: f567b3165e2d074e26eab4098aaaac30ac989ebf
         Signed-off-by: b1f386047221c342010c24fb02cdf3855f38ad46 <1098a4204bd8e6f3f4a48fdf24f9a94765f10786>""",
     ),
+    # positive: edge case email formats
+    (
+        "user@sub.domain.example.com",
+        "fa2a1ee9662b85918dc8e5c4eff9c61ccff72038",
+    ),
+    (
+        "user@my-domain.org",
+        "6c93090978e1e6a88c49bf58a6b848002f7c3a7b",
+    ),
+    (
+        "user+tag@domain.com",
+        "0f7b7fff8a4c6ddcfe6f0ba3d32e990bfc741c38",
+    ),
+    (
+        "Joe Developer <joe@linux-foundation.org>",
+        "dc69c2c6cdb5b56c466501d4ee161b09b529e886 <10444bb1af05df1b8d5340beca0f78b338e12ff2>",
+    ),
+    # obfuscated emails, handled by the parser, ignored here (as it would be too error prone)
+    (
+        "user(a)domain.com",
+        "user(a)domain.com",
+    ),
+    (
+        "user at domain.com",
+        "user at domain.com",
+    ),
+    # negative: strings that look almost like identities but are not
+    (
+        "linux.kernel.org",
+        "linux.kernel.org",
+    ),
+    (
+        "#include <linux/version.h>",
+        "#include <linux/version.h>",
+    ),
+    (
+        "@@ -10,7 +10,6 @@",
+        "@@ -10,7 +10,6 @@",
+    ),
+    (
+        "2.20.1.7.g153144c",
+        "2.20.1.7.g153144c",
+    ),
     (
         # Multi Line string with patch and kanji names
         """

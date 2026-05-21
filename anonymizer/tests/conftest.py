@@ -21,6 +21,8 @@ def input_parquet_dir(tmp_path):
                 "Mon Mothma <mon.mothma@coruscant.senate>",
                 "Miles O'Brien <miles.obrien@starfleet.local>",
                 "video4linux-list@redhat.com",
+                "user@sub.domain.example.com",
+                "Joe Developer <joe@linux-foundation.org>",
             ],
             "to": [
                 ["amd-gfx@lists.freedesktop.org"],
@@ -29,6 +31,8 @@ def input_parquet_dir(tmp_path):
                     "Miles O'Brien <miles.obrien@starfleet.local>",
                 ],
                 ["dm-devel@redhat.com"],
+                ["user+tag@domain.com"],
+                ["user@my-domain.org", "user-name@my-domain.org"],
             ],
             "cc": [
                 ["video4linux-list@redhat.com"],
@@ -37,6 +41,8 @@ def input_parquet_dir(tmp_path):
                     "linux-ppp@vger.kernel.org",
                     "David Woodhouse <taramyn.barcona@coruscant.senate>",
                 ],
+                ["#include <linux/version.h>"],
+                ["user+suffix@domain.com", "valid@test.com"],
             ],
             "trailers": [
                 [
@@ -50,6 +56,13 @@ def input_parquet_dir(tmp_path):
                     {
                         "attribution": "Reported-by",
                         "identification": "高倉健 <okarum@oni.club>",
+                    }
+                ],
+                [],
+                [
+                    {
+                        "attribution": "Suggested-by",
+                        "identification": "user(a)domain.com",
                     }
                 ],
             ],
