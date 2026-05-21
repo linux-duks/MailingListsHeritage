@@ -17,7 +17,7 @@ pub fn header_value_to_string(val: &mail_parser::HeaderValue<'_>) -> Option<Stri
             if merged.is_empty() {
                 None
             } else if merged.len() > 1 {
-                log::warn!("Converting many addresses to a single string: {:?}", val);
+                log::debug!("Converting many addresses to a single string: {:?}", val);
                 Some(merged.join(" "))
             } else {
                 Some(merged.into_iter().next().unwrap())

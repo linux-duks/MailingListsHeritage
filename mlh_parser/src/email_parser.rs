@@ -82,10 +82,9 @@ fn collect_header_data(msg: &Message<'_>, email: &mut ParsedEmail, now: DateTime
                 raw.contains("(a)") || raw.contains("(A)") || raw.contains(" at ");
             let mut addrs = if has_obfuscation {
                 normalize_raw_address_header(&raw)
-            } else if let Some(val_vec) = header_value_to_string_list(header.value()) {
-                val_vec
             } else {
-                Vec::new()
+                header_value_to_string_list(header.value())
+                    .unwrap_or_default()
             };
             if key == "to" {
                 email.to.append(&mut addrs);
