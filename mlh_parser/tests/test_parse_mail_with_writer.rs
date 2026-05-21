@@ -219,7 +219,10 @@ fn test_multiple_to_addresses_in_parquet() {
         }
     }
 
-    assert_eq!(row_count, 1, "one input email should produce exactly one row");
+    assert_eq!(
+        row_count, 1,
+        "one input email should produce exactly one row"
+    );
 }
 
 /// Creates a single EML with four CC addresses and one To address,
@@ -325,7 +328,10 @@ fn test_multiple_cc_addresses_in_parquet() {
         }
     }
 
-    assert_eq!(row_count, 1, "one input email should produce exactly one row");
+    assert_eq!(
+        row_count, 1,
+        "one input email should produce exactly one row"
+    );
 }
 
 /// Creates three EML files with varying To/CC counts, processes

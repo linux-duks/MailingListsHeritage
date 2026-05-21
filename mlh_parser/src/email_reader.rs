@@ -65,11 +65,7 @@ pub fn header_value_to_string_list(val: &mail_parser::HeaderValue<'_>) -> Option
         }
         mail_parser::HeaderValue::Address(a) => {
             let addrs = crate::address_parser::normalize_address_list(a);
-            if addrs.is_empty() {
-                None
-            } else {
-                Some(addrs)
-            }
+            if addrs.is_empty() { None } else { Some(addrs) }
         }
         mail_parser::HeaderValue::ContentType(ct) => {
             // let st = if let Some(ref s) = ct.c_subtype {

@@ -151,16 +151,13 @@ pub fn normalize_address_list(address: &mail_parser::Address<'_>) -> Vec<String>
 
         if !cur_name.is_empty() && cur_email.is_empty() && i + 1 < addrs.len() {
             let next = addrs[i + 1];
-            let next_name =
-                strip_comment_artifacts(next.name.as_deref().unwrap_or(""));
+            let next_name = strip_comment_artifacts(next.name.as_deref().unwrap_or(""));
             let next_email = next.address.as_deref().unwrap_or("");
 
             if !next_name.is_empty() && !next_email.is_empty() {
-                let merged_name = format!("{} {}", cur_name, next_name)
-                    .replace(',', "");
+                let merged_name = format!("{} {}", cur_name, next_name).replace(',', "");
                 let merged_name = merged_name.trim().to_string();
-                let identity =
-                    normalize_address(&format!("{} <{}>", merged_name, next_email));
+                let identity = normalize_address(&format!("{} <{}>", merged_name, next_email));
                 if !identity.is_empty() {
                     result.push(identity);
                 }
