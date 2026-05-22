@@ -96,8 +96,9 @@ if DEBUG:
     print(f"Running in DEBUG mode. N_PROC={N_PROC}")
 
 # List of specific mailing lists to parse (empty = parse all)
+# Accepts plain list names (e.g. "amd-gfx,intel-gfx") and prefixes "list="
 LISTS_TO_PARSE: list[str] = [
-    item for item in os.getenv("LISTS_TO_PARSE", "").split(",") if item
+    f"list={item}" for item in os.getenv("LISTS_OF_INTEREST", "").split(",") if item
 ]
 
 # Directory paths (required environment variables)
