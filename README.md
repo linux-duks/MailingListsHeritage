@@ -44,7 +44,7 @@ Each component has its own detailed documentation:
 One of the dependencies is a git submodule. To build correctly
 
    ```bash
-   git clone --recurse-submodules git@gitlab.com/ccsl-usp/codev/MLH-archiver.git
+   git clone --recurse-submodules git@gitlab.com:ccsl-usp/codev/MLH-archiver.git
    ```
 
    Or if you dont have your ssh keys configured in GitHub,
