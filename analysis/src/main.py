@@ -6,6 +6,7 @@ from mlh_analysis import patch_missing
 from mlh_analysis import author_distribution
 from mlh_analysis import date_missing
 from mlh_analysis import sql_querier
+from mlh_analysis import duplicate_messages
 from mlh_analysis.inputs import resolve_inputs
 
 import os
@@ -29,6 +30,9 @@ def main():
         "date_missing": lambda: date_missing.main(inputs["dataset"], output_dir),
         # these scripts below will not run by default
         "author_distribution": lambda: author_distribution.main(
+            inputs["dataset"], output_dir
+        ),
+        "duplicate_messages": lambda: duplicate_messages.main(
             inputs["dataset"], output_dir
         ),
         "sql_querier": lambda: sql_querier.main(
