@@ -1,0 +1,279 @@
+Return-Path: <linux-audit-bounces@redhat.com>
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-korg-lkml-1.web.codeaurora.org
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1558FCCA47C
+	for <linux-audit@archiver.kernel.org>; Mon, 27 Jun 2022 02:37:40 +0000 (UTC)
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-167-3964bt-wPhujcmzDOF62lw-1; Sun, 26 Jun 2022 22:37:38 -0400
+X-MC-Unique: 3964bt-wPhujcmzDOF62lw-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3B0A889C7DB;
+	Mon, 27 Jun 2022 02:37:37 +0000 (UTC)
+Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (unknown [10.30.29.100])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 9EC1C492CA3;
+	Mon, 27 Jun 2022 02:37:35 +0000 (UTC)
+Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (localhost [IPv6:::1])
+	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 2496419B45D1;
+	Mon, 27 Jun 2022 02:37:35 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com
+ [10.11.54.5])
+ by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with
+ ESMTP id 875E4194705F for <linux-audit@listman.corp.redhat.com>;
+ Thu, 23 Jun 2022 07:10:40 +0000 (UTC)
+Received: by smtp.corp.redhat.com (Postfix)
+ id 5D3F41131D; Thu, 23 Jun 2022 07:10:40 +0000 (UTC)
+Received: from mimecast-mx02.redhat.com
+ (mimecast06.extmail.prod.ext.rdu2.redhat.com [10.11.55.22])
+ by smtp.corp.redhat.com (Postfix) with ESMTPS id 57DEA111F5
+ for <linux-audit@redhat.com>; Thu, 23 Jun 2022 07:10:40 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
+ [207.211.31.120])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 37D2818188A5
+ for <linux-audit@redhat.com>; Thu, 23 Jun 2022 07:10:40 +0000 (UTC)
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com
+ [205.220.177.32]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-621-HD17OXWFNQq6bL37vQEixg-1; Thu, 23 Jun 2022 03:10:35 -0400
+X-MC-Unique: HD17OXWFNQq6bL37vQEixg-1
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+ by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25N737BI004652;
+ Thu, 23 Jun 2022 07:10:17 GMT
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com
+ (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+ by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3gs54ct8n7-1
+ (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+ Thu, 23 Jun 2022 07:10:17 +0000
+Received: from pps.filterd
+ (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+ by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.16.1.2/8.16.1.2)
+ with SMTP id 25N762vk031837; Thu, 23 Jun 2022 07:10:16 GMT
+Received: from nam04-bn8-obe.outbound.protection.outlook.com
+ (mail-bn8nam04lp2047.outbound.protection.outlook.com [104.47.74.47])
+ by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com with ESMTP id
+ 3gtkfwcbmg-1
+ (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+ Thu, 23 Jun 2022 07:10:16 +0000
+Received: from MWHPR1001MB2365.namprd10.prod.outlook.com
+ (2603:10b6:301:2d::28) by MWHPR10MB1566.namprd10.prod.outlook.com
+ (2603:10b6:300:27::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5353.15; Thu, 23 Jun
+ 2022 07:10:14 +0000
+Received: from MWHPR1001MB2365.namprd10.prod.outlook.com
+ ([fe80::5020:9b82:5917:40b]) by MWHPR1001MB2365.namprd10.prod.outlook.com
+ ([fe80::5020:9b82:5917:40b%6]) with mapi id 15.20.5373.015; Thu, 23 Jun 2022
+ 07:10:14 +0000
+Date: Thu, 23 Jun 2022 10:09:48 +0300
+From: Ashitaka Emishi <ashitaka.emishi@ghibli.local>
+To: kbuild@lists.01.org, Ponyo Sosuke <ponyo.sosuke@ghibli.local>,
+ casey.schaufler@intel.com, jmorris@namei.org,
+ linux-security-module@vger.kernel.org, selinux@vger.kernel.org
+Subject: Re: [PATCH v36 18/33] LSM: Use lsmcontext in
+ security_dentry_init_security
+Message-ID: <202206230827.rGKbTxmu-lkp@intel.com>
+In-Reply-To: <20220609230146.319210-19-casey@schaufler-ca.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: JN2P275CA0005.ZAFP275.PROD.OUTLOOK.COM (2603:1086:0:3::17)
+ To MWHPR1001MB2365.namprd10.prod.outlook.com
+ (2603:10b6:301:2d::28)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: b2642dbf-62a5-4b9e-097d-08da54e76b7d
+X-MS-TrafficTypeDiagnostic: MWHPR10MB1566:EE_
+X-Microsoft-Antispam-PRVS: <MWHPR10MB1566CD38BA47427359CA468C8EB59@MWHPR10MB1566.namprd10.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0
+X-Microsoft-Antispam-Message-Info: hOJ5Cwktbm00Da0Yv3yywZELyCDqfXsM8E2ZqzaJRRJRmcuMMUf72QPdo8etkwaT+g34zhq4LwSVPTtoHiv4er6QWQphQcz6H6V3HUhSpKI9qBAXomBChHbhqWEslvq1qFi84BqZF43s7qvZUVfahzVDmj7MoYDtwDQh10vKYYX1YV4/S0EPPs27nZ9NpxU9hvTJG+EW19mIaXynbFHdSX0KFVqqGtOX4IZJ+IVkNi5VtadPe0hYcvmnFqRCzQZqjSejF4Go+JVg4tOyuSW0S/eczuWi7Sc4ZCJNw5foBwP/TstbR6MrEB2l9FPNmvRlvtyR1yPFdl7yhX1osvtpDU01YUQVaRcUmreonCSC1gLjKUcu7623MRNaqc8JsecxsidJ4whAySGwxeYi4IrYBbG+DXJqHaEMONjvsmeTVmXn8XhlFMkM9DURCqXyFi0VKUdv6F+nzKsnirwHSkLsgDzfbz6UktGmIq1Vle/s1aS1fnoHPLXk8vDmYGCngzlP7MLaNtVNuNEbdWy9ka9oNz2wNLn3kSVuz27esg8SLW8TfS1XRPCsATJipkItkMTcBZQ9s8dvXJpzFluvFe6UB+YTDZkdGUDvtzpTAgzap/HlqqX996HfDFR75L7snMrp+hf7t1IXxN5O+/wir9wbrn2e8kuUyxlFZf2AES+P+thx7qC2rBPrEMPEGTpIROgcNv7LbTjwucsJMeNTb5pvm9yVqWGaI7FQ9Kw3opk+8kDWfbkH41rPFNKINuhpTrXIUXyVZwb8A6glE3xEDDLK0gdwPLq4r71ohQVcBfdTdRng+KEp4/LY/3yPJG0QtkeSgAOYyfULyB/rfr6fHOcxCA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255; CTRY:; LANG:en; SCL:1; SRV:;
+ IPV:NLI; SFV:NSPM; H:MWHPR1001MB2365.namprd10.prod.outlook.com; PTR:; CAT:NONE;
+ SFS:(13230016)(39860400002)(346002)(136003)(376002)(366004)(396003)(38350700002)(26005)(6512007)(6486002)(38100700002)(9686003)(83380400001)(186003)(86362001)(41300700001)(36756003)(4001150100001)(478600001)(6666004)(7416002)(316002)(66946007)(66556008)(4326008)(66476007)(52116002)(15650500001)(2906002)(5660300002)(8936002)(44832011)(6506007)(1076003)(966005)(8676002);
+ DIR:OUT; SFP:1101
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?IKM/7mxrzP+VpgTN4Sbwr1JyNEu+uMTx0VwrqIAuz3jdCKovfb2QzM8h6rEu?=
+ =?us-ascii?Q?dPxLDfHpxuqzOqfhYWAHe+CAPWXeJvwNbt9XJGm2VAQKww1ek0h+AC5ybe8e?=
+ =?us-ascii?Q?VcTJ8RyDRJypgjtzvAH8WqAaVa2y4OrNECdkVUEZ9puFqb7OLOzOAdiuH/sw?=
+ =?us-ascii?Q?D97VjRYwdcaLBomsOxbyarP5ugqeXs0BLI0NoXbDU7buqhDTK9S09KT4MThB?=
+ =?us-ascii?Q?GXgz3/Ut5dOUU+cSdMEQLgN4IDa49REYzvs1Kn8Zr43Lu5ohH6DSd6uqB3EH?=
+ =?us-ascii?Q?LogV4YbPV+wXaKChSoeGzPmJugZHriD5em39Ghuyl2kYJ9HaXeNdEjYiMgzS?=
+ =?us-ascii?Q?Zvbako7813hM7ixt/4rGE2irFSk9TtmI82JsdnbPWD/U3JzaUkwYAfx/cYoE?=
+ =?us-ascii?Q?IPz8HY0poPVtY+baNl87AHoTxDf1s62kbpMSv37bMMPwEYYwfz/BaTAlRb7G?=
+ =?us-ascii?Q?LHRnmmzbE+fX9F6znLnuEH4JNcbgazV0+yiqaf2vVz/8+eeOlH9T/CjwaNO/?=
+ =?us-ascii?Q?C2NcH9edyUbOHT88eDmaI4Er04XgtNAr2EjvxJgxuKw19x/pgnprzpt11yY8?=
+ =?us-ascii?Q?EgHqTrSW+MM3zWAXr52doPWWJl+9TLAPDbAzdtsug5UhujZPEl3R9nukMUED?=
+ =?us-ascii?Q?9DP2PRoKmeY+96C1dJs36OdU82d8KoOzjXFNvBMXmY7IxZcVYKW/axQ2+Hca?=
+ =?us-ascii?Q?dq50YXU96W3HnxA9Zn4o8WU6cdD/DQex7j2i6teXqTzGSEJAaKc2ATsb1Kr2?=
+ =?us-ascii?Q?LQheQp9JSO2uGdimnVbcR8gNZNJ26ofwGwc/cOJ/JFulxvX75kxYtJ/XYxJn?=
+ =?us-ascii?Q?64q2QnSrt7fY/1Yx6WLPP46mW3HNfFUgM4gJyL3ncjDFn0HZLXORvgfifdsd?=
+ =?us-ascii?Q?7XdvpczzeH082Sv8OYp0gdiOdtjLJHGC91K+IZ7sxtIg+yr/jRIWdEkGAlCN?=
+ =?us-ascii?Q?drE2dS2GETWuvuiOE7zoe7DgamPMSNJn9Nr0FY5KIW7g6cwacFHbFQk7Kypb?=
+ =?us-ascii?Q?FXuVF/DRRz3lhQK61r3zLd/WD2s5nwhmCnEFH3byZC8IkvPq79rj0afXJ1a5?=
+ =?us-ascii?Q?uB4cTm1V3BJGHf5EYk7+nJCm3jpZpmXuZo8RN7nJ2B07+bxpibI9ByslGOx4?=
+ =?us-ascii?Q?OSxzV8FdskAeKmc+CEo3rvNLVNIytFK4aZC9mzr1ClS29ytcmL2xOdu+93IL?=
+ =?us-ascii?Q?G6KRIlENbN5lR0Yhe/caK6qOybQWU2fzzKwt7ST17Zbyklsq5+gdRX3CyUEs?=
+ =?us-ascii?Q?xMaERM0KWkvvc75EiGiaPQZF6d9CF6K2UZjW0y2iNUchB/W+lQrC5t42UzGA?=
+ =?us-ascii?Q?5z6EY0JTeLG7eD1+LbAElB+QWAy5PqMrtd2fYZG3pBmXGhDStesJKXR7ZGpK?=
+ =?us-ascii?Q?1dkvvY+PKj57OsZahRMtgm3XbsWoSIm1Teu51GlW7RhCU/H8JjNF6lfyFpMK?=
+ =?us-ascii?Q?WUM7wb3SGmrJ44kB4bWU5UByM2ZTn6pUZhISCuPJ6Rx16efYlc01Cu9N8vLX?=
+ =?us-ascii?Q?6lq/XmYhA1yrk7s9Q5ygz/o0rhq3SoG3QzabsVLTjO4R+hPDlMOJ30hZVO3o?=
+ =?us-ascii?Q?eaMXepG7jSi5k0jNA8vl3k5IvzqvRjYu44xWb/cNkzSr+eHMM0Knazne88p4?=
+ =?us-ascii?Q?PQ=3D=3D?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b2642dbf-62a5-4b9e-097d-08da54e76b7d
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR1001MB2365.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2022 07:10:14.8256 (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: MtplTeBrgBUJqDtSEFf6FVZSxrne39xF98u591mp5MBXb7SvsSmDzohofJkX7Jzpyl+0OWRpCDYgJoGXBRQ9RI9VyV3SrmHdaSRmGzewuoM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR10MB1566
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.517, 18.0.883
+ definitions=2022-06-23_03:2022-06-22,
+ 2022-06-23 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0
+ malwarescore=0
+ mlxlogscore=999 suspectscore=0 adultscore=0 phishscore=0 bulkscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2204290000 definitions=main-2206230027
+X-Proofpoint-GUID: mSq6sqN8LRtAG8-Ft7VrYwTJI4RhKNBd
+X-Proofpoint-ORIG-GUID: mSq6sqN8LRtAG8-Ft7VrYwTJI4RhKNBd
+X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
+ Definition; Similar Internal Domain=false;
+ Similar Monitored External Domain=false; Custom External Domain=false;
+ Mimecast External Domain=false; Newly Observed Domain=false;
+ Internal User Name=false; Custom Display Name List=false;
+ Reply-to Address Mismatch=false; Targeted Threat Dictionary=false;
+ Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
+X-Scanned-By: MIMEDefang 2.79 on 10.11.54.5
+X-Mailman-Approved-At: Mon, 27 Jun 2022 02:37:34 +0000
+X-BeenThere: linux-audit@redhat.com
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: Linux Audit Discussion <linux-audit.redhat.com>
+List-Unsubscribe: <https://listman.redhat.com/mailman/options/linux-audit>,
+ <mailto:linux-audit-request@redhat.com?subject=unsubscribe>
+List-Archive: <http://listman.redhat.com/archives/linux-audit/>
+List-Post: <mailto:linux-audit@redhat.com>
+List-Help: <mailto:linux-audit-request@redhat.com?subject=help>
+List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-audit>,
+ <mailto:linux-audit-request@redhat.com?subject=subscribe>
+Cc: john.johansen@canonical.com, kbuild-all@lists.01.org, lkp@intel.com,
+ linux-kernel@vger.kernel.org, linux-audit@redhat.com
+Errors-To: linux-audit-bounces@redhat.com
+Sender: "Linux-audit" <linux-audit-bounces@redhat.com>
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.9
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=linux-audit-bounces@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Disposition: inline
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+
+Hi Casey,
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Casey-Schaufler/integrity-disassociate-ima_filter_rule-from-security_audit_rule/20220610-080129
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/audit.git next
+config: parisc-randconfig-m031-20220622 (https://download.01.org/0day-ci/archive/20220623/202206230827.rGKbTxmu-lkp@intel.com/config)
+compiler: hppa-linux-gcc (GCC) 11.3.0
+
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <seita.yokokawa@ghibli.local>
+Reported-by: Ashitaka Emishi <ashitaka.emishi@ghibli.local>
+
+New smatch warnings:
+fs/fuse/dir.c:484 get_security_context() error: uninitialized symbol 'name'.
+
+Old smatch warnings:
+fs/fuse/dir.c:503 get_security_context() warn: is 'ptr' large enough for 'struct fuse_secctx'? 0
+
+vim +/name +484 fs/fuse/dir.c
+
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  462  static int get_security_context(struct dentry *entry, umode_t mode,
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  463  				void **security_ctx, u32 *security_ctxlen)
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  464  {
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  465  	struct fuse_secctx *fctx;
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  466  	struct fuse_secctx_header *header;
+86d33e271bed73 Casey Schaufler 2022-06-09  467  	struct lsmcontext lsmctx;
+                                                        ^^^^^^^^^^^^^^^^^^^^^^^^
+
+86d33e271bed73 Casey Schaufler 2022-06-09  468  	void *ptr;
+86d33e271bed73 Casey Schaufler 2022-06-09  469  	u32 total_len = sizeof(*header);
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  470  	int err, nr_ctx = 0;
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  471  	const char *name;
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  472  	size_t namelen;
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  473  
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  474  	err = security_dentry_init_security(entry, mode, &entry->d_name,
+86d33e271bed73 Casey Schaufler 2022-06-09  475  					    &name, &lsmctx);
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  476  	if (err) {
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  477  		if (err != -EOPNOTSUPP)
+
+Imagine "err == -EOPNOTSUPP".
+
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  478  			goto out_err;
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  479  		/* No LSM is supporting this security hook. Ignore error */
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  480  	}
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  481  
+86d33e271bed73 Casey Schaufler 2022-06-09  482  	if (lsmctx.len) {
+
+Then actually "lsmctx.len" is uninitialized.  Everything breaks after
+that.
+
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  483  		nr_ctx = 1;
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11 @484  		namelen = strlen(name) + 1;
+                                                                                 ^^^^
+Warning.
+
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  485  		err = -EIO;
+86d33e271bed73 Casey Schaufler 2022-06-09  486  		if (WARN_ON(namelen > XATTR_NAME_MAX + 1 ||
+86d33e271bed73 Casey Schaufler 2022-06-09  487  		    lsmctx.len > S32_MAX))
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  488  			goto out_err;
+86d33e271bed73 Casey Schaufler 2022-06-09  489  		total_len += FUSE_REC_ALIGN(sizeof(*fctx) + namelen +
+86d33e271bed73 Casey Schaufler 2022-06-09  490  					    lsmctx.len);
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  491  	}
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  492  
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  493  	err = -ENOMEM;
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  494  	header = ptr = kzalloc(total_len, GFP_KERNEL);
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  495  	if (!ptr)
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  496  		goto out_err;
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  497  
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  498  	header->nr_secctx = nr_ctx;
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  499  	header->size = total_len;
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  500  	ptr += sizeof(*header);
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  501  	if (nr_ctx) {
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  502  		fctx = ptr;
+86d33e271bed73 Casey Schaufler 2022-06-09  503  		fctx->size = lsmctx.len;
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  504  		ptr += sizeof(*fctx);
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  505  
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  506  		strcpy(ptr, name);
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  507  		ptr += namelen;
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  508  
+86d33e271bed73 Casey Schaufler 2022-06-09  509  		memcpy(ptr, lsmctx.context, lsmctx.len);
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  510  	}
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  511  	*security_ctxlen = total_len;
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  512  	*security_ctx = header;
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  513  	err = 0;
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  514  out_err:
+86d33e271bed73 Casey Schaufler 2022-06-09  515  	if (nr_ctx)
+86d33e271bed73 Casey Schaufler 2022-06-09  516  		security_release_secctx(&lsmctx);
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  517  	return err;
+3e2b6fdbdc9ab5 Vivek Goyal     2021-11-11  518  }
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
+
+--
+Linux-audit mailing list
+Linux-audit@redhat.com
+https://listman.redhat.com/mailman/listinfo/linux-audit
+

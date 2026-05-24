@@ -9,16 +9,16 @@ use regex::Regex;
 use std::sync::LazyLock;
 
 static DATE_REGEX: LazyLock<Regex> = LazyLock::new(|| {
-    let rfc2822 = r"(?:(Sun|Mon|Tue|Wed|Thu|Fri|Sat),\s+)?(0[1-9]|[1-2]?[0-9]|3[01])\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+(19[0-9]{2}|[2-9][0-9]{3})\s+(2[0-3]|[0-1][0-9]):([0-5][0-9])(?::(60|[0-5][0-9]))?\s+([-\+][0-9]{2}[0-5][0-9]|(?:UT|GMT|(?:E|C|M|P)(?:ST|DT)|[A-IK-Z]))";
+    let rfc2822 = r"(?:(Sun|Mon|Tue|Wed|Thu|Fri|Sat),\s+)?(0[1-9]|[1-2]?[0-9]|3[01])\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+(19[0-9]{2}|[2-9][0-9]{3}|0[0-9]{3})\s+(2[0-3]|[0-1][0-9]):([0-5][0-9])(?::(60|[0-5][0-9]))?\s+([-\+][0-9]{2}[0-5][0-9]|(?:UT|GMT|(?:E|C|M|P)(?:ST|DT)|[A-IK-Z]))";
     let rfc2822_loose = r"(?:(Sun|Mon|Tue|Wed|Thu|Fri|Sat),\s+)?(0[1-9]|[1-2]?[0-9]|3[01])\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+([0-9]{2,4})\s+([0-9]{2}:[0-9]{2}(?::[0-9]{2})?)";
     let rfc1123 = r"\w{3}, \d{2} \w{3} \d{4} \d{2}:\d{2}:\d{2} \w{3}";
     let rfc1036 = r"\w+?, \d{2}-\w{3}-\d{2} \d{2}:\d{2}:\d{2} \w{3}";
     let ctime = r"\w{3}\s+\w{3}\s+\d{1,2}\s+\d{2}:\d{2}:\d{2}\s+\d{4}";
     let ctime_tz = r"\w{3}\s+\w{3}\s+\d{1,2}\s+\d{2}:\d{2}:\d{2}\s+\w{3,5}\s+\d{4}";
     let dash_date_tz = r"\d{1,2}-\w{3}-\d{4}\s+\d{2}:\d{2}:\d{2}\s+\w{3,5}";
-    // rfc3339_loose allows for 2,3,4 digit yerars
+    // rfc3339_loose allows for 2,3,4 digit years and optional non-colon timezone
     let rfc3339_loose =
-        r"((?:\d{2,4}-\d{2}-\d{2})[T ]\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+\-]\d{2}:\d{2})?)";
+        r"((?:\d{2,4}-\d{2}-\d{2})[T ]\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+\-]\d{2}:?\d{2})?)";
     Regex::new(&format!(
         "(?:{})|(?:{})|(?:{})|(?:{})|(?:{})|(?:{})|(?:{})|(?:{})",
         rfc2822, rfc2822_loose, rfc1123, rfc1036, ctime, ctime_tz, dash_date_tz, rfc3339_loose
@@ -49,20 +49,20 @@ pub fn parse_date_string(date: &str) -> Option<DateTime<FixedOffset>> {
         // Try RFC 2822 format first
         // This rust implemented parser handles "millennium dates",
         // These will be fixed here, not in `fix_millennium_date`
-        if let Ok(dt) = DateTime::parse_from_rfc2822(&cleaned) {
-            if has_valid_utc_offset(&dt) {
-                return Some(dt);
-            }
-            return None;
+        if let Ok(dt) = DateTime::parse_from_rfc2822(&cleaned)
+            && has_valid_utc_offset(&dt)
+        {
+            return Some(dt);
         }
+        // fall through to last_effort_date_finder on invalid offset
 
         // Try RFC 3339
-        if let Ok(dt) = DateTime::parse_from_rfc3339(&cleaned) {
-            if has_valid_utc_offset(&dt) {
-                return Some(dt);
-            }
-            return None;
+        if let Ok(dt) = DateTime::parse_from_rfc3339(&cleaned)
+            && has_valid_utc_offset(&dt)
+        {
+            return Some(dt);
         }
+        // fall through to last_effort_date_finder on invalid offset
 
         // Try RFC 3339 with zero-padded year (handles 2-3 digit millennium years)
         if let Some(first_dash) = cleaned.find('-') {
@@ -72,12 +72,12 @@ pub fn parse_date_string(date: &str) -> Option<DateTime<FixedOffset>> {
                 && year_part.chars().all(|c| c.is_ascii_digit())
             {
                 let padded = format!("{:0>4}{}", year_part, &cleaned[first_dash..]);
-                if let Ok(dt) = DateTime::parse_from_rfc3339(&padded) {
-                    if has_valid_utc_offset(&dt) {
-                        return Some(dt);
-                    }
-                    return None;
+                if let Ok(dt) = DateTime::parse_from_rfc3339(&padded)
+                    && has_valid_utc_offset(&dt)
+                {
+                    return Some(dt);
                 }
+                // fall through to last_effort_date_finder on invalid offset
             }
         }
 
@@ -95,6 +95,19 @@ static TZ_STRIP_REGEX: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"\s+[A-Z]{2,5}(\s+\d{4}|$)").expect("TZ_STRIP_REGEX must compile")
 });
 
+static NUMERIC_TZ_REGEX: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"(?:\s|^)([+\-]\d{2}):?(\d{2})(?:\s|$)").expect("NUMERIC_TZ_REGEX must compile")
+});
+
+fn extract_tz_offset(text: &str) -> Option<i32> {
+    NUMERIC_TZ_REGEX.captures(text).and_then(|caps| {
+        let sign = if &caps[1][..1] == "-" { -1 } else { 1 };
+        let hours: i32 = caps[1][1..].parse().ok()?;
+        let minutes: i32 = caps[2].parse().ok()?;
+        Some(sign * (hours * 3600 + minutes * 60))
+    })
+}
+
 fn last_effort_date_finder(date_text: &str) -> Option<DateTime<FixedOffset>> {
     let cleaned = if let Some(pos) = date_text.find('(') {
         date_text[..pos].trim().to_string()
@@ -102,6 +115,7 @@ fn last_effort_date_finder(date_text: &str) -> Option<DateTime<FixedOffset>> {
         date_text.to_string()
     };
 
+    let tz_offset = extract_tz_offset(&cleaned);
     let tz_stripped = TZ_STRIP_REGEX.replace(&cleaned, "${1}").to_string();
 
     let attempts = vec![
@@ -119,21 +133,38 @@ fn last_effort_date_finder(date_text: &str) -> Option<DateTime<FixedOffset>> {
     ];
 
     for attempt in &attempts {
+        // ISO 8601 formats with timezone (deterministic, no local timezone dependency)
+        for fmt in &[
+            "%Y-%m-%d %H:%M:%S %:z",
+            "%Y-%m-%d %H:%M:%S %z",
+            "%Y-%m-%dT%H:%M:%S%:z",
+            "%Y-%m-%dT%H:%M:%S%z",
+        ] {
+            if let Ok(dt) = DateTime::parse_from_str(attempt, fmt) {
+                return Some(dt);
+            }
+        }
+        // ISO 8601 without timezone — apply extracted offset
+        for fmt in &["%Y-%m-%d %H:%M:%S", "%Y-%m-%dT%H:%M:%S"] {
+            if let Ok(naive) = NaiveDateTime::parse_from_str(attempt, fmt) {
+                let offset = FixedOffset::east_opt(tz_offset.unwrap_or(0))?;
+                let dt = offset.from_local_datetime(&naive).single()?;
+                return Some(dt);
+            }
+        }
         // Dash date format: "31-Oct-2005 11:20:23"
         for fmt in &["%d-%b-%Y %H:%M:%S", "%d-%b-%y %H:%M:%S"] {
             if let Ok(naive) = NaiveDateTime::parse_from_str(attempt, fmt) {
-                let dt = Utc
-                    .from_utc_datetime(&naive)
-                    .with_timezone(&FixedOffset::east_opt(0)?);
+                let offset = FixedOffset::east_opt(tz_offset.unwrap_or(0))?;
+                let dt = offset.from_local_datetime(&naive).single()?;
                 return Some(dt);
             }
         }
         // Try with weekday prefix (works for 2-digit years)
         for fmt in &["%a, %d %b %Y %H:%M:%S", "%a, %d %b %y %H:%M:%S"] {
             if let Ok(naive) = NaiveDateTime::parse_from_str(attempt, fmt) {
-                let dt = Utc
-                    .from_utc_datetime(&naive)
-                    .with_timezone(&FixedOffset::east_opt(0)?);
+                let offset = FixedOffset::east_opt(tz_offset.unwrap_or(0))?;
+                let dt = offset.from_local_datetime(&naive).single()?;
                 return Some(dt);
             }
         }
@@ -144,18 +175,16 @@ fn last_effort_date_finder(date_text: &str) -> Option<DateTime<FixedOffset>> {
             .unwrap_or(attempt);
         for fmt in &["%d %b %Y %H:%M:%S", "%d %b %y %H:%M:%S"] {
             if let Ok(naive) = NaiveDateTime::parse_from_str(without_weekday, fmt) {
-                let dt = Utc
-                    .from_utc_datetime(&naive)
-                    .with_timezone(&FixedOffset::east_opt(0)?);
+                let offset = FixedOffset::east_opt(tz_offset.unwrap_or(0))?;
+                let dt = offset.from_local_datetime(&naive).single()?;
                 return Some(dt);
             }
         }
         // Try ctime format: "%a %b %d %H:%M:%S %Y"
         for fmt in &["%a %b %d %H:%M:%S %Y", "%a %b %d %H:%M:%S %y"] {
             if let Ok(naive) = NaiveDateTime::parse_from_str(attempt, fmt) {
-                let dt = Utc
-                    .from_utc_datetime(&naive)
-                    .with_timezone(&FixedOffset::east_opt(0)?);
+                let offset = FixedOffset::east_opt(tz_offset.unwrap_or(0))?;
+                let dt = offset.from_local_datetime(&naive).single()?;
                 return Some(dt);
             }
         }
@@ -165,9 +194,8 @@ fn last_effort_date_finder(date_text: &str) -> Option<DateTime<FixedOffset>> {
             .unwrap_or(attempt);
         for fmt in &["%b %d %H:%M:%S %Y", "%b %d %H:%M:%S %y"] {
             if let Ok(naive) = NaiveDateTime::parse_from_str(without_weekday_ctime, fmt) {
-                let dt = Utc
-                    .from_utc_datetime(&naive)
-                    .with_timezone(&FixedOffset::east_opt(0)?);
+                let offset = FixedOffset::east_opt(tz_offset.unwrap_or(0))?;
+                let dt = offset.from_local_datetime(&naive).single()?;
                 return Some(dt);
             }
         }
@@ -175,15 +203,20 @@ fn last_effort_date_finder(date_text: &str) -> Option<DateTime<FixedOffset>> {
 
     // last effort lib
     if let Ok(date) = dateparser::parse(date_text.trim()) {
-        Some(date.into())
+        // Apply extracted timezone to dateparser result (which always returns UTC)
+        let offset_opt = FixedOffset::east_opt(tz_offset.unwrap_or(0))?;
+        let utc_dt: DateTime<Utc> = date;
+        Some(utc_dt.with_timezone(&offset_opt))
     } else {
         None
     }
 }
 
-/// Returns `true` if the date's year is before 1900 (likely malformed).
+/// Returns `true` if the date's year is before 1970 (likely malformed).
 pub fn is_date_too_old(date_obj: &DateTime<FixedOffset>) -> bool {
-    date_obj.year() < 1900
+    // the first email in history was sent in 1971
+    // https://en.wikipedia.org/wiki/History_of_email
+    date_obj.year() < 1970
 }
 
 /// Returns `true` if `date_obj` is more than 3 days after `now`.

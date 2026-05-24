@@ -1,0 +1,56 @@
+From: Cebolinha <cebolinha@dono.da.rua>
+Date: Mon, 04 May 1998 16:44:34 +0000
+Subject: UltraPenguin1.0.9 update
+Message-Id: <marc-linux-ultrasparc-90222356530965@msgid-missing>
+List-Id: <ultralinux.vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: ultralinux@vger.kernel.org
+
+Hi!
+
+Following things have changes in UP1.1 beta:
+
+update to kernel 2.1.99 (should fix a couple of bugs with Ultra5 machines,
+plus one ugly bug which sometimes killed applications during fork - now
+there are no known bugs, just to make assure you)
+
+update to glibc-2.0.7pre3 plus sparc patches (please, if you can, test
+whether this update does not break anything, I haven't seen any problem, but
+the more people, the more proper testing).
+
+ld.so: ld-linux.so.1 and libc5 apps now should work on both sparc32 and
+	sparc64, not only on sparc64
+
+mouseconfig: I hope the lockup during serial installation is gone, but
+	things about probing Xserver need still to be solved (for now, don't
+	install Xservers when doing serial console installs - hope to fix
+	this tomorrow)
+
+joe: fix a bug in joe, which caused improper screen size detection
+
+procps: update to 1.2.7, fixed a bug in procps which caused it not to work 
+	with shared libs
+
+other minor updates:
+	lpr, hdparm, strace, texinfo, ypbind
+
+The colors in SBUS Xservers are not yet fixed (well, I have a patch which
+fixes it, but am waiting for a fix for Mach64/16+32bpp colormap handling to
+make a shiny new XFree86-3.3.2 RPMS).
+Then, modutils need to be fixed wrt. kerneld, and then I'd like if people
+can remind me on broken packages, so that we can have a release in a week or
+so.
+And if the sparcaudio people help us, we can have full sound support in the
+distribution as well ;) Then just T-shirt time and CD burning time...
+
+Cheers,
+    Cebolinha
+___________________________________________________________________
+Cebolinha | cebolinha@dono.da.rua | http://sunsite.mff.cuni.cz
+Administrator of SunSITE Czech Republic, MFF, Charles University
+___________________________________________________________________
+Ultralinux - first 64bit OS to take full power of the UltraSparc
+Linux version 2.1.99 on a sparc64 machine (498.80 BogoMips).
+___________________________________________________________________
