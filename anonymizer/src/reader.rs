@@ -41,11 +41,7 @@ pub fn read_parquet_dir(dir: &Path) -> Result<DataFrame> {
 
 /// Read a parquet file in slices, calling `f` for each batch of rows.
 /// Re-opens the file per slice to keep memory bounded.
-pub fn read_parquet_file_batched<F>(
-    path: &Path,
-    batch_rows: usize,
-    mut f: F,
-) -> Result<()>
+pub fn read_parquet_file_batched<F>(path: &Path, batch_rows: usize, mut f: F) -> Result<()>
 where
     F: FnMut(DataFrame) -> Result<()>,
 {
@@ -59,7 +55,7 @@ where
         return Ok(());
     }
 
-    let n_batches = (total_rows + batch_rows - 1) / batch_rows;
+    let n_batches = total_rows.div_ceil(batch_rows);
     let mut offset = 0;
 
     for batch_idx in 0..n_batches {
@@ -87,11 +83,7 @@ where
 }
 
 /// Read all parquet files in a directory in slices, calling `f` for each batch.
-pub fn read_parquet_dir_batched<F>(
-    dir: &Path,
-    batch_rows: usize,
-    mut f: F,
-) -> Result<()>
+pub fn read_parquet_dir_batched<F>(dir: &Path, batch_rows: usize, mut f: F) -> Result<()>
 where
     F: FnMut(DataFrame) -> Result<()>,
 {

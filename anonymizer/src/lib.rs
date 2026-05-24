@@ -93,9 +93,7 @@ pub fn process_mailing_list(
 ) -> Result<()> {
     let list_input_path = resolve_list_dir(input_dir, mailing_list);
 
-    let main_output_dir = output_dir
-        .join("dataset")
-        .join(mailing_list);
+    let main_output_dir = output_dir.join("dataset").join(mailing_list);
     let main_output_path = main_output_dir.join("list_data.parquet");
 
     let id_map_output_dir = output_dir
