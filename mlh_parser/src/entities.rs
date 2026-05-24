@@ -23,7 +23,7 @@ pub struct ParsedEmail {
     pub cc: Vec<String>,
     pub subject: String,
     pub date: Option<chrono::DateTime<chrono::Utc>>,
-    pub client_date: String,
+    pub client_date: Vec<String>,
     pub in_reply_to: Option<String>,
     pub references: Vec<String>,
     pub x_mailing_list: Option<String>,

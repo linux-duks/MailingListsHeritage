@@ -106,10 +106,8 @@ fn collect_header_data(msg: &Message<'_>, email: &mut ParsedEmail, now: DateTime
 
             if let Some(val_date) = header_value_date(header.value()) {
                 date_options.push(val_date);
-            } else {
-                if let Some(dt) = date_parser::parse_date_string(&raw_date) {
-                    date_options.push(dt);
-                }
+            } else if let Some(dt) = date_parser::parse_date_string(&raw_date) {
+                date_options.push(dt);
             }
             client_dates.push(raw_date);
 
@@ -143,7 +141,7 @@ fn collect_header_data(msg: &Message<'_>, email: &mut ParsedEmail, now: DateTime
 
     // select date
     email.date = select_date(date_options, now);
-    email.client_date = client_dates.join(", ");
+    email.client_date = client_dates;
 
     if from_candidates.is_empty()
         && let Some(from) = msg.from()

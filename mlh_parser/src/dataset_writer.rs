@@ -136,7 +136,9 @@ pub fn build_record_batch(
 
         // client-date
         {
-            client_date_arr.values().append_value(&email.client_date);
+            for client_date in &email.client_date {
+                client_date_arr.values().append_value(client_date);
+            }
             client_date_arr.append(!email.client_date.is_empty());
         }
 
