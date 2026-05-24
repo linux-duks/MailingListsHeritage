@@ -19,6 +19,10 @@ def _detect_partition_cols(data_path):
 
 
 def main(input_map, output_dir):
+    if not input_map:
+        print("Expected input dataset map")
+        return
+
     ctx = SessionContext()
 
     for name, data_path in input_map.items():

@@ -4,6 +4,10 @@ import glob
 
 
 def main(dataset_dir, output_dir):
+    if not dataset_dir:
+        print("Expected input dataset missing")
+        return
+
     # pass list names split by ","
     # read all lists by default
     LISTS_OF_INTEREST = os.environ.get("LISTS_OF_INTEREST", "").split(",")

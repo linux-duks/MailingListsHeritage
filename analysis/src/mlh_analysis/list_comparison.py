@@ -10,14 +10,15 @@ import glob
 sns.set_style("whitegrid")
 
 
-def main(dataset_dir, anon_dataset_dir, output_dir):
-    working_dir = dataset_dir or anon_dataset_dir
+def main(working_dir, output_dir):
     if not working_dir:
-        print("Error: no dataset or anon_dataset directory available.")
+        print("Error: no input directory available.")
         return
 
     default_lists = "netdev,bpf,rust-for-linux"
-    LISTS_OF_INTEREST = (os.environ.get("LISTS_OF_INTEREST") or default_lists).split(",")
+    LISTS_OF_INTEREST = (os.environ.get("LISTS_OF_INTEREST") or default_lists).split(
+        ","
+    )
     LISTS_OF_INTEREST = [li for li in LISTS_OF_INTEREST if li]
 
     if not LISTS_OF_INTEREST:

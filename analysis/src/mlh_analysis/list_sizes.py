@@ -4,6 +4,10 @@ import numpy as np
 
 
 def main(dataset_dir, output_dir):
+    if not dataset_dir:
+        print("Expected input dataset missing")
+        return
+
     list_sizes = []
     biggest_list = (-1, "none")
     smallest_list = (999999999999999, "none")
@@ -11,7 +15,7 @@ def main(dataset_dir, output_dir):
     for subdir_name in os.listdir(dataset_dir):
         list_name = subdir_name.split("=")[1]
 
-        sub_df = pl.scan_parquet(os.path.join(dataset_dir, subdir_name, "*.parquet"))
+        sub_df = pl.scan_parquet(os.path.join(dataset_dir, subdir_name))
         list_size = int(sub_df.describe()["from"][0])
 
         list_sizes.append(list_size)

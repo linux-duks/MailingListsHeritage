@@ -6,9 +6,12 @@ from mlh_analysis import patch_missing
 from mlh_analysis import author_distribution
 from mlh_analysis import date_missing
 from mlh_analysis import sql_querier
-from mlh_analysis.inputs import resolve_inputs
 
+import logging
 import os
+
+logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+logger = logging.getLogger(__name__)
 
 
 def main():
@@ -18,43 +21,114 @@ def main():
 
     inputs = resolve_inputs(input_dirs)
 
+    # for analysis that work with multiple inputs
+    # this function selects one in order
+    def pick(*keys):
+        for k in keys:
+            if inputs.get(k):
+                return inputs[k]
+        return None
+
     scripts = {
         "list_comparison": lambda: list_comparison.main(
-            inputs["dataset"], inputs["anon_dataset"], output_dir
+            pick("dataset", "anon_dataset"), output_dir
         ),
-        "list_sizes": lambda: list_sizes.main(inputs["dataset"], output_dir),
-        "unique_authors": lambda: unique_authors.main(inputs["id_map"], output_dir),
-        "date_analysis": lambda: date_analysis.main(inputs["dataset"], output_dir),
-        "patch_missing": lambda: patch_missing.main(inputs["dataset"], output_dir),
-        "date_missing": lambda: date_missing.main(inputs["dataset"], output_dir),
+        "list_sizes": lambda: list_sizes.main(
+            pick("dataset", "anon_dataset"), output_dir
+        ),
+        "unique_authors": lambda: unique_authors.main(
+            pick("id_map", "dataset", "anon_dataset"), output_dir
+        ),
+        "date_analysis": lambda: date_analysis.main(
+            pick("dataset", "anon_dataset"), output_dir
+        ),
+        "patch_missing": lambda: patch_missing.main(
+            pick("dataset", "anon_dataset"), output_dir
+        ),
+        "date_missing": lambda: date_missing.main(
+            pick("dataset", "anon_dataset"), output_dir
+        ),
         # these scripts below will not run by default
         "author_distribution": lambda: author_distribution.main(
-            inputs["dataset"], output_dir
+            pick("dataset", "anon_dataset"), output_dir
         ),
-        "sql_querier": lambda: sql_querier.main(
-            inputs, output_dir
-        ),
+        "sql_querier": lambda: sql_querier.main(inputs, output_dir),
     }
 
     non_default_scripts = ["author_distribution", "sql_querier"]
 
     if analysis_script:
         if analysis_script in scripts.keys():
-            print(f"Starting {analysis_script}...\n")
+            logger.info("Starting %s...", analysis_script)
             scripts[analysis_script]()
-            print()
         else:
-            print(f"Unknown analysis script: {analysis_script}")
-            print(f"Available: {', '.join(scripts.keys())}")
-        # if specific script selected, return early
+            logger.warning("Unknown analysis script: %s", analysis_script)
+            logger.warning("Available: %s", ", ".join(scripts.keys()))
         return
 
     for name in scripts.keys():
         if name in non_default_scripts:
             continue
-        print(f"Starting {name}...\n")
-        scripts[name]()
-        print()
+        logger.info("Starting %s...", name)
+        try:
+            scripts[name]()
+        except Exception:
+            logger.exception("Failed to run %s analysis", name)
+
+
+def resolve_inputs(input_dirs):
+    """Resolve dataset, lineage, and id_map directories from a list of input directories.
+
+    Returns a dict with keys 'dataset', 'anon_dataset', 'lineage', and 'id_map'.
+    """
+    dataset_dir = None
+    anon_dataset_dir = None
+    lineage_dir = None
+    id_map_dir = None
+
+    for d in input_dirs:
+        d = d.strip()
+        if not d or not os.path.isdir(d):
+            continue
+
+        entries = os.listdir(d)
+
+        if "id_map_from" in entries and id_map_dir is None:
+            id_map_dir = os.path.join(d, "id_map_from")
+
+        if lineage_dir is None:
+            if os.path.isfile(os.path.join(d, "lineage.parquet")):
+                lineage_dir = d
+
+        has_list_dirs = any(e.startswith("list=") for e in entries)
+        if dataset_dir is None and has_list_dirs:
+            dataset_dir = d
+
+        if (
+            ("anonymizer" in d or "anonymized" in d)
+            and anon_dataset_dir is None
+            and "dataset" in entries
+        ):
+            anon_dataset_dir = os.path.join(d, "dataset")
+
+        # output/parser/dataset
+        # if missing, use the anonimyzed in its place
+        if "parser" in d and dataset_dir is None and not has_list_dirs:
+            if "dataset" in entries:
+                dataset_dir = os.path.join(d, "dataset")
+
+    if dataset_dir is None and anon_dataset_dir is None:
+        raise FileNotFoundError(
+            f"No dataset directory found in: {input_dirs}. "
+            "Expected 'list=*/' subdirectories, 'dataset/'"
+        )
+
+    return {
+        "dataset": dataset_dir or anon_dataset_dir or "",
+        "anon_dataset": anon_dataset_dir or "",
+        "lineage": lineage_dir or "",
+        "id_map": id_map_dir or "",
+    }
 
 
 if __name__ == "__main__":

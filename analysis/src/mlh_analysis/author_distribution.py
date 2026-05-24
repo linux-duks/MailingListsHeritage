@@ -4,12 +4,18 @@ import glob
 
 
 def main(dataset_dir, output_dir):
+    if not dataset_dir:
+        print("Expected input dataset missing")
+        return
+
     # pass list names split by ","
     # read all lists by default
     AUTHOR_IDENTITY = os.environ.get("AUTHOR_IDENTITY", "")
     if not AUTHOR_IDENTITY:
         print("AUTHOR_IDENTITY not defined")
-        AUTHOR_IDENTITY = input("Enter AUTHOR_IDENTITY (name and/or email as it appears in 'From':\n ")
+        AUTHOR_IDENTITY = input(
+            "Enter AUTHOR_IDENTITY (name and/or email as it appears in 'From':\n "
+        )
 
     LISTS_OF_INTEREST = os.environ.get("LISTS_OF_INTEREST", "").split(",")
     LISTS_OF_INTEREST = [li for li in LISTS_OF_INTEREST if li]
