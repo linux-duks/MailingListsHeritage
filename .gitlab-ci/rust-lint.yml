@@ -60,3 +60,30 @@ cargo-doc:parser:
         - mlh_parser/**/*
   script:
     - cargo doc --all-features --no-deps -p mlh_parser
+
+rust-fmt:anonymizer:
+  <<: *rust-lint-base
+  stage: lint
+  rules:
+    - changes:
+        - anonymizer/**/*
+  script:
+    - cd anonymizer && cargo fmt --check
+
+rust-clippy:anonymizer:
+  <<: *rust-lint-base
+  stage: lint
+  rules:
+    - changes:
+        - anonymizer/**/*
+  script:
+    - cargo clippy --all-features --all-targets -p anonymizer
+
+cargo-doc:anonymizer:
+  <<: *rust-lint-base
+  stage: lint
+  rules:
+    - changes:
+        - anonymizer/**/*
+  script:
+    - cargo doc --all-features --no-deps -p anonymizer

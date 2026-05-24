@@ -1,0 +1,26 @@
+name: "Analysis: Lint and Test"
+
+on:
+  push:
+    paths:
+    - 'analysis/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  # no tets yet
+  # analysis-tests:
+  #   uses: ./.github/workflows/py-tests.yaml
+  #   name: analysis-tests
+  #   with:
+  #     path: ./analysis
+  #     project-name: analysis
+
+  analysis-lint:
+    uses: ./.github/workflows/py-lint.yaml
+    with:
+      path: ./analysis
+

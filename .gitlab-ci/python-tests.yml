@@ -1,31 +1,31 @@
-python-tests:anonymizer:
+python-tests:analysis:
   stage: test
   image: python:3.14-slim
   rules:
     - changes:
-        - anonymizer/**/*
+        - analysis/**/*
   before_script:
     - apt-get update -qq && apt-get install -y -qq curl
     - curl -LsSf https://astral.sh/uv/install.sh | sh
     - export PATH="$HOME/.local/bin:$PATH"
   script:
-    - cd anonymizer
+    - cd analysis
     - uv sync --locked --all-extras --dev
     - uv tool install nox
     - uv tool run nox -s tests
   artifacts:
     when: always
     paths:
-      - anonymizer/htmlcov/
-      - anonymizer/coverage-summary.md
+      - analysis/htmlcov/
+      - analysis/coverage-summary.md
     expire_in: 7 days
   after_script:
     - apt-get update -qq && apt-get install -y -qq curl || true
     - |
-      if [ -n "$CI_MERGE_REQUEST_IID" ] && [ -f anonymizer/coverage-summary.md ]; then
+      if [ -n "$CI_MERGE_REQUEST_IID" ] && [ -f analysis/coverage-summary.md ]; then
         curl --silent --show-error --fail \
           --header "JOB-TOKEN: $CI_JOB_TOKEN" \
-          --data-urlencode "body@anonymizer/coverage-summary.md" \
+          --data-urlencode "body@analysis/coverage-summary.md" \
           "$CI_API_V4_URL/projects/$CI_PROJECT_ID/merge_requests/$CI_MERGE_REQUEST_IID/notes" \
           || true
       fi

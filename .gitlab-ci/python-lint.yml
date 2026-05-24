@@ -1,14 +1,14 @@
-python-lint:anonymizer:
+python-lint:analysis:
   stage: lint
   image: python:3.14-slim
   rules:
     - changes:
-        - anonymizer/**/*
+        - analysis/**/*
   before_script:
     - apt-get update -qq && apt-get install -y -qq curl
     - curl -LsSf https://astral.sh/uv/install.sh | sh
     - export PATH="$HOME/.local/bin:$PATH"
   script:
-    - cd anonymizer
+    - cd analysis
     - uv sync --locked --all-extras --dev
     - uvx ruff check src/

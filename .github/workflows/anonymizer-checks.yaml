@@ -12,14 +12,15 @@ permissions:
 
 jobs:
   anonymizer-tests:
-    uses: ./.github/workflows/py-tests.yaml
+    uses: ./.github/workflows/rust-tests.yaml
     name: anonymizer-tests
     with:
       path: ./anonymizer
       project-name: anonymizer
 
   anonymizer-lint:
-    uses: ./.github/workflows/py-lint.yaml
+    uses: ./.github/workflows/rust-lint.yaml
+    name: anonymizer-lint
     with:
       path: ./anonymizer
-
+      project-name: anonymizer

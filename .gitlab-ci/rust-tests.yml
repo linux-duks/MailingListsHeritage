@@ -93,3 +93,43 @@ cargo-coverage:parser:
           "$CI_API_V4_URL/projects/$CI_PROJECT_ID/merge_requests/$CI_MERGE_REQUEST_IID/notes" \
           || true
       fi
+
+
+cargo-test:anonymizer:
+  <<: *rust-base
+  stage: test
+  rules:
+    - changes:
+        - anonymizer/**/*
+  script:
+    - cargo test -p anonymizer
+
+cargo-coverage:anonymizer:
+  <<: *rust-base
+  stage: test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - anonymizer/**/*
+  script:
+    - cargo install cargo-llvm-cov
+    - |
+      echo "## Rust Coverage Summary: anonymizer" > anonymizer/coverage-summary.md
+      echo "" >> anonymizer/coverage-summary.md
+      echo '```' >> anonymizer/coverage-summary.md
+      cargo llvm-cov --all-features --summary-only -p anonymizer 2>&1 >> anonymizer/coverage-summary.md
+      echo '```' >> mlh_parser/coverage-summary.md
+  artifacts:
+    when: always
+    paths:
+      - anonymizer/coverage-summary.md
+    expire_in: 7 days
+  after_script:
+    - |
+      if [ -n "$CI_MERGE_REQUEST_IID" ] && [ -f anonymizer/coverage-summary.md ]; then
+        curl --silent --show-error --fail \
+          --header "JOB-TOKEN: $CI_JOB_TOKEN" \
+          --data-urlencode "body@anonymizer/coverage-summary.md" \
+          "$CI_API_V4_URL/projects/$CI_PROJECT_ID/merge_requests/$CI_MERGE_REQUEST_IID/notes" \
+          || true
+      fi
