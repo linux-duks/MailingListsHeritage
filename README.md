@@ -1,4 +1,4 @@
-# Mailing Lists Archiver - Create Datasets from Mailing Lists
+# Mailing Lists Heritage - Create Datasets from Mailing Lists
 
 Collect and archive locally all emails from mailing lists, parse them into structured datasets, and analyze them while preserving privacy.
 
@@ -44,14 +44,14 @@ Each component has its own detailed documentation:
 One of the dependencies is a git submodule. To build correctly
 
    ```bash
-   git clone --recurse-submodules git@gitlab.com:ccsl-usp/codev/MLH-archiver.git
+   git clone --recurse-submodules git@gitlab.com:ccsl-usp/codev/MailingListsHeritage.git
    ```
 
    Or if you dont have your ssh keys configured in GitHub,
 
    ```bash
-   git clone https://gitlab.com/ccsl-usp/codev/MLH-archiver.git
-   cd MLH-archiver
+   git clone https://gitlab.com/ccsl-usp/codev/MailingListsHeritage.git
+   cd MailingListsHeritage
    git config --global url."https://gitlab.com/".insteadOf "git@gitlab.com:"
    git submodule update --init --recursive
    # and to revert the config:
