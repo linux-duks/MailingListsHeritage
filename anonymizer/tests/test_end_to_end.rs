@@ -455,7 +455,11 @@ fn test_parse_mail_at() {
 
     let res = process_mailing_list(list_name, input_dir.path(), output_dir.path(), 2);
 
-    assert!(res.is_ok(), "process_mailing_list failed with error {}", res.err().unwrap());
+    assert!(
+        res.is_ok(),
+        "process_mailing_list failed with error {}",
+        res.err().unwrap()
+    );
 
     let output_parquet = output_dir
         .path()
@@ -551,8 +555,16 @@ fn test_process_mailing_list_output_path() {
 
         process_mailing_list(list_name, input_dir.path(), output_dir.path(), 0).unwrap();
 
-        let expected_path = output_dir.path().join("dataset").join(list_name).join("list_data.parquet");
-        assert!(expected_path.exists(), "bare name: expected output at {}", expected_path.display());
+        let expected_path = output_dir
+            .path()
+            .join("dataset")
+            .join(list_name)
+            .join("list_data.parquet");
+        assert!(
+            expected_path.exists(),
+            "bare name: expected output at {}",
+            expected_path.display()
+        );
     }
 
     // Hive format input (list=name) — output should NOT get list=list=name
@@ -566,10 +578,116 @@ fn test_process_mailing_list_output_path() {
 
         process_mailing_list(&hive_dir_name, input_dir.path(), output_dir.path(), 0).unwrap();
 
-        let expected_path = output_dir.path().join("dataset").join(&hive_dir_name).join("list_data.parquet");
-        assert!(expected_path.exists(), "hive name: expected output at {}", expected_path.display());
+        let expected_path = output_dir
+            .path()
+            .join("dataset")
+            .join(&hive_dir_name)
+            .join("list_data.parquet");
+        assert!(
+            expected_path.exists(),
+            "hive name: expected output at {}",
+            expected_path.display()
+        );
 
-        let wrong_path = output_dir.path().join("dataset").join(format!("list={}", hive_dir_name)).join("list_data.parquet");
-        assert!(!wrong_path.exists(), "double list= prefix should not exist at {}", wrong_path.display());
+        let wrong_path = output_dir
+            .path()
+            .join("dataset")
+            .join(format!("list={}", hive_dir_name))
+            .join("list_data.parquet");
+        assert!(
+            !wrong_path.exists(),
+            "double list= prefix should not exist at {}",
+            wrong_path.display()
+        );
+    }
+}
+
+#[test]
+fn test_large_batch_200k() {
+    let input_dir = TempDir::new().unwrap();
+    let output_dir = TempDir::new().unwrap();
+
+    let list_name = "large_list";
+    let list_input_dir = input_dir.path().join(list_name);
+    fs::create_dir_all(&list_input_dir).unwrap();
+
+    let n_rows = 200_000usize;
+    let identity = "Cassian Andor <cassian@kenari.fx>";
+    let expected_hash =
+        "2fc62ca334e8876315efff90f95af4cd922079de <b81f9a424d4117c707de2839b73cf83afbc1b32f>";
+
+    // Build a DataFrame with 200k rows, all same identity in "from"
+    let from_vals: Vec<&str> = std::iter::repeat_n(identity, n_rows).collect();
+    let from_s = Series::new("from".into(), from_vals.as_slice());
+
+    let empty_list_200k: Vec<Vec<&str>> = std::iter::repeat_n(Vec::new(), n_rows).collect();
+    let to_s = build_list_series("to", &empty_list_200k);
+    let cc_s = build_list_series("cc", &empty_list_200k);
+
+    let body_vals: Vec<&str> = std::iter::repeat_n("no identity here", n_rows).collect();
+    let raw_body_s = Series::new("raw_body".into(), body_vals.as_slice());
+
+    let subject_vals: Vec<&str> = std::iter::repeat_n("[PATCH] test", n_rows).collect();
+    let subject_s = Series::new("subject".into(), subject_vals.as_slice());
+
+    let empty_trailers: Vec<Vec<(&str, &str)>> = std::iter::repeat_n(Vec::new(), n_rows).collect();
+    let trailers_s = build_struct_list_series("trailers", &empty_trailers);
+
+    let mut df = df![
+        "from" => from_s,
+        "to" => to_s,
+        "cc" => cc_s,
+        "trailers" => trailers_s,
+        "raw_body" => raw_body_s,
+        "subject" => subject_s,
+    ]
+    .unwrap();
+
+    write_test_parquet(&list_input_dir, &mut df);
+
+    process_mailing_list(list_name, input_dir.path(), output_dir.path(), 0).unwrap();
+
+    let output_parquet = output_dir
+        .path()
+        .join("dataset")
+        .join(list_name)
+        .join("list_data.parquet");
+
+    let out_df = read_parquet_as_df(&output_parquet);
+
+    // Verify row count is preserved
+    assert_eq!(
+        out_df.height(),
+        n_rows,
+        "row count should be preserved after anonymization"
+    );
+
+    // Verify the from column was anonymized (all rows same hash)
+    let from_col = out_df.column("from").unwrap().as_materialized_series();
+    let from_values: Vec<String> = from_col
+        .str()
+        .unwrap()
+        .into_iter()
+        .map(|o| o.unwrap_or("").to_string())
+        .collect();
+
+    assert_eq!(from_values.len(), n_rows);
+    for (i, val) in from_values.iter().enumerate() {
+        assert_eq!(val, expected_hash, "row {i} should have hashed identity");
+    }
+
+    // Verify raw_body was NOT changed (no identity in it)
+    let body_col = out_df.column("raw_body").unwrap().as_materialized_series();
+    let body_values: Vec<String> = body_col
+        .str()
+        .unwrap()
+        .into_iter()
+        .map(|o| o.unwrap_or("").to_string())
+        .collect();
+    for val in &body_values {
+        assert_eq!(
+            val, "no identity here",
+            "raw_body should be unchanged when no identity present"
+        );
     }
 }
