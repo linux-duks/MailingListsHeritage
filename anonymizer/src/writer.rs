@@ -1,15 +1,20 @@
-//! Parquet file writer using Polars with ZSTD compression and row group control.
+//! Parquet batched writer using Polars with ZSTD compression.
 
 use crate::Result;
-use crate::constants::BATCH_MAX_RECORDS;
 use polars::prelude::*;
+use polars::io::parquet::write::{BatchedWriter, ParquetCompression, ParquetWriter};
 use polars_utils::compression::ZstdLevel;
 use std::fs;
 use std::path::Path;
 
-/// Write a DataFrame to a Parquet file with ZSTD compression and row group control.
-/// Each row group contains at most `BATCH_MAX_RECORDS` rows.
-pub fn write_parquet(path: &Path, compression: usize, df: &mut DataFrame) -> Result<()> {
+/// Create a [`BatchedWriter`] for incremental parquet writing.
+/// Each [`BatchedWriter::write_batch`] call appends a row group to the
+/// underlying file. Call [`BatchedWriter::finish`] to finalize the file.
+pub fn create_batched_writer(
+    path: &Path,
+    compression: usize,
+    schema: &Schema,
+) -> Result<BatchedWriter<fs::File>> {
     if let Some(parent) = path.parent() {
         fs::create_dir_all(parent)?;
     }
@@ -24,9 +29,9 @@ pub fn write_parquet(path: &Path, compression: usize, df: &mut DataFrame) -> Res
     };
 
     let file = fs::File::create(path)?;
-    ParquetWriter::new(file)
+    let writer = ParquetWriter::new(file)
         .with_compression(ParquetCompression::Zstd(zstd_level))
-        .with_row_group_size(Some(BATCH_MAX_RECORDS))
-        .finish(df)?;
-    Ok(())
+        .batched(schema)?;
+
+    Ok(writer)
 }

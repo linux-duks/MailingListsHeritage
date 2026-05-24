@@ -15,7 +15,7 @@ pub mod transform;
 pub mod writer;
 
 use crate::constants::BATCH_MAX_RECORDS;
-use polars::prelude::*;
+use polars::io::parquet::write::BatchedWriter;
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -108,8 +108,8 @@ pub fn process_mailing_list(
         main_output_path.display()
     );
 
-    let mut main_batches: Vec<DataFrame> = Vec::new();
-    let mut id_map_batches: Vec<DataFrame> = Vec::new();
+    let mut main_writer: Option<BatchedWriter<fs::File>> = None;
+    let mut id_map_writer: Option<BatchedWriter<fs::File>> = None;
     let mut total_rows = 0usize;
     let mut batch_count = 0usize;
 
@@ -126,38 +126,43 @@ pub fn process_mailing_list(
             total_rows,
         );
 
-        let id_map = transform::build_id_map(&df)?;
-        let anon_df = transform::anonymize_dataframe(df)?;
+        let mut id_map = transform::build_id_map(&df)?;
+        id_map.rechunk_mut();
+        let mut anon_df = transform::anonymize_dataframe(df)?;
+        anon_df.rechunk_mut();
 
-        id_map_batches.push(id_map);
-        main_batches.push(anon_df);
+        if main_writer.is_none() {
+            main_writer = Some(writer::create_batched_writer(
+                &main_output_path,
+                compression,
+                anon_df.schema(),
+            )?);
+        }
+        main_writer.as_mut().unwrap().write_batch(&anon_df)?;
+
+        if id_map_writer.is_none() {
+            id_map_writer = Some(writer::create_batched_writer(
+                &id_map_output_path,
+                compression,
+                id_map.schema(),
+            )?);
+        }
+        id_map_writer.as_mut().unwrap().write_batch(&id_map)?;
 
         Ok(())
     })?;
 
-    if main_batches.is_empty() {
+    if batch_count == 0 {
         log::warn!("No data found for list '{}'", mailing_list);
         return Ok(());
     }
 
-    log::info!(
-        "  concatenating {} batches for list '{}'",
-        main_batches.len(),
-        mailing_list,
-    );
-
-    let mut main_df = main_batches.remove(0);
-    for batch in main_batches {
-        main_df.vstack_mut(&batch)?;
+    if let Some(w) = main_writer {
+        w.finish()?;
     }
-
-    let mut id_map_df = id_map_batches.remove(0);
-    for batch in id_map_batches {
-        id_map_df.vstack_mut(&batch)?;
+    if let Some(w) = id_map_writer {
+        w.finish()?;
     }
-
-    writer::write_parquet(&main_output_path, compression, &mut main_df)?;
-    writer::write_parquet(&id_map_output_path, compression, &mut id_map_df)?;
 
     log::info!(
         "Saved {} anonymized rows in {} batches for list '{}'",
