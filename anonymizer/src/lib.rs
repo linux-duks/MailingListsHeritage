@@ -34,7 +34,11 @@ pub fn start(cfg: &mut crate::config::AppConfig) -> Result<()> {
             .filter_map(|entry| {
                 let entry = entry.ok()?;
                 if entry.file_type().ok()?.is_dir() {
-                    entry.file_name().into_string().ok()
+                    entry
+                        .file_name()
+                        .into_string()
+                        .ok()
+                        .map(|name| name.strip_prefix("list=").unwrap_or(&name).to_string())
                 } else {
                     None
                 }
@@ -93,12 +97,14 @@ pub fn process_mailing_list(
 ) -> Result<()> {
     let list_input_path = resolve_list_dir(input_dir, mailing_list);
 
-    let main_output_dir = output_dir.join("dataset").join(mailing_list);
+    let hive_list_name = format!("list={}", mailing_list);
+
+    let main_output_dir = output_dir.join("dataset").join(&hive_list_name);
     let main_output_path = main_output_dir.join("list_data.parquet");
 
     let id_map_output_dir = output_dir
         .join(format!("id_map_{}", constants::SPLIT_DATASET_COLUMN))
-        .join(mailing_list);
+        .join(&hive_list_name);
     let id_map_output_path = id_map_output_dir.join("list_data.parquet");
 
     log::info!(

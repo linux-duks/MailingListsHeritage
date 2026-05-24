@@ -1,8 +1,8 @@
 //! Parquet batched writer using Polars with ZSTD compression.
 
 use crate::Result;
-use polars::prelude::*;
 use polars::io::parquet::write::{BatchedWriter, ParquetCompression, ParquetWriter};
+use polars::prelude::*;
 use polars_utils::compression::ZstdLevel;
 use std::fs;
 use std::path::Path;

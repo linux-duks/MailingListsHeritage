@@ -464,7 +464,7 @@ fn test_parse_mail_at() {
     let output_parquet = output_dir
         .path()
         .join("dataset")
-        .join(list_name)
+        .join(format!("list={}", list_name))
         .join("list_data.parquet");
 
     let out_df = read_parquet_as_df(&output_parquet);
@@ -545,7 +545,7 @@ fn test_process_mailing_list_output_path() {
     let input_dir = TempDir::new().unwrap();
     let output_dir = TempDir::new().unwrap();
 
-    // Bare name input — output should use bare name
+    // Bare name input — output should use Hive format list=<name>
     {
         let list_name = "test_list_bare";
         let list_input_dir = input_dir.path().join(list_name);
@@ -558,7 +558,7 @@ fn test_process_mailing_list_output_path() {
         let expected_path = output_dir
             .path()
             .join("dataset")
-            .join(list_name)
+            .join(format!("list={}", list_name))
             .join("list_data.parquet");
         assert!(
             expected_path.exists(),
@@ -567,7 +567,7 @@ fn test_process_mailing_list_output_path() {
         );
     }
 
-    // Hive format input (list=name) — output should NOT get list=list=name
+    // Hive format input (list=name) — output at list=<name>
     {
         let list_name = "hive_test";
         let hive_dir_name = format!("list={}", list_name);
@@ -576,7 +576,7 @@ fn test_process_mailing_list_output_path() {
         let mut df = build_test_df();
         write_test_parquet(&list_input_dir, &mut df);
 
-        process_mailing_list(&hive_dir_name, input_dir.path(), output_dir.path(), 0).unwrap();
+        process_mailing_list(list_name, input_dir.path(), output_dir.path(), 0).unwrap();
 
         let expected_path = output_dir
             .path()
@@ -650,7 +650,7 @@ fn test_large_batch_200k() {
     let output_parquet = output_dir
         .path()
         .join("dataset")
-        .join(list_name)
+        .join(format!("list={}", list_name))
         .join("list_data.parquet");
 
     let out_df = read_parquet_as_df(&output_parquet);
