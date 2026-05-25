@@ -27,7 +27,7 @@ build:
 	else \
 		echo "==> Rust toolchain not found, building with Docker (Image: $(RUST_DOCKER_IMAGE))..."; \
 		$(CONTAINER) run --rm \
-			-it -u $(id -u):$(id -g) \
+			-it -u $(shell id -u):$(shell id -g) \
 			--network=host \
 			-v ../:/usr/src/app:z \
 			-w /usr/src/app \
@@ -57,7 +57,7 @@ debug:
 	else \
 		echo "==> Rust toolchain not found, building with Docker (Image: $(RUST_DOCKER_IMAGE))..."; \
 		$(CONTAINER) run --rm \
-			-it -u $(id -u):$(id -g) \
+			-it -u $(shell id -u):$(shell id -g) \
 			-e DEBUG=true \
 			-e RUST_LOG=debug \
 			--network=host \
@@ -76,7 +76,7 @@ test:
 	else \
 		echo "==> Rust toolchain not found, running tests with Docker (Image: $(RUST_DOCKER_IMAGE))..."; \
 		$(CONTAINER) run --rm \
-			-it -u $(id -u):$(id -g) \
+			-it -u $(shell id -u):$(shell id -g) \
 			--network=host \
 			-v $(REPO_ROOT):/usr/src/app:z \
 			-w /usr/src/app \
@@ -92,7 +92,7 @@ doc:
 	else \
 		echo "==> Rust toolchain not found, generating docs with Docker (Image: $(RUST_DOCKER_IMAGE))..."; \
 		$(CONTAINER) run --rm \
-			-it -u $(id -u):$(id -g) \
+			-it -u $(shell id -u):$(shell id -g) \
 			--network=host \
 			-v $(REPO_ROOT):/usr/src/app:z \
 			-w /usr/src/app \
