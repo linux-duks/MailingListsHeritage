@@ -30,9 +30,6 @@ def main():
         return None
 
     scripts = {
-        "list_comparison": lambda: list_comparison.main(
-            pick("dataset", "anon_dataset"), output_dir
-        ),
         "list_sizes": lambda: list_sizes.main(
             pick("dataset", "anon_dataset"), output_dir
         ),
@@ -49,13 +46,16 @@ def main():
             pick("dataset", "anon_dataset"), output_dir
         ),
         # these scripts below will not run by default
+        "list_comparison": lambda: list_comparison.main(
+            pick("dataset", "anon_dataset"), output_dir
+        ),
         "author_distribution": lambda: author_distribution.main(
             pick("dataset", "anon_dataset"), output_dir
         ),
         "sql_querier": lambda: sql_querier.main(inputs, output_dir),
     }
 
-    non_default_scripts = ["author_distribution", "sql_querier"]
+    non_default_scripts = ["list_comparison", "author_distribution", "sql_querier"]
 
     if analysis_script:
         if analysis_script in scripts.keys():
