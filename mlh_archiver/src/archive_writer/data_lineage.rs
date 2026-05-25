@@ -1,6 +1,6 @@
 //! Data lineage tracking for the archive writer.
 //!
-//! Every time an article is fetched and stored, a `DataLineage` record is
+//! Every time an article is fetched and stored, a `DataLineageRecord` record is
 //! appended to the `__progress.yaml` file. This creates an append-only audit
 //! trail that captures:
 //!
@@ -11,7 +11,7 @@
 //!   target platform, Rust version, build time)
 //!
 //! The `__progress.yaml` file is a multi-document YAML stream where each
-//! document is a `DataLineage` entry, separated by `---`.
+//! document is a `DataLineageRecord` entry, separated by `---`.
 //!
 //! # Example file content
 //!
@@ -29,8 +29,9 @@
 //! archiver_build_info: "Archiver v=0.1.0 commit=abc123 ..."
 //! ```
 
-use chrono::{DateTime, Utc};
+use chrono::Utc;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, LazyLock};
 
@@ -52,19 +53,33 @@ static BUILD_INFO: LazyLock<Arc<str>> = LazyLock::new(|| {
 
 /// Progress state for a mailing list.
 #[derive(Serialize, Deserialize, Debug)]
-pub(crate) struct DataLineage {
+pub struct DataLineageRecord {
     /// email id/file_name
-    pub(crate) email_index: String,
+    pub email_index: String,
     /// mailing list name
-    pub(crate) list_name: String,
+    pub list_name: String,
     /// name of the RunMode
-    pub(crate) source_type: String,
+    pub source_type: String,
     /// writer module used
-    pub(crate) write_mode: String,
-    /// date when the read was performed
-    pub(crate) timestamp: DateTime<chrono::Utc>,
+    pub write_mode: String,
+    /// UTC date when the read was performed
+    /// encoded using RFC3339
+    pub archive_timestamp: String,
     /// build information about the archiver software
-    pub(crate) archiver_build_info: String,
+    pub archiver_build_info: String,
+}
+
+impl From<DataLineageRecord> for HashMap<String, String> {
+    fn from(r: DataLineageRecord) -> Self {
+        let mut m = HashMap::new();
+        m.insert("email_index".to_string(), r.email_index);
+        m.insert("list_name".to_string(), r.list_name);
+        m.insert("source_type".to_string(), r.source_type);
+        m.insert("write_mode".to_string(), r.write_mode);
+        m.insert("archive_timestamp".to_string(), r.archive_timestamp);
+        m.insert("archiver_build_info".to_string(), r.archiver_build_info);
+        m
+    }
 }
 
 #[derive(std::fmt::Debug)]
@@ -105,13 +120,13 @@ impl DataLineageWriter {
     pub fn update(&self, id: &str) -> crate::Result<()> {
         crate::file_utils::append_yaml_to_file(
             self.output_path.to_str().unwrap(),
-            &DataLineage {
+            &DataLineageRecord {
                 email_index: id.to_string(),
                 list_name: self.list_name.clone(),
                 source_type: self.run_mode.clone(),
                 archiver_build_info: (*self.build_info).to_string(),
                 write_mode: self.write_mode.to_string(),
-                timestamp: Utc::now(),
+                archive_timestamp: Utc::now().to_rfc3339(),
             },
         )
         .map_err(crate::errors::Error::Io)

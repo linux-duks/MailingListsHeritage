@@ -31,6 +31,9 @@ pub mod range_inputs;
 pub mod scheduler;
 pub mod worker;
 
+/// shortcut export of DataLineageRecord
+pub use archive_writer::data_lineage::DataLineageRecord;
+
 #[cfg(feature = "otel")]
 pub mod otel;
 

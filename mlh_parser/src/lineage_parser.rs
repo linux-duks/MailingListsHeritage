@@ -1,3 +1,4 @@
+use chrono::Utc;
 /// Lineage
 ///
 /// folder structure:
@@ -17,9 +18,24 @@ use std::collections::HashMap;
 use std::fs;
 use std::io::BufWriter;
 use std::path::Path;
-use std::sync::Arc;
+use std::sync::{Arc, LazyLock};
 
-use arrow::array::StringBuilder;
+use crate::config::built_info;
+
+/// Shared build info string — computed once, cloned cheaply via `Arc`.
+static BUILD_INFO: LazyLock<Arc<str>> = LazyLock::new(|| {
+    format!(
+        "\"Parser v='{}' commit='{}' build_time_utc='{}' target='{}' rustc='{}'\"",
+        built_info::PKG_VERSION,
+        built_info::GIT_VERSION.unwrap_or("unknown"),
+        built_info::BUILT_TIME_UTC,
+        built_info::TARGET,
+        built_info::RUSTC_VERSION,
+    )
+    .into()
+});
+
+use arrow::array::{Date64Builder, StringBuilder};
 use arrow::datatypes::{DataType, Field, Schema};
 use arrow::record_batch::RecordBatch;
 use parquet::arrow::ArrowWriter;
@@ -28,30 +44,9 @@ use parquet::file::properties::{WriterProperties, WriterVersion};
 
 use crate::Result;
 
-const ROW_GROUP_SIZE: usize = 10_000;
+const ROW_GROUP_SIZE: usize = 50_000;
 
-#[derive(Debug, serde::Deserialize)]
-struct LineageRecord {
-    email_index: String,
-    list_name: String,
-    source_type: String,
-    write_mode: String,
-    timestamp: String,
-    archiver_build_info: String,
-}
-
-impl From<LineageRecord> for HashMap<String, String> {
-    fn from(r: LineageRecord) -> Self {
-        let mut m = HashMap::new();
-        m.insert("email_index".to_string(), r.email_index);
-        m.insert("list_name".to_string(), r.list_name);
-        m.insert("source_type".to_string(), r.source_type);
-        m.insert("write_mode".to_string(), r.write_mode);
-        m.insert("timestamp".to_string(), r.timestamp);
-        m.insert("archiver_build_info".to_string(), r.archiver_build_info);
-        m
-    }
-}
+use mlh_archiver::DataLineageRecord;
 
 fn lineage_schema() -> Arc<Schema> {
     Arc::new(Schema::new(vec![
@@ -59,8 +54,10 @@ fn lineage_schema() -> Arc<Schema> {
         Field::new("list_name", DataType::Utf8, true),
         Field::new("source_type", DataType::Utf8, true),
         Field::new("write_mode", DataType::Utf8, true),
-        Field::new("timestamp", DataType::Utf8, true),
+        Field::new("archive_timestamp", DataType::Date64, true),
         Field::new("archiver_build_info", DataType::Utf8, true),
+        Field::new("parse_timestamp", DataType::Date64, true),
+        Field::new("parser_build_info", DataType::Utf8, true),
     ]))
 }
 
@@ -68,25 +65,52 @@ fn build_lineage_batch(
     entries: &[HashMap<String, String>],
     schema: &Arc<Schema>,
 ) -> Result<RecordBatch> {
+    // columns from archiver
     let mut email_builder = StringBuilder::new();
     let mut list_builder = StringBuilder::new();
     let mut source_builder = StringBuilder::new();
     let mut write_mode_builder = StringBuilder::new();
-    let mut timestamp_builder = StringBuilder::new();
-    let mut build_info_builder = StringBuilder::new();
+    let mut archiver_timestamp_builder = Date64Builder::new();
+    let mut archiver_build_info_builder = StringBuilder::new();
+    // columns from parser
+    let mut parser_timestamp_builder = Date64Builder::new();
+    let mut parser_build_info_builder = StringBuilder::new();
+
+    // single timestamp, because this is not done at the same time for each line.
+    let parse_ts = Utc::now().timestamp();
 
     for entry in entries {
+        // read entries from archiver
         email_builder.append_value(entry.get("email_index").map(|s| s.as_str()).unwrap_or(""));
         list_builder.append_value(entry.get("list_name").map(|s| s.as_str()).unwrap_or(""));
         source_builder.append_value(entry.get("source_type").map(|s| s.as_str()).unwrap_or(""));
         write_mode_builder.append_value(entry.get("write_mode").map(|s| s.as_str()).unwrap_or(""));
-        timestamp_builder.append_value(entry.get("timestamp").map(|s| s.as_str()).unwrap_or(""));
-        build_info_builder.append_value(
+
+        // this failure should not happen, but try to parse from the RFC3339 expected from Archiver
+        let archiver_timestamp = entry
+            .get("archive_timestamp")
+            .map(|s| match chrono::DateTime::parse_from_rfc3339(s) {
+                Ok(d) => Some(d.timestamp()),
+                Err(_) => None,
+            })
+            .unwrap_or(None);
+
+        if let Some(archive_ts) = archiver_timestamp {
+            archiver_timestamp_builder.append_value(archive_ts);
+        } else {
+            archiver_timestamp_builder.append_null();
+        }
+
+        archiver_build_info_builder.append_value(
             entry
                 .get("archiver_build_info")
                 .map(|s| s.as_str())
                 .unwrap_or(""),
         );
+
+        // fill entries from parser
+        parser_timestamp_builder.append_value(parse_ts);
+        parser_build_info_builder.append_value(BUILD_INFO.clone());
     }
 
     let batch = RecordBatch::try_new(
@@ -96,8 +120,10 @@ fn build_lineage_batch(
             Arc::new(list_builder.finish()),
             Arc::new(source_builder.finish()),
             Arc::new(write_mode_builder.finish()),
-            Arc::new(timestamp_builder.finish()),
-            Arc::new(build_info_builder.finish()),
+            Arc::new(archiver_timestamp_builder.finish()),
+            Arc::new(archiver_build_info_builder.finish()),
+            Arc::new(parser_timestamp_builder.finish()),
+            Arc::new(parser_build_info_builder.finish()),
         ],
     )?;
 
@@ -140,7 +166,7 @@ pub fn parse_lineage(input_dir: &Path, output_dir: &Path) -> Result<()> {
             if trimmed.is_empty() {
                 continue;
             }
-            let record = match serde_yaml::from_str::<LineageRecord>(trimmed) {
+            let record = match serde_yaml::from_str::<DataLineageRecord>(trimmed) {
                 Ok(r) => r,
                 Err(e) => {
                     log::warn!(

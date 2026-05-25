@@ -69,7 +69,7 @@
 //! │   └── __errors.csv             # CSV: id,error_message
 //! ```
 
-mod data_lineage;
+pub mod data_lineage;
 mod email_store;
 mod error_log;
 pub mod parquet_email_store;

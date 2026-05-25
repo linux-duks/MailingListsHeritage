@@ -5,6 +5,11 @@ use clap::{Parser, ValueHint};
 use config::Config;
 use glob::glob;
 
+// The file `built.rs` was placed there by cargo and `build.rs`
+pub(crate) mod built_info {
+    include!(concat!(env!("OUT_DIR"), "/built.rs"));
+}
+
 /// CLI arguments for the parser binary.
 #[derive(Debug, Parser, Default)]
 pub struct Opts {
