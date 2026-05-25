@@ -24,6 +24,7 @@ test:
 	else \
 		echo "==> Python Testing toolchain not found, running with $(CONTAINER) (Image: $(ANALYSIS_IMAGE))..."; \
 		$(CONTAINER) run --rm \
+			-u $(shell id -u):$(shell id -g) \
 			--network=host \
 			-v $(CURDIR):/usr/src/app \
 			-w /usr/src/app \
@@ -52,6 +53,7 @@ run: create-output-dir
 				$(MAKE) rebuild; \
 			fi; \
 			$(CONTAINER) run --rm -it \
+				-u $(shell id -u):$(shell id -g) \
 				--network=host \
 				-e INPUT_DIR=/data/dataset,/data/lineage,/data/anonymized \
 				-e OUTPUT_DIR=/output \
