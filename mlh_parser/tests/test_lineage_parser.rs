@@ -282,10 +282,7 @@ fn test_parse_lineage_static_columns_same_value() {
     assert!(!first.is_empty());
 
     for info in &parser_build_infos {
-        assert_eq!(
-            info, first,
-            "all rows must have same parser build info"
-        );
+        assert_eq!(info, first, "all rows must have same parser build info");
     }
 }
 
