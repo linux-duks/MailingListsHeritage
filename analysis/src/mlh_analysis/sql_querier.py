@@ -63,10 +63,10 @@ def main(input_map, output_dir):
             print("$ Sending query ...")
             start = time.time()
             df = ctx.sql(query)
+            df.show(num=30)
             end = time.time()
             elapsed_time = end - start
             print(f"! Completed in {elapsed_time:.4f}s. First Lines: ")
-            df.show(num=30)
 
             print(f"(Attempting to save results in {result_path})\n")
         except KeyboardInterrupt:
