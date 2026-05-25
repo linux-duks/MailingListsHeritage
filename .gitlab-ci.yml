@@ -10,4 +10,5 @@ include:
   - local: .gitlab-ci/rust-lint.yml
   - local: .gitlab-ci/rust-tests.yml
   - local: .gitlab-ci/spell-check.yml
+  - local: .gitlab-ci/integration-test.yml
   # - local: .gitlab-ci/python-tests.yml # no tests enabled yet

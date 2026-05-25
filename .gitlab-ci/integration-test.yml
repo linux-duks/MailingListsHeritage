@@ -1,0 +1,31 @@
+integration-test:
+  stage: test
+  image: rust:latest
+  tags:
+    - self-hosted
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+  before_script:
+    - apt-get update -qq && apt-get install -y -qq docker.io
+    - export PATH="$HOME/.local/bin:$PATH"
+
+  script:
+    - mkdir ./data
+    - chmod 777 ./data
+    - echo "y" | make setup-demo
+    - make run
+    - |
+      for dir in output/archiver output/parser output/anonymizer output/analysis; do
+        if [ -d "$dir" ] && [ -n "$(ls -A "$dir" 2>/dev/null)" ]; then
+          file_count=$(find "$dir" -type f | wc -l)
+          echo "  [OK] $dir — $file_count file(s)"
+        else
+          echo "  [FAIL] $dir is empty or missing"
+          exit 1
+        fi
+      done
+  only:
+    - merge_requests

@@ -1,0 +1,42 @@
+name: "Integration Test: Full Pipeline"
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  integration-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: true
+
+      - name: Create folder with ci permissions
+        run: mkdir ./data && chmod 777 ./data
+
+      - name: Setup demo environment
+        run: echo "y" | make setup-demo
+
+      - name: Run full pipeline
+        run: make run
+
+      - name: Verify output folders
+        run: |
+          set -e
+          for dir in output/archiver output/parser output/anonymizer output/analysis; do
+            if [ -d "$dir" ] && [ -n "$(ls -A "$dir" 2>/dev/null)" ]; then
+              file_count=$(find "$dir" -type f | wc -l)
+              echo "  [OK] $dir — $file_count file(s)"
+            else
+              echo "  [FAIL] $dir is empty or missing"
+              exit 1
+            fi
+          done
+          echo ""
+          echo "All output folders verified successfully."
