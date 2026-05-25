@@ -36,7 +36,7 @@ build:
 	fi
 
 .PHONY: rebuild
-rebuild: clean build
+rebuild: build
 
 .PHONY: create-output-dir
 create-output-dir:

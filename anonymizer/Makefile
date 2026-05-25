@@ -36,11 +36,11 @@ build:
 	fi
 
 .PHONY: rebuild
-rebuild: clean build
+rebuild: build
 
 .PHONY: create-output-dir
 create-output-dir:
-	@mkdir -p $(REPO_ROOT)/output/parser
+	@mkdir -p $(REPO_ROOT)/output/anonymizer
 
 .PHONY: run
 run: create-output-dir
@@ -104,7 +104,7 @@ doc:
 
 .PHONY: clean
 clean:
-	@echo "==> Cleaning up parser build artifacts..."
+	@echo "==> Cleaning up anonymizer build artifacts..."
 	@if command -v cargo >/dev/null 2>&1; then \
 		cargo clean; \
 	else \
