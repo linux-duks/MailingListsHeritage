@@ -1,0 +1,11 @@
+# Demo config file
+nthreads: 1
+output_dir: "./output/archiver/"
+loop_groups: false
+
+read_lists:
+  public_inbox: ["*"]
+
+public_inbox:
+  origin: kernel.ime.usp.br
+  import_directory: ./data/

@@ -20,7 +20,7 @@ _build-rs:
 	else \
 		echo "==> Rust toolchain not found, building with Docker (Image: $(RUST_DOCKER_IMAGE))..."; \
 		$(CONTAINER) run --rm \
-			-it -u $(id -u):$(id -g) \
+			-it -u $(shell id -u):$(shell id -g) \
 			--network=host \
 			-v $(REPO_ROOT):/usr/src/app:z \
 			-w /usr/src/app \
@@ -33,19 +33,18 @@ PI_IMAGE ?= mlh-create-example-pi
 .PHONY: create-example-pi
 create-example-pi:
 	@echo "==> Building container image for example public-inbox..."
-	$(CONTAINER) build -t $(PI_IMAGE) -f ./create_example_pi/Containerfile $(REPO_ROOT)
+	$(CONTAINER) build -t $(PI_IMAGE) --build-arg USER_ID=$(shell id -u) --build-arg GROUP_ID=$(shell id -g) -f ./create_example_pi/Containerfile $(REPO_ROOT)
 	@echo "==> Creating output directory..."
 	rm -rf $(REPO_ROOT)/data
 	mkdir -p $(REPO_ROOT)/data
 	@echo "==> Generating example public-inbox v2 repository..."
-	CID=$$($(CONTAINER) create \
-		-u $(shell id -u):$(shell id -g) \
+	$(CONTAINER) run --rm \
+		-it -u $(shell id -u):$(shell id -g) \
 		-w /data \
+		-v $(REPO_ROOT)/data:/data \
+		-v $(REPO_ROOT)/mlh_parser/tests/fixtures:/fixtures \
 		$(PI_IMAGE) \
-		/fixtures /data); \
-	$(CONTAINER) start -a $$CID || { $(CONTAINER) rm $$CID; exit 1; }; \
-	$(CONTAINER) cp $$CID:/data/. $(REPO_ROOT)/data/; \
-	$(CONTAINER) rm $$CID
+		/fixtures /data \
 	@echo "==> Example public-inbox created at $(REPO_ROOT)/data/"
 
 .PHONY: clean
@@ -74,7 +73,7 @@ peek:
 	else \
 		echo "==> uv toolchain not found, running in container..."; \
 		$(CONTAINER) run --rm \
-			-it -u $(id -u):$(id -g) \
+			-it -u $(shell id -u):$(shell id -g) \
 			-v ./:/usr/src/app:z \
 			-v $(PEEK_PATH):/target_path:z \
 			-w /usr/src/app \

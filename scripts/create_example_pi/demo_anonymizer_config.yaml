@@ -1,0 +1,5 @@
+# Demo config file
+nthreads: 1
+input_dir_path: "./output/parser/dataset/"
+output_dir_path: "./output/anonymizer/"
+

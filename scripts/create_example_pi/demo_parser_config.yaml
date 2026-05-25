@@ -1,0 +1,7 @@
+# Demo config file
+
+nthreads: 2
+input_dir_path: "./output/archiver/"
+output_dir_path: "./output/parser/"
+fail_on_parsing_error: false
+

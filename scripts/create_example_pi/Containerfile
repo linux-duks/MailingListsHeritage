@@ -21,8 +21,6 @@ RUN cpanm -n YAML::XS
 
 COPY mlh_archiver/tests/test_public_inbox/public-inbox /public-inbox
 
-COPY mlh_parser/tests/fixtures /fixtures
-
 WORKDIR /app
 
 COPY scripts/create_example_pi/create_example_public_inbox.pl /app/
@@ -31,5 +29,8 @@ ENV PERL5LIB=/public-inbox/lib
 ENV TMPDIR=/data
 
 RUN mkdir -p /data && chown ${USER_ID}:${GROUP_ID} /data
+
+# Switch to non-root user matching the host (overridable at runtime via --user)
+USER $USER_ID:$GROUP_ID
 
 ENTRYPOINT ["perl", "/app/create_example_public_inbox.pl"]
