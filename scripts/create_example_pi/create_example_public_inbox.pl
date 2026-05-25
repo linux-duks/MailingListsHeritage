@@ -56,7 +56,7 @@ foreach my $file (sort @eml_files) {
 
 say "Parsed " . scalar(@emails) . " emails from " . scalar(@eml_files) . " .eml files";
 
-# change this value if you want a diferent number of lists
+# change this value if you want a different number of lists
 
 my $number_of_lists = 2;
 my $total_emails = scalar @emails;
