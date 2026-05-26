@@ -1,23 +1,32 @@
 FROM python:3.14-slim AS builder
+
+ARG USER_ID=1000
+ARG GROUP_ID=1000
+
 # Install uv
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 # Enable bytecode compilation
 ENV UV_COMPILE_BYTECODE=1
+ENV UV_LINK_MODE=copy
+ENV UV_NO_CACHE=1
+ENV UV_PROJECT_ENVIRONMENT=/opt/venv
 
 # Change the working directory to the `app` directory
 WORKDIR /app
 
 # Install dependencies
-RUN --mount=type=cache,target=/root/.cache/uv \
-	--mount=type=bind,source=uv.lock,target=uv.lock \
-	--mount=type=bind,source=pyproject.toml,target=pyproject.toml \
-	uv sync --locked --no-install-project
+RUN --mount=type=bind,source=uv.lock,target=uv.lock \
+    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+    uv sync --locked --no-install-project
 
 # Copy the project into the image
-ADD pyproject.toml .
-ADD uv.lock .
+COPY pyproject.toml .
+COPY uv.lock .
+
 
 # Sync the project
-RUN --mount=type=cache,target=/root/.cache/uv \
-	uv sync --locked
+RUN uv sync --locked
+
+# Switch to non-root user matching the host (overridable at runtime via --user)
+USER $USER_ID:$GROUP_ID

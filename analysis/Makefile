@@ -26,8 +26,8 @@ test:
 		$(CONTAINER) run --rm \
 			-u $(shell id -u):$(shell id -g) \
 			--network=host \
-			-v $(CURDIR):/usr/src/app \
-			-w /usr/src/app \
+			-v $(CURDIR):/app \
+			-w /app \
 			$(ANALYSIS_IMAGE) \
 			uvx nox; \
 	fi
@@ -65,8 +65,8 @@ run: create-output-dir
 				-v $(LINEAGE_OUTPUT_DIR):/data/lineage \
 				-v $(ANONYMIZER_OUTPUT_DIR):/data/anonymized \
 				-v $(ANALYSIS_OUTPUT_DIR):/output \
-				-v $(CURDIR):/usr/src/app \
-				-w /usr/src/app \
+				-v $(CURDIR):/app \
+				-w /app \
 				$(ANALYSIS_IMAGE) \
 				uv run src/main.py; \
 		fi \
@@ -75,7 +75,7 @@ run: create-output-dir
 
 .PHONY: rebuild
 rebuild:
-	$(CONTAINER) build -t $(ANALYSIS_IMAGE) .
+	$(CONTAINER) build --build-arg USER_ID=$(shell id -u) --build-arg GROUP_ID=$(shell id -g) -t $(ANALYSIS_IMAGE) -f Containerfile .
 
 .PHONY: clean
 clean:
