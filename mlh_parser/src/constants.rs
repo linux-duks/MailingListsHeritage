@@ -39,6 +39,7 @@ pub static PARQUET_SCHEMA: LazyLock<Schema> = LazyLock::new(|| {
     ]);
 
     Schema::new(vec![
+        Field::new("message_id", DataType::Utf8, true),
         Field::new("from", DataType::Utf8, true),
         Field::new(
             "to",
@@ -51,6 +52,18 @@ pub static PARQUET_SCHEMA: LazyLock<Schema> = LazyLock::new(|| {
             true,
         ),
         Field::new("subject", DataType::Utf8, true),
+        Field::new("has_patch_tag", DataType::Boolean, true),
+        Field::new("has_rfc_tag", DataType::Boolean, true),
+        Field::new("has_response_tag", DataType::Boolean, true),
+        Field::new("has_forward_tag", DataType::Boolean, true),
+        Field::new("patch_version", DataType::UInt16, true),
+        Field::new("patchset_sequence_number", DataType::Utf8, true),
+        Field::new(
+            "subject_tags",
+            DataType::List(Arc::new(Field::new("item", DataType::Utf8, true))),
+            true,
+        ),
+        Field::new("untegged_subject", DataType::Utf8, true),
         Field::new(
             "date",
             DataType::Timestamp(TimeUnit::Microsecond, None),
@@ -61,7 +74,6 @@ pub static PARQUET_SCHEMA: LazyLock<Schema> = LazyLock::new(|| {
             DataType::List(Arc::new(Field::new("item", DataType::Utf8, true))),
             true,
         ),
-        Field::new("message_id", DataType::Utf8, true),
         Field::new("in_reply_to", DataType::Utf8, true),
         Field::new(
             "references",

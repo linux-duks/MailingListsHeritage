@@ -356,7 +356,7 @@ fn test_parse_mail_batched() {
     let mut message_ids: Vec<String> = Vec::new();
     for batch in reader {
         let batch = batch.unwrap();
-        let col = batch.column(6);
+        let col = batch.column(0);
         let arr = col.as_any().downcast_ref::<StringArray>().unwrap();
         for v in arr.iter().flatten() {
             message_ids.push(v.to_string());

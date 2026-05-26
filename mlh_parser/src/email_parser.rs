@@ -31,6 +31,8 @@ pub fn parse_email(
     let mut email = ParsedEmail::default();
     collect_header_data(&msg, &mut email, now);
 
+    email.subject_tags = extractors::extract_tags_from_subject(&email.subject);
+
     let raw_body = email_reader::get_body(&msg);
 
     email.trailers = extractors::extract_attributions(&raw_body);

@@ -74,6 +74,14 @@ pub fn build_record_batch(
     let mut to_arr = ListBuilder::new(StringBuilder::new());
     let mut cc_arr = ListBuilder::new(StringBuilder::new());
     let mut subject_arr = StringBuilder::new();
+    let mut has_patch_tag_arr = BooleanBuilder::new();
+    let mut has_rfc_tag_arr = BooleanBuilder::new();
+    let mut has_response_tag_arr = BooleanBuilder::new();
+    let mut has_forward_tag_arr = BooleanBuilder::new();
+    let mut patch_version_arr = UInt16Builder::new();
+    let mut patchset_sequence_number_arr = StringBuilder::new();
+    let mut untegged_subject_arr = StringBuilder::new();
+    let mut subject_tags_arr = ListBuilder::new(StringBuilder::new());
     let mut date_arr = TimestampMicrosecondBuilder::new();
     let mut client_date_arr = ListBuilder::new(StringBuilder::new());
     let mut message_id_arr = StringBuilder::new();
@@ -99,6 +107,10 @@ pub fn build_record_batch(
     let mut source_reference_arr = StringBuilder::new();
 
     for (idx, (email, source_reference)) in emails.iter().enumerate() {
+        // message_id
+        {
+            message_id_arr.append_value(&email.message_id);
+        }
         // from
         {
             from_arr.append_value(&email.from);
@@ -125,6 +137,34 @@ pub fn build_record_batch(
             subject_arr.append_value(&email.subject);
         }
 
+        // subject_tags fields
+        {
+            let st = &email.subject_tags;
+            has_patch_tag_arr.append_value(st.has_patch_tag);
+            has_rfc_tag_arr.append_value(st.has_rfc_tag);
+            has_response_tag_arr.append_value(st.has_response_tag);
+            has_forward_tag_arr.append_value(st.has_forward_tag);
+
+            if let Some(v) = st.patch_version {
+                patch_version_arr.append_value(v);
+            } else {
+                patch_version_arr.append_null();
+            }
+
+            if let Some(ref seq) = st.patchset_sequence_number {
+                patchset_sequence_number_arr.append_value(seq);
+            } else {
+                patchset_sequence_number_arr.append_null();
+            }
+
+            untegged_subject_arr.append_value(&st.untegged_subject);
+
+            for tag in &st.subject_tags {
+                subject_tags_arr.values().append_value(tag);
+            }
+            subject_tags_arr.append(!st.subject_tags.is_empty());
+        }
+
         // date
         {
             if let Some(dt) = email.date {
@@ -141,11 +181,6 @@ pub fn build_record_batch(
                 client_date_arr.values().append_value(client_date);
             }
             client_date_arr.append(!email.client_date.is_empty());
-        }
-
-        // message_id
-        {
-            message_id_arr.append_value(&email.message_id);
         }
 
         // in_reply_to
@@ -176,19 +211,22 @@ pub fn build_record_batch(
         // trailers - struct list
         {
             let struct_builder = trailers_arr.values();
-            for attr in &email.trailers {
-                struct_builder
-                    .field_builder::<StringBuilder>(0)
-                    .unwrap()
-                    .append_value(&attr.attribution);
-                struct_builder
-                    .field_builder::<StringBuilder>(1)
-                    .unwrap()
-                    .append_value(&attr.identification);
-                struct_builder.append(true);
+            if email.trailers.is_empty() {
+                trailers_arr.append_null();
+            } else {
+                for attr in &email.trailers {
+                    struct_builder
+                        .field_builder::<StringBuilder>(0)
+                        .unwrap()
+                        .append_value(&attr.attribution);
+                    struct_builder
+                        .field_builder::<StringBuilder>(1)
+                        .unwrap()
+                        .append_value(&attr.identification);
+                    struct_builder.append(true);
+                }
+                trailers_arr.append(true);
             }
-            // Non nullable. Use empty lists instead
-            trailers_arr.append(true);
         }
 
         // code
@@ -215,13 +253,21 @@ pub fn build_record_batch(
     let batch = RecordBatch::try_new(
         Arc::new(schema),
         vec![
+            Arc::new(message_id_arr.finish()),
             Arc::new(from_arr.finish()),
             Arc::new(to_arr.finish()),
             Arc::new(cc_arr.finish()),
             Arc::new(subject_arr.finish()),
+            Arc::new(has_patch_tag_arr.finish()),
+            Arc::new(has_rfc_tag_arr.finish()),
+            Arc::new(has_response_tag_arr.finish()),
+            Arc::new(has_forward_tag_arr.finish()),
+            Arc::new(patch_version_arr.finish()),
+            Arc::new(patchset_sequence_number_arr.finish()),
+            Arc::new(subject_tags_arr.finish()),
+            Arc::new(untegged_subject_arr.finish()),
             Arc::new(date_arr.finish()),
             Arc::new(client_date_arr.finish()),
-            Arc::new(message_id_arr.finish()),
             Arc::new(in_reply_to_arr.finish()),
             Arc::new(references_arr.finish()),
             Arc::new(x_mailing_list_arr.finish()),
