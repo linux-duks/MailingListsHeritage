@@ -53,7 +53,7 @@ pub fn extract_attributions(commit_message: &str) -> Vec<Attribution> {
 }
 
 static RE_DIFF_BLOCK: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"(?im)^diff --git ").expect("RE_DIFF_BLOCK must compile"));
+    LazyLock::new(|| Regex::new(r"(?im)^diff (?:--git |-r )").expect("RE_DIFF_BLOCK must compile"));
 
 /// Extracts patch diffs from an email body.
 ///
