@@ -2,7 +2,6 @@ use arrow::array::{Array, ListArray, StringArray, StructArray};
 use mlh_parser::{config::AppConfig, constants::BATCH_MAX_RECORDS, process_mailing_list, start};
 use parquet::arrow::arrow_reader::ParquetRecordBatchReaderBuilder;
 use std::fs;
-use std::sync::{Arc, atomic::AtomicBool};
 use tempfile::TempDir;
 
 #[test]
@@ -919,9 +918,8 @@ fn test_100_emails_order_preserved() {
             lists_to_parse: Some(vec!["list_a".to_string(), "list_b".to_string()]),
         };
 
-        let shutdown = Arc::new(AtomicBool::new(false));
         pool.install(|| {
-            start(&mut cfg, shutdown).expect("start() should succeed");
+            start(&mut cfg).expect("start() should succeed");
         });
 
         // Read both parquet files and collect raw_body strings in order

@@ -3,10 +3,6 @@ use env_logger::Env;
 use mlh_parser::Result;
 use mlh_parser::config;
 use mlh_parser::start;
-use std::sync::{
-    Arc,
-    atomic::{AtomicBool, Ordering},
-};
 
 fn main() -> Result<()> {
     let env = Env::default().filter_or("RUST_LOG", "info");
@@ -33,15 +29,5 @@ fn main() -> Result<()> {
         .build_global()
         .unwrap();
 
-    // Setup signal handler for Ctrl+C
-    let shutdown_flag = Arc::new(AtomicBool::new(false));
-    let shutdown_flag_signal = Arc::clone(&shutdown_flag);
-
-    ctrlc::set_handler(move || {
-        log::info!("Received shutdown signal (Ctrl+C), stopping workers...");
-        shutdown_flag_signal.store(true, Ordering::Relaxed);
-    })
-    .map_err(|e| std::io::Error::other(format!("Failed to set Ctrl+C handler: {}", e)))?;
-
-    start(&mut app_config, shutdown_flag)
+    start(&mut app_config)
 }

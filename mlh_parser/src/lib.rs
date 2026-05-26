@@ -35,16 +35,12 @@ use rayon::prelude::*;
 use std::fs;
 use std::io::{BufWriter, Write};
 use std::path::{Path, PathBuf};
-use std::sync::{
-    Arc,
-    atomic::{AtomicBool, Ordering},
-};
 
 /// Convenience result type used throughout the crate.
 pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
 /// Starts the parsing routine according to the configs
-pub fn start(cfg: &mut crate::config::AppConfig, shutdown_flag: Arc<AtomicBool>) -> Result<()> {
+pub fn start(cfg: &mut crate::config::AppConfig) -> Result<()> {
     let input_path = PathBuf::from(&cfg.input_dir_path);
     let output_path = PathBuf::from(&cfg.output_dir_path);
 
@@ -75,11 +71,6 @@ pub fn start(cfg: &mut crate::config::AppConfig, shutdown_flag: Arc<AtomicBool>)
 
     rayon::scope(|s| {
         for mail_l in lists {
-            if shutdown_flag.load(Ordering::Relaxed) {
-                break;
-            }
-
-            let shutdown = Arc::clone(&shutdown_flag);
             let input = input_path.clone();
             let output = output_path.clone();
             let fail_on_err = cfg.fail_on_parsing_error;
@@ -90,19 +81,13 @@ pub fn start(cfg: &mut crate::config::AppConfig, shutdown_flag: Arc<AtomicBool>)
                 if let Err(e) = process_mailing_list_wrap(&mail_l, &input, &output, fail_on_err) {
                     log::error!("Error on {}: {}", mail_l, e);
                     if fail_on_err {
-                        shutdown.store(true, Ordering::Relaxed);
+                        panic!("Fail on error requested. Error: {e}");
                     }
                 }
             });
         }
     });
     lineage_parser::parse_lineage(&input_path, &output_path)?;
-
-    if shutdown_flag.load(Ordering::Relaxed) {
-        log::info!("Process exited via shutdown signal.");
-    } else {
-        log::info!("Process completed successfully.");
-    }
 
     Ok(())
 }
