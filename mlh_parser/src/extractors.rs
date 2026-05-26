@@ -258,7 +258,7 @@ pub fn extract_tags_from_subject(email_subject: &str) -> SubjectTags {
         tag_end = tag_end.max(col_pos + 1);
     }
 
-    let untegged_subject = subject[tag_end..]
+    let untagged_subject = subject[tag_end..]
         .trim()
         .trim_start_matches(']')
         .trim()
@@ -272,7 +272,7 @@ pub fn extract_tags_from_subject(email_subject: &str) -> SubjectTags {
         patch_version: state.version,
         patchset_sequence_number: state.sequence,
         subject_tags: state.tags,
-        untegged_subject,
+        untagged_subject,
     }
 }
 
@@ -292,7 +292,7 @@ mod tests {
                 SubjectTags {
                     has_patch_tag: true,
                     subject_tags: vec![s("PATCH"), s("5.15.y")],
-                    untegged_subject: s("wifi: mac80211: check tdls flag in ieee80211_tdls_oper"),
+                    untagged_subject: s("wifi: mac80211: check tdls flag in ieee80211_tdls_oper"),
                     ..Default::default()
                 },
             ),
@@ -301,7 +301,7 @@ mod tests {
                 SubjectTags {
                     has_rfc_tag: true,
                     subject_tags: vec![s("RFC")],
-                    untegged_subject: s(
+                    untagged_subject: s(
                         "2.4.0-test6-pre2 Merge softirq, local_irq_count, local_bh_count",
                     ),
                     ..Default::default()
@@ -312,7 +312,7 @@ mod tests {
                 SubjectTags {
                     has_patch_tag: true,
                     subject_tags: vec![s("patch")],
-                    untegged_subject: s("2.4.0-test11 Elf64_Word incorrectly defined"),
+                    untagged_subject: s("2.4.0-test11 Elf64_Word incorrectly defined"),
                     ..Default::default()
                 },
             ),
@@ -321,7 +321,7 @@ mod tests {
                 SubjectTags {
                     has_patch_tag: true,
                     subject_tags: vec![s("PATCH")],
-                    untegged_subject: s(
+                    untagged_subject: s(
                         "xfrm: move policy_bydst RCU sync from per-netns .exit to .pre_exit",
                     ),
                     ..Default::default()
@@ -334,7 +334,7 @@ mod tests {
                     patch_version: Some(2),
                     patchset_sequence_number: Some(s("0/3")),
                     subject_tags: vec![s("PATCH"), s("v2"), s("0/3")],
-                    untegged_subject: s("libbpf: support STRUCT_OPS in light skeletons"),
+                    untagged_subject: s("libbpf: support STRUCT_OPS in light skeletons"),
                     ..Default::default()
                 },
             ),
@@ -345,7 +345,7 @@ mod tests {
                     patch_version: Some(2),
                     patchset_sequence_number: Some(s("1/3")),
                     subject_tags: vec![s("PATCH"), s("v2"), s("1/3")],
-                    untegged_subject: s(
+                    untagged_subject: s(
                         "libbpf: load vmlinux BTF in gen_loader mode for struct_ops",
                     ),
                     ..Default::default()
@@ -357,7 +357,7 @@ mod tests {
                     has_patch_tag: true,
                     patchset_sequence_number: Some(s("0/2")),
                     subject_tags: vec![s("PATCH"), s("0/2")],
-                    untegged_subject: s(
+                    untagged_subject: s(
                         "bpf: cgroup: fix sysctl new-value handling in __cgroup_bpf_run_filter_sysctl",
                     ),
                     ..Default::default()
@@ -371,7 +371,7 @@ mod tests {
                     has_response_tag: true,
                     patchset_sequence_number: Some(s("2/6")),
                     subject_tags: vec![s("Re"), s("PATCH"), s("RFC"), s("bpf-next"), s("2/6")],
-                    untegged_subject: s("bpf: compute loops hierarchy"),
+                    untagged_subject: s("bpf: compute loops hierarchy"),
                     ..Default::default()
                 },
             ),
@@ -382,7 +382,7 @@ mod tests {
                     patch_version: Some(3),
                     patchset_sequence_number: Some(s("00/12")),
                     subject_tags: vec![s("PATCH"), s("v3"), s("00/12")],
-                    untegged_subject: s("uprobes/x86: Fix red zone issue for optimized uprobes"),
+                    untagged_subject: s("uprobes/x86: Fix red zone issue for optimized uprobes"),
                     ..Default::default()
                 },
             ),
@@ -393,7 +393,7 @@ mod tests {
                     patch_version: Some(5),
                     patchset_sequence_number: Some(s("00/11")),
                     subject_tags: vec![s("PATCH"), s("dwarves"), s("v5"), s("00/11")],
-                    untegged_subject: s("pahole: Encode true signatures in kernel BTF"),
+                    untagged_subject: s("pahole: Encode true signatures in kernel BTF"),
                     ..Default::default()
                 },
             ),
@@ -404,7 +404,7 @@ mod tests {
                     patch_version: Some(3),
                     patchset_sequence_number: Some(s("0/4")),
                     subject_tags: vec![s("PATCH"), s("6.6.y"), s("v3"), s("0/4")],
-                    untegged_subject: s("ksmbd: validate owner of durable handle on reconnect"),
+                    untagged_subject: s("ksmbd: validate owner of durable handle on reconnect"),
                     ..Default::default()
                 },
             ),
@@ -412,7 +412,7 @@ mod tests {
                 "[to-be-updated] mm-cma-fix-reserved-page-leak-on-activation-failure.patch removed from -mm tree",
                 SubjectTags {
                     subject_tags: vec![s("to-be-updated")],
-                    untegged_subject: s(
+                    untagged_subject: s(
                         "mm-cma-fix-reserved-page-leak-on-activation-failure.patch removed from -mm tree",
                     ),
                     ..Default::default()
@@ -423,7 +423,7 @@ mod tests {
                 SubjectTags {
                     has_patch_tag: true,
                     subject_tags: vec![s("Patch")],
-                    untegged_subject: s(
+                    untagged_subject: s(
                         "add quirk NVME_QUIRK_IGNORE_DEV_SUBNQN for 144d:a808 (Samsung PM981/983/970 EVO Plus )\" has been added to the 7.0-stable tree",
                     ),
                     ..Default::default()
@@ -434,7 +434,7 @@ mod tests {
                 SubjectTags {
                     has_patch_tag: true,
                     subject_tags: vec![s("FAILED"), s("PATCH")],
-                    untegged_subject: s(
+                    untagged_subject: s(
                         "net: skbuff: propagate shared-frag marker through\" failed to apply to 5.15-stable tree",
                     ),
                     ..Default::default()
@@ -445,7 +445,7 @@ mod tests {
                 SubjectTags {
                     has_forward_tag: true,
                     subject_tags: vec![s("fwd"), s("Bug"), s("9106")],
-                    untegged_subject: s("Sun Fire v100 dmfe driver bug"),
+                    untagged_subject: s("Sun Fire v100 dmfe driver bug"),
                     ..Default::default()
                 },
             ),
@@ -456,7 +456,7 @@ mod tests {
                     patch_version: Some(19),
                     patchset_sequence_number: Some(s("00/14")),
                     subject_tags: vec![s("PATCH"), s("v19"), s("00/14")],
-                    untegged_subject: s(
+                    untagged_subject: s(
                         "crypto/dmaengine: qce: introduce BAM locking and use DMA for register I/O",
                     ),
                     ..Default::default()
@@ -467,7 +467,7 @@ mod tests {
                 SubjectTags {
                     has_patch_tag: true,
                     subject_tags: vec![s("2.6"), s("patch")],
-                    untegged_subject: s("fix dependencies of HUGETLB_PAGE_SIZE_64K"),
+                    untagged_subject: s("fix dependencies of HUGETLB_PAGE_SIZE_64K"),
                     ..Default::default()
                 },
             ),
@@ -476,7 +476,7 @@ mod tests {
                 SubjectTags {
                     has_patch_tag: true,
                     subject_tags: vec![s("2.4"), s("PATCH")],
-                    untegged_subject: s("sparc64 dma parenthesis fixes"),
+                    untagged_subject: s("sparc64 dma parenthesis fixes"),
                     ..Default::default()
                 },
             ),
@@ -486,7 +486,7 @@ mod tests {
                     has_patch_tag: true,
                     has_rfc_tag: true,
                     subject_tags: vec![s("PATCH"), s("RFC")],
-                    untegged_subject: s("io_remap_pfn_range()"),
+                    untagged_subject: s("io_remap_pfn_range()"),
                     ..Default::default()
                 },
             ),
@@ -505,7 +505,7 @@ mod tests {
                         s("T1"),
                         s("200"),
                     ],
-                    untegged_subject: s(""),
+                    untagged_subject: s(""),
                     ..Default::default()
                 },
             ),
@@ -513,7 +513,7 @@ mod tests {
                 "[Netra T1 200 status...]",
                 SubjectTags {
                     subject_tags: vec![s("Netra"), s("T1"), s("200"), s("status")],
-                    untegged_subject: s(""),
+                    untagged_subject: s(""),
                     ..Default::default()
                 },
             ),
@@ -521,7 +521,7 @@ mod tests {
                 "[CALL FOR TESTERS] SILO 0.8.7",
                 SubjectTags {
                     subject_tags: vec![s("CALL"), s("FOR"), s("TESTERS")],
-                    untegged_subject: s("SILO 0.8.7"),
+                    untagged_subject: s("SILO 0.8.7"),
                     ..Default::default()
                 },
             ),
@@ -529,7 +529,7 @@ mod tests {
                 "[ath9k-devel] Shutting down the ath[59]k-devel mailing lists",
                 SubjectTags {
                     subject_tags: vec![s("ath9k-devel")],
-                    untegged_subject: s("Shutting down the ath[59]k-devel mailing lists"),
+                    untagged_subject: s("Shutting down the ath[59]k-devel mailing lists"),
                     ..Default::default()
                 },
             ),
@@ -538,7 +538,7 @@ mod tests {
                 SubjectTags {
                     has_patch_tag: true,
                     subject_tags: vec![s("ath9k-devel"), s("PATCH")],
-                    untegged_subject: s("ath9k: Switch to using"),
+                    untagged_subject: s("ath9k: Switch to using"),
                     ..Default::default()
                 },
             ),
@@ -548,7 +548,7 @@ mod tests {
                     has_patch_tag: true,
                     patch_version: Some(3),
                     subject_tags: vec![s("ath9k-devel"), s("PATCH"), s("v3")],
-                    untegged_subject: s(
+                    untagged_subject: s(
                         "ath9k: Switch to using mac80211 intermediate software queues.",
                     ),
                     ..Default::default()
@@ -559,7 +559,7 @@ mod tests {
                 SubjectTags {
                     has_rfc_tag: true,
                     subject_tags: vec![s("ath9k-devel"), s("RFC")],
-                    untegged_subject: s("ath9k: add devicetree support to ath9k"),
+                    untagged_subject: s("ath9k: add devicetree support to ath9k"),
                     ..Default::default()
                 },
             ),
@@ -569,7 +569,7 @@ mod tests {
                     has_patch_tag: true,
                     patchset_sequence_number: Some(s("119/124")),
                     subject_tags: vec![s("PATCH"), s("AUTOSEL"), s("for"), s("4.15"), s("119/124")],
-                    untegged_subject: s(
+                    untagged_subject: s(
                         "signal/metag: Document a conflict with SI_USER with SIGFPE",
                     ),
                     ..Default::default()
@@ -580,7 +580,7 @@ mod tests {
                 SubjectTags {
                     has_response_tag: true,
                     subject_tags: vec![s("Re")],
-                    untegged_subject: s("Demand dial doesn't raise ISP connection"),
+                    untagged_subject: s("Demand dial doesn't raise ISP connection"),
                     ..Default::default()
                 },
             ),
@@ -589,7 +589,7 @@ mod tests {
                 SubjectTags {
                     has_forward_tag: true,
                     subject_tags: vec![s("FW"), s("Lustre-discuss")],
-                    untegged_subject: s("Troubles compile lustre with --enable-quota"),
+                    untagged_subject: s("Troubles compile lustre with --enable-quota"),
                     ..Default::default()
                 },
             ),
@@ -598,21 +598,21 @@ mod tests {
                 SubjectTags {
                     has_response_tag: true,
                     subject_tags: vec![s("Re")],
-                    untegged_subject: s("c++ code - not getting compiled !!!!!!!!!"),
+                    untagged_subject: s("c++ code - not getting compiled !!!!!!!!!"),
                     ..Default::default()
                 },
             ),
             (
                 "c++ code - not getting compiled !!!!!!!!!",
                 SubjectTags {
-                    untegged_subject: s("c++ code - not getting compiled !!!!!!!!!"),
+                    untagged_subject: s("c++ code - not getting compiled !!!!!!!!!"),
                     ..Default::default()
                 },
             ),
             (
                 "Assembler errors in optimization level 3 (-O3) - gcc (4.1.2)",
                 SubjectTags {
-                    untegged_subject: s(
+                    untagged_subject: s(
                         "Assembler errors in optimization level 3 (-O3) - gcc (4.1.2)",
                     ),
                     ..Default::default()

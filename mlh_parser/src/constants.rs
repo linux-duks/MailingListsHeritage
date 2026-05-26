@@ -63,7 +63,7 @@ pub static PARQUET_SCHEMA: LazyLock<Schema> = LazyLock::new(|| {
             DataType::List(Arc::new(Field::new("item", DataType::Utf8, true))),
             true,
         ),
-        Field::new("untegged_subject", DataType::Utf8, true),
+        Field::new("untagged_subject", DataType::Utf8, true),
         Field::new(
             "date",
             DataType::Timestamp(TimeUnit::Microsecond, None),

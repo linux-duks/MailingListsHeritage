@@ -80,7 +80,7 @@ pub fn build_record_batch(
     let mut has_forward_tag_arr = BooleanBuilder::new();
     let mut patch_version_arr = UInt16Builder::new();
     let mut patchset_sequence_number_arr = StringBuilder::new();
-    let mut untegged_subject_arr = StringBuilder::new();
+    let mut untagged_subject_arr = StringBuilder::new();
     let mut subject_tags_arr = ListBuilder::new(StringBuilder::new());
     let mut date_arr = TimestampMicrosecondBuilder::new();
     let mut client_date_arr = ListBuilder::new(StringBuilder::new());
@@ -157,7 +157,7 @@ pub fn build_record_batch(
                 patchset_sequence_number_arr.append_null();
             }
 
-            untegged_subject_arr.append_value(&st.untegged_subject);
+            untagged_subject_arr.append_value(&st.untagged_subject);
 
             for tag in &st.subject_tags {
                 subject_tags_arr.values().append_value(tag);
@@ -265,7 +265,7 @@ pub fn build_record_batch(
             Arc::new(patch_version_arr.finish()),
             Arc::new(patchset_sequence_number_arr.finish()),
             Arc::new(subject_tags_arr.finish()),
-            Arc::new(untegged_subject_arr.finish()),
+            Arc::new(untagged_subject_arr.finish()),
             Arc::new(date_arr.finish()),
             Arc::new(client_date_arr.finish()),
             Arc::new(in_reply_to_arr.finish()),

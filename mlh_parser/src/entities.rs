@@ -64,5 +64,5 @@ pub struct SubjectTags {
     /// list of tags considered, in order as they appear
     pub subject_tags: Vec<String>,
     /// the subject message, cut after the last tag
-    pub untegged_subject: String,
+    pub untagged_subject: String,
 }
