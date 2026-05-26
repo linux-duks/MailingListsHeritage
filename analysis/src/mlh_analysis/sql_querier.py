@@ -66,7 +66,7 @@ def main(input_map, output_dir):
             df.show(num=30)
             end = time.time()
             elapsed_time = end - start
-            print(f"! Completed in {elapsed_time:.4f}s. First Lines: ")
+            print(f"! Completed in {elapsed_time:.4f}s. First Lines ⬆️")
 
             print(f"(Attempting to save results in {result_path})\n")
         except KeyboardInterrupt:
@@ -77,10 +77,12 @@ def main(input_map, output_dir):
         if df is not None:
             try:
                 df.write_csv(result_path)
+                print("Saved results as CSV")
             except Exception as e:
                 print(
                     f"Writing CSV failed with an error. Falling back to Parquet. Error: {e}"
                 )
                 df.write_parquet(result_path)
+                print("Saved results as Parquet")
         df = None
         gc.collect()
