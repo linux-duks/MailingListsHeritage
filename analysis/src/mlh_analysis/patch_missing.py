@@ -31,7 +31,7 @@ def main(dataset_dir, output_dir):
             pl.col("has_patch_tag")
             & (~pl.col("has_response_tag"))
             & (~pl.col("has_forward_tag"))
-            & (pl.col("code").is_null() | pl.col("code").list.len() == 0)
+            & (pl.col("code").is_null() | (pl.col("code").list.len() == 0))
         )
         df = df.with_columns(pl.lit(mailing_list).alias("list"))
         df = df.select(["list", "message_id", "subject", "_source_reference"])
