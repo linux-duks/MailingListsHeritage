@@ -42,7 +42,7 @@ create-example-pi:
 		-it -u $(shell id -u):$(shell id -g) \
 		-w /data \
 		-v $(REPO_ROOT)/data:/data \
-		-v $(REPO_ROOT)/mlh_parser/tests/fixtures:/fixtures:ro \
+		-v $(REPO_ROOT)/mlh_parser/tests/fixtures:/fixtures \
 		$(PI_IMAGE) \
 		/fixtures /data \
 	@echo "==> Example public-inbox created at $(REPO_ROOT)/data/"

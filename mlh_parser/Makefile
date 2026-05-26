@@ -26,8 +26,7 @@ build:
 		cargo build --release; \
 	else \
 		echo "==> Rust toolchain not found, building with Docker (Image: $(RUST_DOCKER_IMAGE))..."; \
-		$(CONTAINER) run --rm \
-			-it -u $(shell id -u):$(shell id -g) \
+		$(CONTAINER) run --rm -it \
 			--network=host \
 			-v ../:/usr/src/app:z \
 			-w /usr/src/app \
@@ -59,8 +58,7 @@ debug:
 		cd $(REPO_ROOT) && RUST_LOG=debug cargo run --bin $(BINARY_NAME); \
 	else \
 		echo "==> Rust toolchain not found, building with Docker (Image: $(RUST_DOCKER_IMAGE))..."; \
-		$(CONTAINER) run --rm \
-			-it -u $(shell id -u):$(shell id -g) \
+		$(CONTAINER) run --rm -it \
 			-e RUST_LOG=debug \
 			--network=host \
 			-v $(REPO_ROOT):/usr/src/app:z \
@@ -77,8 +75,7 @@ test:
 		cargo test; \
 	else \
 		echo "==> Rust toolchain not found, running tests with Docker (Image: $(RUST_DOCKER_IMAGE))..."; \
-		$(CONTAINER) run --rm \
-			-it -u $(shell id -u):$(shell id -g) \
+		$(CONTAINER) run --it \
 			--network=host \
 			-v $(REPO_ROOT):/usr/src/app:z \
 			-w /usr/src/app \
@@ -93,8 +90,7 @@ doc:
 		cargo doc --document-private-items --open; \
 	else \
 		echo "==> Rust toolchain not found, generating docs with Docker (Image: $(RUST_DOCKER_IMAGE))..."; \
-		$(CONTAINER) run --rm \
-			-it -u $(shell id -u):$(shell id -g) \
+		$(CONTAINER) run --rm -it \
 			--network=host \
 			-v $(REPO_ROOT):/usr/src/app:z \
 			-w /usr/src/app \
