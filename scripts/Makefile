@@ -19,8 +19,7 @@ _build-rs:
 		cargo build --bin $(BIN) --release; \
 	else \
 		echo "==> Rust toolchain not found, building with Docker (Image: $(RUST_DOCKER_IMAGE))..."; \
-		$(CONTAINER) run --rm \
-			-it -u $(shell id -u):$(shell id -g) \
+		$(CONTAINER) run --rm -t \
 			--network=host \
 			-v $(REPO_ROOT):/usr/src/app:z \
 			-w /usr/src/app \
@@ -38,8 +37,7 @@ create-example-pi:
 	rm -rf $(REPO_ROOT)/data
 	mkdir -p $(REPO_ROOT)/data
 	@echo "==> Generating example public-inbox v2 repository..."
-	$(CONTAINER) run --rm \
-		-it -u $(shell id -u):$(shell id -g) \
+	$(CONTAINER) run --rm -t \
 		-w /data \
 		-v $(REPO_ROOT)/data:/data \
 		-v $(REPO_ROOT)/mlh_parser/tests/fixtures:/fixtures \
@@ -72,8 +70,7 @@ peek:
 		uv run --project ./peek_parquet ./peek_parquet/peek_files.py $(PEEK_PATH) ;\
 	else \
 		echo "==> uv toolchain not found, running in container..."; \
-		$(CONTAINER) run --rm \
-			-it -u $(shell id -u):$(shell id -g) \
+		$(CONTAINER) run --rm -t \
 			-v ./:/usr/src/app:z \
 			-v $(PEEK_PATH):/target_path:z \
 			-w /usr/src/app \
