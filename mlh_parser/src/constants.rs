@@ -15,16 +15,16 @@ pub const BATCH_MAX_RECORDS: usize = 50_000;
 /// This is not a config option, but can be changed easily.
 /// I originally set this to 1970, because
 /// the first email in history was sent in 1971
-///   (https://en.wikipedia.org/wiki/History_of1_email)
+///   <https://en.wikipedia.org/wiki/History_of1_email>
 /// However, I found many emails where the date is
 /// in 1970 because of unixtime 0
 ///
 /// I couldnt find a reliable source for the first emails archived,
 ///  of first mailing list. One good candidate is 1986 for the LISTSERV
-///  https://en.wikipedia.org/wiki/LISTSERV
+///  <https://en.wikipedia.org/wiki/LISTSERV>
 ///  and possibly the "MsgGroup" in 1975, for the ARPANET
-///  https://www.cs.kent.edu/~javed/internetbook/hobbestimeline/HIT.html
-///  https://www.britannica.com/technology/Internet
+///  <https://www.cs.kent.edu/~javed/internetbook/hobbestimeline/HIT.html>
+///  <https://www.britannica.com/technology/Internet>
 ///  I chose 1986 as the default cutoff
 pub const OLDEST_MAIL_DATE_CUTOFF: usize = 1986;
 

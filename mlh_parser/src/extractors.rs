@@ -1,5 +1,6 @@
 //! Extracts trailers (Signed-off-by, Reviewed-by, etc.) and patch diffs from
 //! email body text.
+//! Extract "tags" from email Subject, like `[PATCH v3 0/11]`
 
 use regex::Regex;
 use std::sync::LazyLock;
