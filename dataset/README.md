@@ -23,22 +23,32 @@ Analyses can be performed targeting a specific partition, such as `list=dev.linu
 Schema definition of the Columnar dataset:
 
 ```
-| Column        | Type                          | Description                                                                                          |
-|---------------|-------------------------------|------------------------------------------------------------------------------------------------------|
-| message-id    | String                        | Email Message-ID header                                                                              |
-| from          | String                        | Sender email address                                                                                 |
-| to            | List of Strings               | Recipients (To field)                                                                                |
-| cc            | List of Strings               | CC recipients                                                                                        |
-| subject       | String                        | Email subject line                                                                                   |
-| date          | Datetime                      | Dataset email date (corrected)                                                                       |
-| client-date   | List of Strings               | Raw date from email client (may be incorrect)                                                        |
-| in-reply-to   | String                        | In-Reply-To header                                                                                   |
-| references    | List of Strings               | References headers                                                                                   |
-| x-mailing-list| String                        | Mailing list name                                                                                    |
-| trailers      | List of Structs               | Signature block attribution and identification                                                       |
-| code          | List of Strings               | Code snippets extracted from email                                                                   |
-| raw_body      | String                        | Complete raw email body                                                                              |
-| file_name     | String                        | Provenance tracking: source file name (e.g., `{email_id}:{parquet_filename}` for parquet inputs)     |
+| Column                   | Type               | Description                                                                                      |
+|--------------------------|--------------------|--------------------------------------------------------------------------------------------------|
+| message-id               | String             | Email Message-ID header                                                                          |
+| from                     | String             | Sender email address                                                                             |
+| to                       | List of Strings    | Recipients (To field)                                                                            |
+| cc                       | List of Strings    | CC recipients                                                                                    |
+| subject                  | String             | Email subject line                                                                               |
+| has_patch_tag            | Boolean            | Presence "patch tag" (convention) in the subject              |
+| has_rfc_tag              | Boolean            | Presence "RFC tag" (convention) in the subject                |
+| has_response_tag         | Boolean            | Presence of "Re/Res tag" in the subject                       |
+| has_forward_tag          | Boolean            | Presence of "Fwd/Fd tag" in the subject                       |
+| patch_version            | UInt16             | Version of patch, if present ([PATCH v3] -> 3 )               |
+| patchset_sequence_number | String             | Sequence string, if present ([PATCH 0/11] -> 0/11)            |
+| subject_tags             | List of Strings    | All tags extracted from the subject                           |
+| untagged_subject         | String             | The subject removed from all tags but "Re/Res/Fd/Fwd"         |
+| date                     | Datetime           | Dataset email date (corrected)                                                                   |
+| client-date              | List of Strings    | Raw date from email client (may be incorrect)                                                    |
+| in-reply-to              | String             | In-Reply-To header                                                                               |
+| references               | List of Strings    | References headers                                                                               |
+| x-mailing-list           | String             | Mailing list name                                                                                |
+| trailers                 | List of Structs    | Signature block attribution and identification                                                   |
+| code                     | List of Strings    | Code snippets extracted from email                                                               |
+| raw_body                 | String             | Complete raw email body                                                                          |
+| body_sha1                | String             | Sha1 hashsum of the raw body (befor anonymization)                                               |
+| _source_reference        | String             | Provenance tracking: source back reference (e.g., nntp sequencial id, `{epoch}-{commit_hash}` for PI) |
+| list                     | String (partition) | The list from where the message was collected, split into a folder partition (hive style)        |
 ```
 
 ### Lineage Dataset
@@ -54,8 +64,10 @@ Alongside the main email dataset, a `lineage.parquet` file provides a complete a
 | list_name           | String | Mailing list name                                                           |
 | source_type         | String | Source type and configuration (e.g., `NNTP h=localhost`, `PublicInbox`)     |
 | write_mode          | String | Output format used (`raw_email` or `parquet:<buffer_size>`)                 |
-| timestamp           | String | UTC timestamp when the email was fetched                                    |
+| archiver_timestamp  | String | UTC timestamp when the email was fetched                                    |
 | archiver_build_info | String | Archiver build metadata: version, git commit, build time, target, rustc     |
+| parser_timestamp    | String | UTC timestamp when the emails were parsed                                   |
+| parser_build_info   | String | Parser build metadata: version, git commit, build time, target, rustc       |
 ```
 
 #### Example Lineage Entry
@@ -65,7 +77,7 @@ email_index: 1
 list_name: dev.linux.lists.gfs2
 source_type: "PublicInbox"
 write_mode: "parquet:10000"
-timestamp: 2025-01-15T10:30:00Z
+archiver_timestamp: 2025-01-15T10:30:00Z
 archiver_build_info: "Archiver v='0.1.0' commit='abc123' build_time_utc='2025-01-15T00:00:00Z' target='x86_64-unknown-linux-gnu' rustc='1.80.0'"
 ```
 
