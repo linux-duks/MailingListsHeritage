@@ -67,7 +67,7 @@ static RE_DIFF_BLOCK: LazyLock<Regex> =
 /// as separate entries. Multiple `diff --git` blocks within a single `---`
 /// section are kept together as one patch (multi-file patches).
 ///
-/// Source: https://github.com/mricon/b4/blob/main/src/b4/__init__.py
+/// Source: <https://github.com/mricon/b4/blob/main/src/b4/__init__.py>
 /// Licensed under GPLv2
 pub fn extract_patches(email_body: &str) -> Vec<String> {
     if !RE_DIFF_BLOCK.is_match(email_body) {
@@ -206,6 +206,32 @@ impl TagState {
     }
 }
 
+fn process_colon_tags(prefix: &str, state: &mut TagState) -> (String, usize) {
+    let mut tag_end = 0;
+    for caps in RE_COLON_TAG.captures_iter(prefix) {
+        let m = caps.get(0).unwrap();
+        if m.start() > tag_end && !prefix[tag_end..m.start()].trim().is_empty() {
+            break;
+        }
+        let tag = caps.get(1).unwrap().as_str();
+        let lower = tag.to_lowercase();
+        let is_re = lower == "re" || lower == "res";
+        let is_fwd = lower == "fw" || lower == "fwd" || lower == "forward";
+        if !is_re && !is_fwd {
+            break;
+        }
+        if is_re {
+            state.has_response = true;
+        } else {
+            state.has_forward = true;
+        }
+        state.tags.push(tag.to_string());
+        tag_end = m.end();
+    }
+    let colon_prefix = prefix[..tag_end].to_string();
+    (colon_prefix, tag_end)
+}
+
 /// Parses an email subject line into [`SubjectTags`].
 ///
 /// # Tag categories
@@ -289,10 +315,7 @@ impl TagState {
 /// ```
 pub fn extract_tags_from_subject(email_subject: &str) -> SubjectTags {
     let mut state = TagState::new();
-    let mut tag_end: usize = 0;
-    let mut tag_zone_end: usize = 0;
     let mut tag_zone_active = true;
-    let mut has_recognized_tag = false;
 
     let subject = email_subject.trim();
 
@@ -302,39 +325,12 @@ pub fn extract_tags_from_subject(email_subject: &str) -> SubjectTags {
     } else {
         subject
     };
+    // Stop at the first literal quote to avoid scanning into the message body
+    // (e.g. `Patch "nvme: ..."` — the quoted description may contain brackets).
     let prefix = raw_prefix.split('"').next().unwrap_or("");
     let has_brackets = first_bracket.is_some();
 
-    let mut colon_tag_last_end: usize = 0;
-
-    for caps in RE_COLON_TAG.captures_iter(prefix) {
-        let m = caps.get(0).unwrap();
-        if m.start() > colon_tag_last_end {
-            let between = &prefix[colon_tag_last_end..m.start()];
-            if !between.trim().is_empty() {
-                break;
-            }
-        }
-        let tag = caps.get(1).unwrap().as_str();
-        let lower = tag.to_lowercase();
-        let is_re = lower == "re" || lower == "res";
-        let is_fwd = lower == "fw" || lower == "fwd" || lower == "forward";
-        if !is_re && !is_fwd {
-            break;
-        }
-        has_recognized_tag = true;
-        if is_re {
-            state.has_response = true;
-        } else {
-            state.has_forward = true;
-        }
-        state.tags.push(tag.to_string());
-        colon_tag_last_end = m.end();
-        tag_zone_end = m.end();
-    }
-
-    let colon_prefix = prefix[..colon_tag_last_end].to_string();
-    tag_end = tag_end.max(colon_tag_last_end);
+    let (colon_prefix, mut tag_end) = process_colon_tags(prefix, &mut state);
 
     if let Some(m) = RE_PATCH_STANDALONE.find(prefix)
         && m.start() == 0
@@ -342,8 +338,8 @@ pub fn extract_tags_from_subject(email_subject: &str) -> SubjectTags {
         state.has_patch = true;
         if !has_brackets {
             state.tags.push(m.as_str().to_string());
-            tag_end = tag_end.max(m.end());
         }
+        tag_end = tag_end.max(m.end());
     }
 
     for m in RE_BRACKETS.find_iter(subject) {
@@ -352,22 +348,12 @@ pub fn extract_tags_from_subject(email_subject: &str) -> SubjectTags {
             continue;
         }
         if !tag_zone_active {
+            break;
+        }
+        if start > tag_end && !subject[tag_end..start].trim().is_empty() {
             continue;
         }
-        if has_recognized_tag && start > tag_zone_end {
-            let between = &subject[tag_zone_end..start];
-            if !between.trim().is_empty() {
-                continue;
-            }
-        }
-        if !has_recognized_tag {
-            if start > tag_zone_end && !subject[tag_zone_end..start].trim().is_empty() {
-                continue;
-            }
-            has_recognized_tag = true;
-        }
-        tag_zone_end = m.end();
-        tag_end = tag_end.max(m.end());
+        tag_end = m.end();
         let full = m.as_str();
         let content = &full[1..full.len() - 1];
         let cleaned = content.replace(['[', ']'], "");
@@ -390,12 +376,12 @@ pub fn extract_tags_from_subject(email_subject: &str) -> SubjectTags {
         .trim_start_matches('"')
         .trim_start_matches(']')
         .trim();
-    let comma = if colon_prefix.is_empty() || after_tags.is_empty() {
+    let separator = if colon_prefix.is_empty() || after_tags.is_empty() {
         ""
     } else {
         " "
     };
-    let untagged_subject = format!("{colon_prefix}{comma}{after_tags}")
+    let untagged_subject = format!("{colon_prefix}{separator}{after_tags}")
         .trim()
         .to_string();
 
