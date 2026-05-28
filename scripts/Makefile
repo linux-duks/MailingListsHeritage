@@ -29,6 +29,11 @@ _build-rs:
 
 PI_IMAGE ?= mlh-create-example-pi
 
+USERN_MAP :=
+ifeq ($(CONTAINER),podman)
+USERN_MAP := --userns=keep-id
+endif
+
 .PHONY: create-example-pi
 create-example-pi:
 	@echo "==> Building container image for example public-inbox..."
@@ -38,11 +43,12 @@ create-example-pi:
 	mkdir -p $(REPO_ROOT)/data
 	@echo "==> Generating example public-inbox v2 repository..."
 	$(CONTAINER) run --rm -t \
+		$(USERN_MAP) \
 		-w /data \
-		-v $(REPO_ROOT)/data:/data \
-		-v $(REPO_ROOT)/mlh_parser/tests/fixtures:/fixtures \
+		-v $(REPO_ROOT)/data:/data:z \
+		-v $(REPO_ROOT)/mlh_parser/tests/fixtures:/fixtures:ro \
 		$(PI_IMAGE) \
-		/fixtures /data \
+		/fixtures /data
 	@echo "==> Example public-inbox created at $(REPO_ROOT)/data/"
 
 .PHONY: clean
@@ -74,6 +80,6 @@ peek:
 			-v ./:/usr/src/app:z \
 			-v $(PEEK_PATH):/target_path:z \
 			-w /usr/src/app \
-			$$($(CONTAINER) build -q -f $(DEV_IMAGE) . ) \
+			$$($(CONTAINER) build -q --build-arg USER_ID=$(shell id -u) --build-arg GROUP_ID=$(shell id -g) -f $(DEV_IMAGE) . ) \
 			bash -c "uv run --project ./peek_parquet ./peek_parquet/peek_files.py --dir /target_path" ; \
 	fi
