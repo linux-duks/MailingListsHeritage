@@ -9,7 +9,7 @@ import matplotlib.ticker as mticker
 import numpy as np
 import polars as pl
 import seaborn as sns
-from matplotlib.colors import LinearSegmentedColormap, LogNorm
+from matplotlib.colors import LogNorm
 
 sns.set_style("whitegrid")
 
