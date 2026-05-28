@@ -1,5 +1,6 @@
 import polars as pl
 import seaborn as sns
+from datetime import date
 import matplotlib.pyplot as plt
 import os
 import glob
@@ -33,7 +34,8 @@ def main(working_dir, output_dir):
 
     # Filter out non-patches
     df = df.filter(
-        (pl.col("has_patch_tag") | pl.col("has_rfc_tag"))
+        pl.col("date").is_between(date(2016, 5, 1), date(2026, 5, 1))
+        & (pl.col("has_patch_tag") | pl.col("has_rfc_tag"))
         & (~pl.col("has_response_tag"))
         & (~pl.col("has_forward_tag"))
         & (
@@ -64,16 +66,25 @@ def main(working_dir, output_dir):
 
     ## Time difference between first and last versions
     df_time_diff = df.filter(pl.col("time_diff_days") > 0)
-    df_time_diff = df_time_diff.to_pandas()
 
-    plt.figure(figsize=(10, 4))
+    counts_time_diff = df_time_diff.group_by("list").len().sort("list")
+    label_map_time_diff = {
+        row["list"]: f"{row['list']} (n={row['len']})"
+        for row in counts_time_diff.iter_rows(named=True)
+    }
+    df_time_diff_plot = df_time_diff.with_columns(
+        pl.col("list").replace_strict(label_map_time_diff).alias("list_label")
+    )
+
+    plt.figure(figsize=(9, (2 * len(selected_lists)) - 1))
     sns.violinplot(
-        data=df_time_diff,
-        y="list",
+        df_time_diff_plot,
+        y="list_label",
         x="time_diff_days",
         log_scale=True,
         inner="quartile",
-        hue="list",
+        hue="list_label",
+        # split=True, # good option if not using hue
     )
     plt.ylabel("Mailing List")
     plt.xlabel("Time Difference (Days)")
@@ -84,29 +95,52 @@ def main(working_dir, output_dir):
         os.makedirs(output_dir, exist_ok=True)
         plt.savefig(f"{output_dir}/revisions_latencies.svg")
 
-    ## Max versions
-    df_versions = df.to_pandas()
+    # BOXEN PLOT
+    # ------------------------
 
-    plt.figure(figsize=(10, 4))
-    sns.violinplot(
-        data=df_versions, y="list", x="rev_count", inner="quartile", hue="list"
+    counts_versions = df.group_by("list").len().sort("list")
+    label_map_versions = {
+        row["list"]: f"{row['list']} (n={row['len']})"
+        for row in counts_versions.iter_rows(named=True)
+    }
+    df_versions_full = df.with_columns(
+        pl.col("list").replace_strict(label_map_versions).alias("list_label")
     )
+
+    plt.figure(figsize=(9, len(selected_lists)))
+    sns.boxenplot(df_versions_full, y="list_label", x="rev_count", hue="list_label")
     plt.ylabel("Mailing List")
     plt.xlabel("Maximum Patch Version")
-    plt.xlim(1, 10)
+    plt.xlim(1, 8)
     plt.title("Distribution of Maximum Patch Versions")
     plt.tight_layout()
 
     if output_dir:
         os.makedirs(output_dir, exist_ok=True)
-        plt.savefig(f"{output_dir}/revisions_versions_violin.svg")
+        plt.savefig(f"{output_dir}/revisions_versions_boxen.svg")
 
-    plt.figure(figsize=(10, 4))
-    sns.boxplot(data=df_versions, y="list", x="rev_count", hue="list")
+    # BOX PLOT
+    # ------------------------
+
+    ## revcount 95th percentile
+    p95 = df["rev_count"].quantile(0.95)
+    df_versions = df.filter(pl.col("rev_count") <= p95)
+
+    counts_versions = df_versions.group_by("list").len().sort("list")
+    label_map_versions = {
+        row["list"]: f"{row['list']} (n={row['len']})"
+        for row in counts_versions.iter_rows(named=True)
+    }
+    df_versions_plot = df_versions.with_columns(
+        pl.col("list").replace_strict(label_map_versions).alias("list_label")
+    )
+
+    plt.figure(figsize=(9, len(selected_lists) - 1))
+    sns.boxplot(df_versions_plot, y="list_label", x="rev_count", hue="list_label")
     plt.ylabel("Mailing List")
     plt.xlabel("Maximum Patch Version")
-    plt.xlim(1, 10)
-    plt.title("Distribution of Maximum Patch Versions")
+    plt.xlim(1, 8)
+    plt.title("Distribution of Maximum Patch Versions (P95)")
     plt.tight_layout()
 
     if output_dir:
