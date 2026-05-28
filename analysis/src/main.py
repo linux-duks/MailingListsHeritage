@@ -59,7 +59,7 @@ def main():
         ),
     }
 
-    non_default_scripts = ["list_comparison", "author_distribution", "sql_querier"]
+    non_default_scripts = ["list_comparison", "author_distribution", "sql_querier", "revisions_analysis"]
 
     if analysis_script:
         if analysis_script in scripts.keys():
