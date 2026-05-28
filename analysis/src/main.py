@@ -47,6 +47,9 @@ def main():
         "date_missing": lambda: date_missing.main(
             pick("dataset", "anon_dataset"), output_dir
         ),
+        "revisions_analysis": lambda: revisions_analysis.main(
+            pick("dataset", "anon_dataset"), output_dir
+        ),
         # these scripts below will not run by default
         "list_comparison": lambda: list_comparison.main(
             pick("dataset", "anon_dataset"), output_dir
@@ -58,24 +61,34 @@ def main():
             pick("dataset", "anon_dataset"), output_dir
         ),
         "sql_querier": lambda: sql_querier.main(inputs, output_dir),
-        "revisions_analysis": lambda: revisions_analysis.main(
-            pick("dataset", "anon_dataset"), output_dir
-        ),
     }
 
-    non_default_scripts = ["list_comparison", "author_distribution", "sql_querier", "revisions_analysis", "duplicate_messages"]
+    non_default_scripts = [
+        "list_comparison",
+        "author_distribution",
+        "sql_querier",
+        "revisions_analysis",
+        "duplicate_messages",
+    ]
+
+    run_all_scripts = False
 
     if analysis_script:
-        if analysis_script in scripts.keys():
-            logger.info("Starting %s...", analysis_script)
-            scripts[analysis_script]()
+        if analysis_script.lower() == "all":
+            run_all_scripts = True
+
         else:
-            logger.warning("Unknown analysis script: %s", analysis_script)
-            logger.warning("Available: %s", ", ".join(scripts.keys()))
-        return
+            # run only default scripts
+            if analysis_script in scripts.keys():
+                logger.info("Starting %s...", analysis_script)
+                scripts[analysis_script]()
+            else:
+                logger.warning("Unknown analysis script: %s", analysis_script)
+                logger.warning("Available: %s", ", ".join(scripts.keys()))
+            return
 
     for name in scripts.keys():
-        if name in non_default_scripts:
+        if not run_all_scripts and name in non_default_scripts:
             continue
         logger.info("Starting %s...", name)
         try:

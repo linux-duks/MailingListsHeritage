@@ -6,6 +6,9 @@ ANALYSIS_OUTPUT_DIR=$(REPO_ROOT)/output/analysis
 
 # Env variables for analysis
 LISTS_OF_INTEREST ?=
+# see list of scripts in analysis/src/main.py
+# leave empty to run default scripts, use a specific script name
+# or "all" to run non default too (require passing LISTS_OF_INTEREST)
 ANALYSIS_SCRIPT ?=
 
 # Include shared container runtime detection
