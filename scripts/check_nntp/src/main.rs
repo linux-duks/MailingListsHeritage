@@ -1,28 +1,35 @@
-//! check_nntp - Interactive NNTP mailing list browser
+//! check_nntp - NNTP mailing list browser & article fetcher
 //!
-//! This tool allows you to interactively browse available NNTP mailing lists.
+//! This tool allows you to browse NNTP mailing lists interactively or fetch
+//! specific articles by glob pattern and article number/range.
 //!
 //! # Usage
 //!
+//! ## Interactive mode (default)
+//!
 //! ```bash
-//! # Interactive mode (prompts for server URL)
 //! cargo run --package check_nntp
-//!
-//! # With CLI arguments
 //! cargo run --package check_nntp -- -s nntp://nntp.example.com
-//!
-//! # With TLS
 //! cargo run --package check_nntp -- -s nntps://nntp.example.com
-//!
-//! # Custom port
 //! cargo run --package check_nntp -- -s nntp://nntp.example.com:8119
+//! ```
+//!
+//! ## Batch mode (fetch specific articles)
+//!
+//! ```bash
+//! cargo run --package check_nntp -- -s nntp://nntp.example.com -l "*-kernel" --id 42
+//! cargo run --package check_nntp -- -s nntp://nntp.example.com -l "*-kernel" --id 1-10
+//! cargo run --package check_nntp -- -s nntp://nntp.example.com -l "*-kernel" --id '1..10'
+//! cargo run --package check_nntp -- -s nntp://nntp.example.com -l "*-kernel" --id '1,3,5-7'
 //! ```
 
 use clap::Parser;
+use glob::Pattern;
 use inquire::{Confirm, MultiSelect, Select, Text};
 use mlh_archiver::nntp_source::{
     connect_to_nntp_server, nntp_utils::server_address, retrieve_lists_with_connection,
 };
+use mlh_archiver::range_inputs::parse_sequence;
 use std::env;
 
 /// Parsed server configuration from a URL.
@@ -125,6 +132,14 @@ struct Args {
     /// Enable verbose logging
     #[arg(short = 'v', long = "verbose")]
     verbose: bool,
+
+    /// Glob pattern to filter mailing lists (e.g., "*-kernel"). Triggers batch mode.
+    #[arg(short = 'l', long = "list")]
+    list: Option<String>,
+
+    /// Article ID or range to fetch (e.g., "1", "1-10", "1..10", "1,3-5,7")
+    #[arg(long = "id")]
+    id: Option<String>,
 }
 
 fn main() -> mlh_archiver::Result<()> {
@@ -138,8 +153,8 @@ fn main() -> mlh_archiver::Result<()> {
     println!("=========================================\n");
 
     // Get server config from CLI, env, or prompt
-    let server = if let Some(url) = args.server {
-        match parse_server_url(&url) {
+    let server = if let Some(ref url) = args.server {
+        match parse_server_url(url) {
             Ok(cfg) => cfg,
             Err(e) => {
                 eprintln!("❌ Invalid server URL: {}", e);
@@ -186,6 +201,10 @@ fn main() -> mlh_archiver::Result<()> {
     if groups.is_empty() {
         println!("No mailing lists available on this server.");
         return Ok(());
+    }
+
+    if let Some(ref list_pattern) = args.list {
+        return batch_mode(&server, &args, &groups, list_pattern);
     }
 
     // Interactive selection
@@ -308,6 +327,161 @@ fn main() -> mlh_archiver::Result<()> {
 
     println!("\n✨ Done!");
     Ok(())
+}
+
+/// Run batch mode: filter groups by glob pattern, fetch articles by id range.
+fn batch_mode(
+    server: &ServerConfig,
+    args: &Args,
+    groups: &[String],
+    list_pattern: &str,
+) -> mlh_archiver::Result<()> {
+    let ids_str = match &args.id {
+        Some(ids) => ids,
+        None => {
+            eprintln!("❌ --id is required when using --list");
+            eprintln!("   Examples: --id 42, --id 1-10, --id '1..10', --id '1,3,5-7'");
+            std::process::exit(1);
+        }
+    };
+
+    let matching = filter_by_glob(groups, list_pattern);
+    let count = matching.len();
+
+    println!("✅ Found {} list(s) matching '{}'\n", count, list_pattern);
+
+    if matching.is_empty() {
+        return Ok(());
+    }
+
+    let ids = parse_id_range(ids_str);
+
+    for (i, group_name) in matching.iter().enumerate() {
+        if i > 0 {
+            let proceed = Confirm::new(&format!(
+                "Continue to '{}'? ({}/{})",
+                group_name,
+                i + 1,
+                count
+            ))
+            .with_default(true)
+            .prompt()
+            .unwrap_or(false);
+
+            if !proceed {
+                println!("Exiting.");
+                break;
+            }
+        }
+
+        fetch_and_display_articles(server, &args.username, &args.password, group_name, &ids);
+    }
+
+    println!("\n✨ Done!");
+    Ok(())
+}
+
+fn filter_by_glob(groups: &[String], pattern: &str) -> Vec<String> {
+    let pat = match Pattern::new(pattern) {
+        Ok(p) => p,
+        Err(e) => {
+            eprintln!("❌ Invalid glob pattern '{}': {}", pattern, e);
+            std::process::exit(1);
+        }
+    };
+    let mut matching: Vec<String> = groups.iter().filter(|g| pat.matches(g)).cloned().collect();
+    matching.sort();
+    matching
+}
+
+fn parse_id_range(input: &str) -> Vec<usize> {
+    let normalized = input.replace("..", "-");
+    match parse_sequence(&normalized) {
+        Ok(iter) => {
+            let ids: Vec<usize> = iter.collect();
+            if ids.is_empty() {
+                eprintln!("❌ Empty id range: '{}'", input);
+                std::process::exit(1);
+            }
+            ids
+        }
+        Err(e) => {
+            eprintln!("❌ Invalid id range '{}': {}", input, e);
+            eprintln!("   Supported formats: 42, 1-10, 1..10, 1,3,5-7");
+            std::process::exit(1);
+        }
+    }
+}
+
+fn fetch_and_display_articles(
+    server: &ServerConfig,
+    username: &Option<String>,
+    password: &Option<String>,
+    group_name: &str,
+    ids: &[usize],
+) {
+    let mut stream = match connect_to_nntp_server(
+        &server.hostname,
+        server.port,
+        username.clone(),
+        password.clone(),
+    ) {
+        Ok(s) => s,
+        Err(e) => {
+            eprintln!("⚠️  Failed to connect for '{}': {}", group_name, e);
+            return;
+        }
+    };
+
+    match stream.group(group_name) {
+        Ok(info) => {
+            println!(
+                "\n📁 {}  (articles {}..{})",
+                group_name, info.low, info.high
+            );
+        }
+        Err(e) => {
+            eprintln!("⚠️  Failed to select group '{}': {}", group_name, e);
+            let _ = stream.quit();
+            return;
+        }
+    }
+
+    for &id in ids {
+        match stream.article_by_number(id as isize) {
+            Ok(article) => {
+                let subject = article
+                    .headers
+                    .get("Subject")
+                    .map(|s| s.as_str())
+                    .unwrap_or("(no subject)");
+                let from = article
+                    .headers
+                    .get("From")
+                    .map(|s| s.as_str())
+                    .unwrap_or("(unknown)");
+                let date = article
+                    .headers
+                    .get("Date")
+                    .map(|s| s.as_str())
+                    .unwrap_or("(unknown)");
+
+                println!("\n── Article #{} ──", id);
+                println!("Subject: {}", subject);
+                println!("From:    {}", from);
+                println!("Date:    {}", date);
+                println!("{}", "─".repeat(50));
+                for line in &article.body {
+                    println!("{}", line);
+                }
+            }
+            Err(e) => {
+                println!("⚠️  Article #{} unavailable: {}", id, e);
+            }
+        }
+    }
+
+    let _ = stream.quit();
 }
 
 /// Prompt user for NNTP server URL

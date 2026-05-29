@@ -403,6 +403,53 @@ check_git --inbox-dir /path/to/inboxes --email-id 0000000056-e0-5dadd9f0f9884ed3
 | `--email-id <ID>` | Look up and print a single email by its formatted identifier |
 | `--verbose` | Enable verbose (debug) logging |
 
+### check-nntp
+
+CLI tool for browsing NNTP mailing lists and fetching specific emails, located in [`scripts/check_nntp/`](scripts/check_nntp/). Supports an interactive TUI and a batch mode for targeted article lookups.
+
+**Build:**
+
+```bash
+# Using make from the project root:
+make build-check-nntp
+
+# Or manually with cargo:
+cargo build --release --package check_nntp
+```
+
+**Usage:**
+
+```bash
+# Interactive mode (browse and preview lists)
+check_nntp
+
+# Interactive mode with explicit server
+check_nntp -s nntp://nntp.example.com
+check_nntp -s nntps://nntp.example.com
+check_nntp -s nntp://nntp.example.com:8119
+
+# Batch mode: fetch specific articles by list glob and id range
+check_nntp -s nntp://nntp.example.com -l "*.lkml" --id 42
+check_nntp -s nntp://nntp.example.com -l "*.lkml" --id 1-10
+check_nntp -s nntp://nntp.example.com -l "*.lkml" --id '1..10'
+check_nntp -s nntp://nntp.example.com -l "*.lkml" --id '1,3,5-7'
+
+# Batch mode with authentication
+check_nntp -s nntp://nntp.example.com -l "*.lkml" --id 1-10 -u myuser -P mypassword
+```
+
+| Option | Description |
+|--------|-------------|
+| `-s, --server <URL>` | NNTP server URL (`nntp://host`, `nntps://host`, `nntp://host:port`) |
+| `-l, --list <PATTERN>` | Glob pattern to filter mailing lists. Triggers batch mode (requires `--id`) |
+| `--id <VALUE>` | Article ID or range in batch mode (`42`, `1-10`, `1..10`, `1,3,5-7`) |
+| `-u, --username <USER>` | NNTP username for authentication |
+| `-P, --password <PASS>` | NNTP password for authentication |
+| `--export-config` | Export configuration to YAML file after browsing |
+| `-v, --verbose` | Enable verbose (debug) logging |
+
+In batch mode, if multiple lists match the glob pattern, the tool fetches articles one list at a time and prompts to confirm before moving to the next list.
+
 ---
 
 ## Architecture Details
