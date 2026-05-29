@@ -182,20 +182,20 @@ fn main() -> mlh_archiver::Result<()> {
 
     // Connect to NNTP server and retrieve list of groups
     println!("🔍 Connecting to {}{}...", server_url, tls_label);
-    let mut nntp_stream = match connect_to_nntp_server(
+    let mut conn = match connect_to_nntp_server(
         &server.hostname,
         server.port,
         args.username.clone(),
         args.password.clone(),
     ) {
-        Ok(stream) => stream,
+        Ok(stream) => NntpConnection::new(stream),
         Err(e) => {
             eprintln!("❌ Failed to connect to NNTP server: {}", e);
             return Err(e);
         }
     };
 
-    let groups = match retrieve_lists_with_connection(&mut nntp_stream) {
+    let groups = match retrieve_lists_with_connection(conn.stream()) {
         Ok(g) => g,
         Err(e) => {
             eprintln!("❌ Failed to fetch mailing lists: {}", e);
@@ -216,7 +216,7 @@ fn main() -> mlh_archiver::Result<()> {
             eprintln!("   Examples: --id 42, --id 1-10, --id '1..10', --id '1,3,5-7'");
             std::process::exit(1);
         });
-        return batch_mode(&mut nntp_stream, &groups, list_pattern, id);
+        return batch_mode(conn.stream(), &groups, list_pattern, id);
     }
 
     // Interactive selection + fetch loop
@@ -244,7 +244,7 @@ fn main() -> mlh_archiver::Result<()> {
 
         println!("📊 Fetching email ranges...");
         let groups_info =
-            match retrieve_groups_info_with_connection(&mut nntp_stream, &groups_to_preview) {
+            match retrieve_groups_info_with_connection(conn.stream(), &groups_to_preview) {
                 Ok(info) => info,
                 Err(e) => {
                     eprintln!("⚠️  Warning: Failed to fetch some group info: {}", e);
@@ -293,7 +293,7 @@ fn main() -> mlh_archiver::Result<()> {
                     {
                         if group_info.high >= group_info.low {
                             let latest = vec![group_info.high as usize];
-                            fetch_and_display_articles(&mut nntp_stream, selection, &latest);
+                            fetch_and_display_articles(conn.stream(), selection, &latest);
                         } else {
                             println!("⚠️  Group appears to be empty (low > high)");
                         }
@@ -319,7 +319,7 @@ fn main() -> mlh_archiver::Result<()> {
                                 break;
                             }
                         }
-                        fetch_and_display_articles(&mut nntp_stream, group_name, &ids);
+                        fetch_and_display_articles(conn.stream(), group_name, &ids);
                     }
                 }
                 None => {
@@ -495,6 +495,28 @@ fn truncate_str(s: &str, max_len: usize) -> String {
         s.to_string()
     } else {
         format!("{}...", &s[..max_len - 3])
+    }
+}
+
+/// Wrapper around [`NNTPStream`] that calls `quit()` on drop, ensuring the
+/// connection is cleanly closed on normal exit, error, or panic.
+struct NntpConnection(Option<NNTPStream>);
+
+impl NntpConnection {
+    fn new(stream: NNTPStream) -> Self {
+        NntpConnection(Some(stream))
+    }
+
+    fn stream(&mut self) -> &mut NNTPStream {
+        self.0.as_mut().expect("NntpConnection already consumed")
+    }
+}
+
+impl Drop for NntpConnection {
+    fn drop(&mut self) {
+        if let Some(ref mut stream) = self.0 {
+            let _ = stream.quit();
+        }
     }
 }
 
