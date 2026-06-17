@@ -59,6 +59,7 @@ def main(dataset_dir: str, output_dir: str) -> None:
 
 # -- helper -------------------------------------------------------------------
 
+
 def _fmt_k(x: float, _=None) -> str:
     if x >= 1_000_000:
         return f"{x / 1_000_000:.1f}M"
@@ -66,7 +67,9 @@ def _fmt_k(x: float, _=None) -> str:
         return f"{x / 1_000:.0f}k"
     return str(int(x))
 
+
 # -- plots ---------------------------------------------------------------------
+
 
 def _plot_heatmap_overlap(df: pl.DataFrame, output_dir: str) -> None:
     """Heatmap of duplicate message overlap between lists."""
@@ -115,8 +118,13 @@ def _plot_heatmap_overlap(df: pl.DataFrame, output_dir: str) -> None:
             if np.isnan(v) or v == 0:
                 continue
             ax.text(
-                j, i, _fmt_k(v), ha="center", va="center",
-                fontsize=8, fontweight="bold",
+                j,
+                i,
+                _fmt_k(v),
+                ha="center",
+                va="center",
+                fontsize=8,
+                fontweight="bold",
                 color="white" if (v / vmax) > 0.4 else "#333",
             )
 
@@ -129,5 +137,8 @@ def _plot_heatmap_overlap(df: pl.DataFrame, output_dir: str) -> None:
         fontsize=12,
     )
     fig.tight_layout()
-    plt.savefig(os.path.join(output_dir, "duplicate_messages_heatmap_overlap.svg"), bbox_inches="tight")
+    plt.savefig(
+        os.path.join(output_dir, "duplicate_messages_heatmap_overlap.svg"),
+        bbox_inches="tight",
+    )
     plt.close()
