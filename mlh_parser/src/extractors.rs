@@ -1,5 +1,5 @@
-//! Extracts trailers (Signed-off-by, Reviewed-by, etc.) and patch diffs from
-//! email body text.
+//! Extracts trailers (Signed-off-by, Reviewed-by, etc.), `Fixes:` tags,
+//! and patch diffs from email body text.
 //! Extract "tags" from email Subject, like `[PATCH v3 0/11]`
 
 use regex::Regex;
@@ -30,7 +30,7 @@ static RE_SIGNATURE: LazyLock<Regex> = LazyLock::new(|| {
 pub fn extract_attributions(commit_message: &str) -> Vec<Attribution> {
     let mut attributions = Vec::new();
 
-    // Split on signature marker
+    // Split on signature/diff marker
     let body = commit_message.split("\n-- \n").next().unwrap_or("");
 
     // Fix common copypaste trailer wrapping
@@ -415,6 +415,106 @@ pub fn extract_tags_from_subject(email_subject: &str) -> SubjectTags {
         subject_tags: state.tags,
         untagged_subject,
     }
+}
+
+static RE_FIXES_FULL: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r#"(?m)^Fixes:\s+([0-9a-fA-F]{12,40})\s+\("([^"\n]*)"\)"#)
+        .expect("RE_FIXES_FULL regex must compile")
+});
+
+static RE_FIXES_BARE: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"(?m)^Fixes:\s+([0-9a-fA-F]{12,40})\s*$").expect("RE_FIXES_BARE regex must compile")
+});
+
+static RE_FIXES_OPEN: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r#"(?m)^Fixes:\s+([0-9a-fA-F]{12,40})\s+\("([^"\n]*)$"#)
+        .expect("RE_FIXES_OPEN regex must compile")
+});
+
+/// Extracts `Fixes:` tags from a commit message / email body text.
+///
+/// Matches the standard kernel style:
+/// `Fixes: <12+ hex chars> ("<one line summary>")`
+///
+/// Also matches bare SHA-only tags without a description:
+/// `Fixes: <12+ hex chars>`
+///
+/// # Parsing rules
+///
+/// - Only the part of the body before `-- ` (the signature/diff marker) is
+///   scanned.
+/// - Copy-paste line wrapping is fixed via [`RE_COPYPASTE`] before extraction.
+/// - Three regexes are applied in order, line by line:
+///   | Regex | Matches | Example |
+///   |---|---|---|
+///   | `RE_FIXES_FULL` | `SHA ("desc")` all on one line | `Fixes: abcdef012345 ("fix thing")` |
+///   | `RE_FIXES_BARE` | `SHA` with no description | `Fixes: abcdef012345` |
+///   | `RE_FIXES_OPEN` | `SHA ("desc` with no closing `"` on the same line | `Fixes: abc ("fix` |
+///
+/// When `RE_FIXES_OPEN` matches, **only the immediate next line** is checked
+/// for a closing `")`. If found, the two parts are joined. If the close is
+/// more than one line away, the tag is discarded.
+///
+/// Returns each match as a string in the format `SHA ("description")` or
+/// just `SHA` for bare tags.
+///
+/// # Examples
+///
+/// ```
+/// use mlh_parser::extractors::extract_fixes_body_tags_from_body;
+///
+/// let body = "Fixes: 54a4f0239f2e (\"KVM: MMU: make kvm_mmu_zap_page()\")\n";
+/// let tags = extract_fixes_body_tags_from_body(body);
+/// assert_eq!(tags, vec!["54a4f0239f2e (\"KVM: MMU: make kvm_mmu_zap_page()\")"]);
+///
+/// let body = "Fixes: abcdef012345\nSigned-off-by: Dev";
+/// let tags = extract_fixes_body_tags_from_body(body);
+/// assert_eq!(tags, vec!["abcdef012345"]);
+/// ```
+pub fn extract_fixes_body_tags_from_body(body: &str) -> Vec<String> {
+    let body = body.split("\n-- \n").next().unwrap_or("");
+    let body = RE_COPYPASTE.replace_all(body, "$1 $2");
+
+    let mut results = Vec::new();
+    let lines: Vec<&str> = body.lines().collect();
+    let mut i = 0;
+
+    while i < lines.len() {
+        let line = lines[i];
+
+        if let Some(caps) = RE_FIXES_FULL.captures(line) {
+            let sha = &caps[1];
+            let desc = &caps[2];
+            results.push(format!("{} (\"{}\")", sha, desc));
+            i += 1;
+        } else if let Some(caps) = RE_FIXES_BARE.captures(line) {
+            let sha = &caps[1];
+            results.push(sha.to_string());
+            i += 1;
+        } else if let Some(caps) = RE_FIXES_OPEN.captures(line) {
+            let sha = &caps[1];
+            let desc_start = caps.get(2).map_or("", |m| m.as_str());
+            if i + 1 < lines.len() {
+                let next = lines[i + 1];
+                if let Some(close_pos) = next.find(")\"") {
+                    let rest = next[..close_pos].trim();
+                    let full_desc = if rest.is_empty() {
+                        desc_start.to_string()
+                    } else {
+                        format!("{} {}", desc_start, rest)
+                    };
+                    results.push(format!("{} (\"{}\")", sha, full_desc));
+                    i += 2;
+                    continue;
+                }
+            }
+            i += 1;
+        } else {
+            i += 1;
+        }
+    }
+
+    results
 }
 
 #[cfg(test)]
@@ -952,5 +1052,99 @@ mod tests {
             let result = extract_tags_from_subject(input);
             assert_eq!(&result, expected, "extract_tags_from_subject({:?})", input);
         }
+    }
+
+    #[test]
+    fn test_extract_fixes_body_tags_standard() {
+        let body = "commit message\n\nFixes: 54a4f0239f2e (\"KVM: MMU: make kvm_mmu_zap_page() return the number of pages it actually freed\")\nSigned-off-by: ...";
+        let result = extract_fixes_body_tags_from_body(body);
+        assert_eq!(result.len(), 1);
+        assert_eq!(
+            result[0],
+            "54a4f0239f2e (\"KVM: MMU: make kvm_mmu_zap_page() return the number of pages it actually freed\")"
+        );
+    }
+
+    #[test]
+    fn test_extract_fixes_body_tags_12_char_sha() {
+        let body = "Fixes: abcdef012345 (\"short sha test\")\nSigned-off-by: X";
+        let result = extract_fixes_body_tags_from_body(body);
+        assert_eq!(result.len(), 1);
+        assert_eq!(result[0], "abcdef012345 (\"short sha test\")");
+    }
+
+    #[test]
+    fn test_extract_fixes_body_tags_multiple() {
+        let body = "msg\n\nFixes: aabbccddeeff (\"first fix\")\nFixes: 112233445566 (\"second fix\")\nSigned-off-by: Dev";
+        let result = extract_fixes_body_tags_from_body(body);
+        assert_eq!(result.len(), 2);
+        assert_eq!(result[0], "aabbccddeeff (\"first fix\")");
+        assert_eq!(result[1], "112233445566 (\"second fix\")");
+    }
+
+    #[test]
+    fn test_extract_fixes_body_tags_none() {
+        let body = "regular message\nSigned-off-by: Dev <dev@example.com>";
+        let result = extract_fixes_body_tags_from_body(body);
+        assert!(result.is_empty());
+    }
+
+    #[test]
+    fn test_extract_fixes_body_tags_after_signature_ignored() {
+        let body = "commit msg\n\nFixes: aabbccddeeff (\"real fix\")\n-- \nFixes: deadbeefcafe (\"signature fix\")\n";
+        let result = extract_fixes_body_tags_from_body(body);
+        assert_eq!(result.len(), 1);
+        assert_eq!(result[0], "aabbccddeeff (\"real fix\")");
+    }
+
+    #[test]
+    fn test_extract_fixes_body_tags_wrapped_line() {
+        let body = "cause\n\nFixes: 123456789abc (\"some very long description that got\nwrapped\")\nSigned-off-by: ...";
+        let result = extract_fixes_body_tags_from_body(body);
+        assert_eq!(result.len(), 1);
+        assert_eq!(
+            result[0],
+            "123456789abc (\"some very long description that got wrapped\")"
+        );
+    }
+
+    #[test]
+    fn test_extract_fixes_body_tags_no_match_prose() {
+        let body = "Fixes: this is not a proper tag\nFixes 123456789abc (\"missing colon\")\nFixes: 1234567890ab (\"missing closing paren\"\nFixes: abc (\"too short sha\")";
+        let result = extract_fixes_body_tags_from_body(body);
+        assert!(result.is_empty());
+    }
+
+    #[test]
+    fn test_extract_fixes_body_tags_bare_sha() {
+        let body = "msg\nFixes: abcdef012345\nSigned-off-by: Dev";
+        let result = extract_fixes_body_tags_from_body(body);
+        assert_eq!(result.len(), 1);
+        assert_eq!(result[0], "abcdef012345");
+    }
+
+    #[test]
+    fn test_extract_fixes_body_tags_mixed_bare_and_full() {
+        let body = "Fixes: aabbccddeeff (\"has desc\")\nFixes: 112233445566\nFixes: 998877aabbcc (\"another\")\nSigned-off-by: Dev";
+        let result = extract_fixes_body_tags_from_body(body);
+        assert_eq!(result.len(), 3);
+        assert_eq!(result[0], "aabbccddeeff (\"has desc\")");
+        assert_eq!(result[1], "112233445566");
+        assert_eq!(result[2], "998877aabbcc (\"another\")");
+    }
+
+    #[test]
+    fn test_extract_fixes_body_tags_next_line_close() {
+        let body = "Fixes: 123456789abc (\"desc start\ncontinued\")\nSigned-off-by: Dev";
+        let result = extract_fixes_body_tags_from_body(body);
+        assert_eq!(result.len(), 1);
+        assert_eq!(result[0], "123456789abc (\"desc start continued\")");
+    }
+
+    #[test]
+    fn test_extract_fixes_body_tags_distant_close_ignored() {
+        let body = "Fixes: abcdef012345 (\"desc\nline2\nline3\")\nline4\nline5\nline6\nline7\nline8\nline9\nline10\nline11\")\nSigned-off-by: Dev";
+        let result = extract_fixes_body_tags_from_body(body);
+        assert!(result.is_empty());
     }
 }

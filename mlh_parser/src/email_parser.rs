@@ -36,6 +36,7 @@ pub fn parse_email(
 
     let raw_body = email_reader::get_body(&msg);
 
+    email.fixes_body_tags = extractors::extract_fixes_body_tags_from_body(&raw_body);
     email.trailers = extractors::extract_attributions(&raw_body);
     email.code = extractors::extract_patches(&raw_body);
     email.body_sha1 = generate_sha1_hash(&raw_body);

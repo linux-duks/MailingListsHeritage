@@ -104,6 +104,7 @@ pub fn build_record_batch(
     let mut code_arr = ListBuilder::new(StringBuilder::new());
     let mut raw_body_arr = StringBuilder::new();
     let mut body_sha1_arr = StringBuilder::new();
+    let mut fixes_body_tags_arr = ListBuilder::new(StringBuilder::new());
     let mut source_reference_arr = StringBuilder::new();
 
     for (idx, (email, source_reference)) in emails.iter().enumerate() {
@@ -237,6 +238,16 @@ pub fn build_record_batch(
             code_arr.append(!email.code.is_empty());
         }
 
+        // fixes_body_tags
+        {
+            for fixes_tag in &email.fixes_body_tags {
+                fixes_body_tags_arr
+                    .values()
+                    .append_value(fixes_tag.as_str());
+            }
+            fixes_body_tags_arr.append(!email.fixes_body_tags.is_empty());
+        }
+
         log::debug!("build_record_batch[{idx}] email_id={source_reference}",);
         raw_body_arr.append_value(email.raw_body.as_str());
         body_sha1_arr.append_value(email.body_sha1.as_str());
@@ -275,6 +286,7 @@ pub fn build_record_batch(
             Arc::new(code_arr.finish()),
             Arc::new(raw_body_arr.finish()),
             Arc::new(body_sha1_arr.finish()),
+            Arc::new(fixes_body_tags_arr.finish()),
             Arc::new(source_reference_arr.finish()),
         ],
     )?;

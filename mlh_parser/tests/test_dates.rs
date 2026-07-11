@@ -69,7 +69,7 @@ fn test_email_dates() {
     // I will only cause problems if new cases are introduced with dates in the future
     // relative to this one:
     // Mon May 18 2026 00:02:36 GMT+0000
-    let now = DateTime::from_timestamp(1779062556, 0).unwrap().into();
+    let now = DateTime::from_timestamp(1783296000, 0).unwrap().into();
 
     for (date_file, email_file) in &pairs {
         let mail_bytes = fs::read(email_file).unwrap();

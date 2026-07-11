@@ -97,6 +97,11 @@ pub static PARQUET_SCHEMA: LazyLock<Schema> = LazyLock::new(|| {
         ),
         Field::new("raw_body", DataType::Utf8, true),
         Field::new("body_sha1", DataType::Utf8, true),
+        Field::new(
+            "fixes_body_tags",
+            DataType::List(Arc::new(Field::new("item", DataType::Utf8, true))),
+            true,
+        ),
         Field::new("_source_reference", DataType::Utf8, true),
     ])
 });

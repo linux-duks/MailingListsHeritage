@@ -14,7 +14,7 @@ fn test_complete_parser() {
     // TODO: this should reflect the maximum real date in tests.
     // I will only cause problems if new cases are introduced with dates in the future
     // relative to this one:
-    let now = DateTime::from_timestamp(1779062556, 0).unwrap().into();
+    let now = DateTime::from_timestamp(1783296000, 0).unwrap().into();
 
     if email_files.is_empty() {
         panic!("test cases missing")

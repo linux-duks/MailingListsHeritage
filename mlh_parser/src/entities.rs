@@ -42,6 +42,8 @@ pub struct ParsedEmail {
     pub raw_body: String,
     /// pre-calculated SHA1 sum of the raw body
     pub body_sha1: String,
+    /// list of "Fixes:" tags, as described in the Kernel docs: https://docs.kernel.org/process/submitting-patches.html#describe-changes
+    pub fixes_body_tags: Vec<String>,
     /// source reference is a information to trace back to the original source
     /// it will be different for each kind of email source.
     pub source_reference: String,
