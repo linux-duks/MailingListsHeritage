@@ -118,7 +118,7 @@ impl<'a> Scheduler<'a> {
         let mut handles = Vec::new();
 
         // Process each worker group - collect tasks first to avoid borrow issues
-        let groups: Vec<WorkerGroup> = self.worker_groups.drain(..).collect();
+        let groups: Vec<WorkerGroup> = std::mem::take(self.worker_groups);
 
         for group in groups {
             let WorkerGroup {
