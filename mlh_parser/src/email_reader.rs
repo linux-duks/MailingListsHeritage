@@ -69,11 +69,6 @@ pub fn header_value_to_string_list(val: &mail_parser::HeaderValue<'_>) -> Option
             if addrs.is_empty() { None } else { Some(addrs) }
         }
         mail_parser::HeaderValue::ContentType(ct) => {
-            // let st = if let Some(ref s) = ct.c_subtype {
-            //     format!("{}/{}", ct.c_type, s)
-            // } else {
-            //     ct.c_type.to_string()
-            // };
             if let Some(ref attrs) = ct.attributes {
                 let attr_strs: Vec<String> = attrs
                     .iter()

@@ -66,7 +66,9 @@ def main(input_map, output_dir):
             df.show(num=30)
             end = time.time()
             elapsed_time = end - start
-            print(f"! Completed in {elapsed_time:.4f}s. Total {df.count()} rows. First rows ⬆️")
+            print(
+                f"! Completed in {elapsed_time:.4f}s. Total {df.count()} rows. First rows ⬆️"
+            )
 
             print(f"(Attempting to save results in {result_path})\n")
         except KeyboardInterrupt:
