@@ -13,7 +13,7 @@ The MLH Parser processes email files produced by the MLH Archiver and converts t
 - **Parquet Output**: Columnar storage format optimized for analytics via Apache Arrow
 - **Hive Partitioning**: Data organized by mailing list (`list=<name>/`) for efficient querying
 - **Auto-detection of Input Format**: Reads `.eml` and `.parquet` files transparently from the same input directory
-- **Email Field Extraction**: Parses headers, body, attachments, and metadata (including trailers, patches, and code snippets)
+- **Email Field Extraction**: Parses headers, body, attachments, and metadata (including trailers, fixes tags, patches, and code snippets)
 - **Error Handling**: Failed parses are saved separately per mailing list for review
 - **Multi-threaded**: Configurable thread pool for parallel processing of mailing lists
 - **Batch Processing**: Auto-splits large datasets into multiple Parquet row groups to stay within Arrow's 2 GB offset limits
@@ -132,6 +132,7 @@ The Parquet dataset includes the following columns:
 | `references` | list\<string\> | References headers |
 | `x-mailing-list` | string | Mailing list name |
 | `trailers` | list\<struct\<attribution: string, identification: string\>\> | Signature block attribution and identification |
+| `fixes_body_tags` | list\<string\> | `Fixes:` tags extracted from the commit message body |
 | `code` | list\<string\> | Code snippets extracted from email |
 | `raw_body` | string | Complete raw email body |
 | `list` (partition) | string | Name of the List. Only present in partition aware readers |
@@ -207,9 +208,9 @@ RUST_LOG=debug cargo run
 
 - `src/main.rs` — Entry point and Ctrl+C signal handling
 - `src/lib.rs` — Core `start()` function, thread pool, batch flush orchestration
-- `src/email_parser.rs` — Top-level email parsing: headers, body, dates, trailers, patches
+- `src/email_parser.rs` — Top-level email parsing: headers, body, dates, trailers, fixes tags, patches
 - `src/email_reader.rs` — Low-level mail-parser integration: decode, headers, body text
-- `src/extractors.rs` — Trailer and patch extraction from email body text
+- `src/extractors.rs` — Trailer, fixes tag, and patch extraction from email body text; subject tag parsing
 - `src/date_parser.rs` — Date parsing, validation, and millennium correction
 - `src/dataset_writer.rs` — Parquet output with batched row group writes
 - `src/email_file_reader.rs` — `.eml` and `.parquet` file reader with unified iterator
