@@ -30,14 +30,14 @@ Schema definition of the Columnar dataset:
 | to                       | List of Strings    | Recipients (To field)                                                                            |
 | cc                       | List of Strings    | CC recipients                                                                                    |
 | subject                  | String             | Email subject line                                                                               |
-| has_patch_tag            | Boolean            | Presence "patch tag" (convention) in the subject              |
-| has_rfc_tag              | Boolean            | Presence "RFC tag" (convention) in the subject                |
-| has_response_tag         | Boolean            | Presence of "Re/Res tag" in the subject                       |
-| has_forward_tag          | Boolean            | Presence of "Fwd/Fd tag" in the subject                       |
-| patch_version            | UInt16             | Version of patch, if present ([PATCH v3] -> 3 )               |
-| patchset_sequence_number | String             | Sequence string, if present ([PATCH 0/11] -> 0/11)            |
-| subject_tags             | List of Strings    | All tags extracted from the subject                           |
-| untagged_subject         | String             | The subject removed from all tags but "Re/Res/Fd/Fwd"         |
+| has_patch_subject_tag    | Boolean            | Presence "patch tag" (convention) in the subject                                                 |
+| has_rfc_subject_tag      | Boolean            | Presence "RFC tag" (convention) in the subject                                                   |
+| has_response_subject_tag | Boolean            | Presence of "Re/Res tag" in the subject                                                          |
+| has_forward_subject_tag  | Boolean            | Presence of "Fwd/Fd tag" in the subject                                                          |
+| patch_version            | UInt16             | Version of patch, if present ([PATCH v3] -> 3 )                                                  |
+| patchset_sequence_number | String             | Sequence string, if present ([PATCH 0/11] -> 0/11)                                               |
+| subject_tags             | List of Strings    | All tags extracted from the subject                                                              |
+| untagged_subject         | String             | The subject removed from all tags but "Re/Res/Fd/Fwd"                                            |
 | date                     | Datetime           | Dataset email date (corrected)                                                                   |
 | client-date              | List of Strings    | Raw date from email client (may be incorrect)                                                    |
 | in-reply-to              | String             | In-Reply-To header                                                                               |
@@ -46,7 +46,8 @@ Schema definition of the Columnar dataset:
 | trailers                 | List of Structs    | Signature block attribution and identification                                                   |
 | code                     | List of Strings    | Code snippets extracted from email                                                               |
 | raw_body                 | String             | Complete raw email body                                                                          |
-| body_sha1                | String             | Sha1 hashsum of the raw body (before anonymization)                                               |
+| body_sha1                | String             | Sha1 hashsum of the raw body (before anonymization)                                              |
+| fixes_body_tag           | List of Strings    | List of "Fixes" tags found in the body                                                           |
 | _source_reference        | String             | Provenance tracking: source back reference (e.g., nntp sequential id, `{epoch}-{commit_hash}` for PI) |
 | list                     | String (partition) | The list from where the message was collected, split into a folder partition (hive style)        |
 ```

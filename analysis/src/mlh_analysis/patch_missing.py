@@ -28,9 +28,9 @@ def main(dataset_dir, output_dir):
     for mailing_list in LISTS_OF_INTEREST:
         df = pl.read_parquet(f"{dataset_dir}/list={mailing_list}/*.parquet")
         df = df.filter(
-            pl.col("has_patch_tag")
-            & (~pl.col("has_response_tag"))
-            & (~pl.col("has_forward_tag"))
+            pl.col("has_patch_subject_tag")
+            & (~pl.col("has_response_subject_tag"))
+            & (~pl.col("has_forward_subject_tag"))
             & (pl.col("code").is_null() | (pl.col("code").list.len() == 0))
             # patchset heads usually have no patch, remove them from this analysis
             & (

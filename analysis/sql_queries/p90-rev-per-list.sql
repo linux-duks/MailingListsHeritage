@@ -16,9 +16,9 @@ WITH patch_revisions AS (
         dataset
     WHERE 
         date BETWEEN CAST('2016-05-01' AS DATE) AND CAST('2026-05-01' AS DATE)
-        AND (has_patch_tag OR has_rfc_tag)
-        AND NOT has_response_tag
-        AND NOT has_forward_tag
+        AND (has_patch_subject_tag OR has_rfc_subject_tag)
+        AND NOT has_response_subject_tag
+        AND NOT has_forward_subject_tag
         AND untagged_subject IS NOT NULL
         AND untagged_subject != ''
     GROUP BY 

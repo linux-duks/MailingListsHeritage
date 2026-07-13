@@ -74,10 +74,10 @@ pub fn build_record_batch(
     let mut to_arr = ListBuilder::new(StringBuilder::new());
     let mut cc_arr = ListBuilder::new(StringBuilder::new());
     let mut subject_arr = StringBuilder::new();
-    let mut has_patch_tag_arr = BooleanBuilder::new();
-    let mut has_rfc_tag_arr = BooleanBuilder::new();
-    let mut has_response_tag_arr = BooleanBuilder::new();
-    let mut has_forward_tag_arr = BooleanBuilder::new();
+    let mut has_patch_subject_tag_arr = BooleanBuilder::new();
+    let mut has_rfc_subject_tag_arr = BooleanBuilder::new();
+    let mut has_response_subject_tag_arr = BooleanBuilder::new();
+    let mut has_forward_subject_tag_arr = BooleanBuilder::new();
     let mut patch_version_arr = UInt16Builder::new();
     let mut patchset_sequence_number_arr = StringBuilder::new();
     let mut untagged_subject_arr = StringBuilder::new();
@@ -141,10 +141,10 @@ pub fn build_record_batch(
         // subject_tags fields
         {
             let st = &email.subject_tags;
-            has_patch_tag_arr.append_value(st.has_patch_tag);
-            has_rfc_tag_arr.append_value(st.has_rfc_tag);
-            has_response_tag_arr.append_value(st.has_response_tag);
-            has_forward_tag_arr.append_value(st.has_forward_tag);
+            has_patch_subject_tag_arr.append_value(st.has_patch_subject_tag);
+            has_rfc_subject_tag_arr.append_value(st.has_rfc_subject_tag);
+            has_response_subject_tag_arr.append_value(st.has_response_subject_tag);
+            has_forward_subject_tag_arr.append_value(st.has_forward_subject_tag);
 
             if let Some(v) = st.patch_version {
                 patch_version_arr.append_value(v);
@@ -269,10 +269,10 @@ pub fn build_record_batch(
             Arc::new(to_arr.finish()),
             Arc::new(cc_arr.finish()),
             Arc::new(subject_arr.finish()),
-            Arc::new(has_patch_tag_arr.finish()),
-            Arc::new(has_rfc_tag_arr.finish()),
-            Arc::new(has_response_tag_arr.finish()),
-            Arc::new(has_forward_tag_arr.finish()),
+            Arc::new(has_patch_subject_tag_arr.finish()),
+            Arc::new(has_rfc_subject_tag_arr.finish()),
+            Arc::new(has_response_subject_tag_arr.finish()),
+            Arc::new(has_forward_subject_tag_arr.finish()),
             Arc::new(patch_version_arr.finish()),
             Arc::new(patchset_sequence_number_arr.finish()),
             Arc::new(subject_tags_arr.finish()),

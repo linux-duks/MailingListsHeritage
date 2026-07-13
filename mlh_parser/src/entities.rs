@@ -52,13 +52,13 @@ pub struct ParsedEmail {
 #[derive(Debug, PartialEq, Clone, Default)]
 pub struct SubjectTags {
     /// `[PATCH]`
-    pub has_patch_tag: bool,
+    pub has_patch_subject_tag: bool,
     /// `[RFC]`
-    pub has_rfc_tag: bool,
+    pub has_rfc_subject_tag: bool,
     /// `Re:`
-    pub has_response_tag: bool,
+    pub has_response_subject_tag: bool,
     /// `Fwd:`
-    pub has_forward_tag: bool,
+    pub has_forward_subject_tag: bool,
     /// `[v3]`
     pub patch_version: Option<u16>,
     /// `[0/3]`
