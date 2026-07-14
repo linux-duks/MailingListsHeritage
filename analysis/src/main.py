@@ -65,7 +65,7 @@ def main():
             pick("dataset", "anon_dataset"), output_dir
         ),
         "sql_querier": lambda: sql_querier.main(
-            pick("dataset", "anon_dataset"), output_dir
+            inputs, output_dir
         ),
     }
 
