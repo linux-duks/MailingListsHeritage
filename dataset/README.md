@@ -27,6 +27,7 @@ Schema definition of the Columnar dataset:
 |--------------------------|--------------------|--------------------------------------------------------------------------------------------------|
 | message-id               | String             | Email Message-ID header                                                                          |
 | from                     | String             | Sender email address                                                                             |
+| from_canonical_addr      | String             | Canonical from address resolved via mailmap (empty if no mapping)                                |
 | to                       | List of Strings    | Recipients (To field)                                                                            |
 | cc                       | List of Strings    | CC recipients                                                                                    |
 | subject                  | String             | Email subject line                                                                               |
@@ -44,10 +45,11 @@ Schema definition of the Columnar dataset:
 | references               | List of Strings    | References headers                                                                               |
 | x-mailing-list           | String             | Mailing list name                                                                                |
 | trailers                 | List of Structs    | Signature block attribution and identification                                                   |
+| trailers_canonical_addr  | List of Strings    | Canonical trailer addresses resolved via mailmap (null if no mapping)                            |
 | code                     | List of Strings    | Code snippets extracted from email                                                               |
 | raw_body                 | String             | Complete raw email body                                                                          |
 | body_sha1                | String             | Sha1 hashsum of the raw body (before anonymization)                                              |
-| fixes_body_tag           | List of Strings    | List of "Fixes" tags found in the body. Matches at least "Fixes SHA{12+}"                        |
+| fixes_body_tags          | List of Strings    | List of "Fixes" tags found in the body. Matches at least "Fixes SHA{12+}"                        |
 | _source_reference        | String             | Provenance tracking: source back reference (e.g., nntp sequential id, `{epoch}-{commit_hash}` for PI) |
 | list                     | String (partition) | The list from where the message was collected, split into a folder partition (hive style)        |
 ```
