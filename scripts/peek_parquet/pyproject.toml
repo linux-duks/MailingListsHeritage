@@ -1,11 +1,10 @@
 [project]
-name = "mlh-scripts"
+name = "peek_parquet"
 version = "0.1.0"
 description = "Utility scripts for MLH project"
 requires-python = ">=3.12"
 dependencies = [
     "polars>=1.39",
-]
 
 # this is still unefective in uv
 [project.scripts]
