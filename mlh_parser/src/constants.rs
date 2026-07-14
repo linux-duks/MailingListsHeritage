@@ -52,10 +52,10 @@ pub static PARQUET_SCHEMA: LazyLock<Schema> = LazyLock::new(|| {
             true,
         ),
         Field::new("subject", DataType::Utf8, true),
-        Field::new("has_patch_tag", DataType::Boolean, true),
-        Field::new("has_rfc_tag", DataType::Boolean, true),
-        Field::new("has_response_tag", DataType::Boolean, true),
-        Field::new("has_forward_tag", DataType::Boolean, true),
+        Field::new("has_patch_subject_tag", DataType::Boolean, true),
+        Field::new("has_rfc_subject_tag", DataType::Boolean, true),
+        Field::new("has_response_subject_tag", DataType::Boolean, true),
+        Field::new("has_forward_subject_tag", DataType::Boolean, true),
         Field::new("patch_version", DataType::UInt16, true),
         Field::new("patchset_sequence_number", DataType::Utf8, true),
         Field::new(
@@ -97,6 +97,11 @@ pub static PARQUET_SCHEMA: LazyLock<Schema> = LazyLock::new(|| {
         ),
         Field::new("raw_body", DataType::Utf8, true),
         Field::new("body_sha1", DataType::Utf8, true),
+        Field::new(
+            "fixes_body_tags",
+            DataType::List(Arc::new(Field::new("item", DataType::Utf8, true))),
+            true,
+        ),
         Field::new("_source_reference", DataType::Utf8, true),
     ])
 });

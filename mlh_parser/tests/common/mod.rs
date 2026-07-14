@@ -208,6 +208,17 @@ pub fn parse_headers_file(headers_file: &Path) -> HashMap<String, String> {
     headers
 }
 
+pub fn parse_fixes_body_tags_file(file: &Path) -> Vec<String> {
+    match fs::read_to_string(file) {
+        Ok(content) => content
+            .lines()
+            .map(|l| l.trim().to_string())
+            .filter(|l| !l.is_empty())
+            .collect(),
+        Err(_) => Vec::new(),
+    }
+}
+
 pub fn parse_patches_file(patches_file: &Path) -> Vec<String> {
     let mut patches = Vec::new();
     let content = match fs::read_to_string(patches_file) {

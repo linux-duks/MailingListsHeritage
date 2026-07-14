@@ -1,0 +1,70 @@
+The batteries list (hdev->batteries) is not cleaned up during
+hidinput_disconnect(), but struct hid_battery entries are allocated
+with devm_kzalloc.
+When a driver is unbound (e.g. during devicereprobe), devm frees those
+entries while their list_head nodesremain dangling in hdev->batteries,
+which persists across rebinds.
+
+Fixes: 4a58ae85c3f9 ("HID: input: Add support for multiple batteries per device")
+Signed-off-by: Rafael Passos <rafael@rcpassos.me>
+---
+Hi, I hope there is time to land this in this cycle.
+Tell me if I should make any changes.
+I built and tested it againts the mainline.
+I dont have devices with multiple batteries to test.
+
+Bug report link:
+    https://lore.kernel.org/all/20260602011949.2825852-1-rafael@rcpassos.me/
+
+I received a sashiko review, and looked at wacom drivers for inspiration.
+
+Changes in v2:
+- removed list deletion from hidinput_disconnect
+- new hidinput_cleanup_battery method
+- register the cleanup call using devm action
+  in hidinput_setup_battery
+
+If my searching was corect, this shoul be called when devres releases its group
+The commit message changed, because it referenced the
+hidinput_disconnect method.
+
+Original patch: https://lore.kernel.org/linux-input/20260602020352.4256D1F00893@smtp.kernel.org/T/#t
+The sashiko review: https://sashiko.dev/#/patchset/20260602015029.2838058-1-rafael@rcpassos.me?part=1
+
+ drivers/hid/hid-input.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
+index d73cfa2e73d3..c7b8c4ff7a33 100644
+--- a/drivers/hid/hid-input.c
++++ b/drivers/hid/hid-input.c
+@@ -519,6 +519,13 @@ static struct hid_battery *hidinput_find_battery(struct hid_device *dev,
+ 	return NULL;
+ }
+ 
++static void hidinput_cleanup_battery(void *res)
++{
++	struct hid_battery *bat = res;
++
++	list_del(&bat->list);
++}
++
+ static int hidinput_setup_battery(struct hid_device *dev, unsigned report_type,
+ 				  struct hid_field *field, bool is_percentage)
+ {
+@@ -610,6 +617,12 @@ static int hidinput_setup_battery(struct hid_device *dev, unsigned report_type,
+ 
+ 	power_supply_powers(bat->ps, &dev->dev);
+ 	list_add_tail(&bat->list, &dev->batteries);
++
++	error = devm_add_action_or_reset(&dev->dev,
++					 hidinput_cleanup_battery, bat);
++	if (error)
++		return error;
++
+ 	return 0;
+ 
+ err_free_name:
+-- 
+2.53.0
+

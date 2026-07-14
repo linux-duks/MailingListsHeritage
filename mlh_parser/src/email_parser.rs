@@ -19,7 +19,8 @@ use sha1::{Digest, Sha1};
 
 /// Parses a raw RFC 822 email byte slice into a [`ParsedEmail`].
 ///
-/// Extracts headers, body text, trailers, and code patches. Dates are
+/// Extracts headers, body text, subject tags, fixes tags, trailers,
+/// and code patches. Dates are
 /// normalized by [`process_date`](crate::date_parser::parse_date_string).
 /// Missing single-valued columns are populated with empty strings.
 pub fn parse_email(
@@ -36,6 +37,7 @@ pub fn parse_email(
 
     let raw_body = email_reader::get_body(&msg);
 
+    email.fixes_body_tags = extractors::extract_fixes_body_tags_from_body(&raw_body);
     email.trailers = extractors::extract_attributions(&raw_body);
     email.code = extractors::extract_patches(&raw_body);
     email.body_sha1 = generate_sha1_hash(&raw_body);

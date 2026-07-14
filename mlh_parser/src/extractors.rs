@@ -1,5 +1,5 @@
-//! Extracts trailers (Signed-off-by, Reviewed-by, etc.) and patch diffs from
-//! email body text.
+//! Extracts trailers (Signed-off-by, Reviewed-by, etc.), `Fixes:` tags,
+//! and patch diffs from email body text.
 //! Extract "tags" from email Subject, like `[PATCH v3 0/11]`
 
 use regex::Regex;
@@ -30,7 +30,7 @@ static RE_SIGNATURE: LazyLock<Regex> = LazyLock::new(|| {
 pub fn extract_attributions(commit_message: &str) -> Vec<Attribution> {
     let mut attributions = Vec::new();
 
-    // Split on signature marker
+    // Split on signature/diff marker
     let body = commit_message.split("\n-- \n").next().unwrap_or("");
 
     // Fix common copypaste trailer wrapping
@@ -302,7 +302,7 @@ fn process_colon_tags(prefix: &str, state: &mut TagState) -> (String, usize) {
 /// ## Standalone patch
 ///
 /// - A standalone `patch`/`Patch` word at position 0 of the subject (before any
-///   bracket or quote) sets `has_patch_tag = true`.
+///   bracket or quote) sets `has_patch_subject_tag = true`.
 /// - If no brackets exist in the subject, the standalone word is added to
 ///   `subject_tags` and stripped from the untagged subject.
 /// - If brackets exist, the standalone word only sets the flag; the bracket
@@ -320,16 +320,16 @@ fn process_colon_tags(prefix: &str, state: &mut TagState) -> (String, usize) {
 /// use mlh_parser::extractors::extract_tags_from_subject;
 ///
 /// let tags = extract_tags_from_subject("[PATCH v2 0/3] libbpf: support STRUCT_OPS");
-/// assert!(tags.has_patch_tag);
+/// assert!(tags.has_patch_subject_tag);
 /// assert_eq!(tags.patch_version, Some(2));
 /// assert_eq!(tags.patchset_sequence_number.as_deref(), Some("0/3"));
 /// assert_eq!(tags.subject_tags, vec!["PATCH", "v2", "0/3"]);
 /// assert_eq!(tags.untagged_subject, "libbpf: support STRUCT_OPS");
 ///
 /// let tags = extract_tags_from_subject("Re: [PATCH RFC bpf-next 2/6] bpf: compute");
-/// assert!(tags.has_response_tag);
-/// assert!(tags.has_patch_tag);
-/// assert!(tags.has_rfc_tag);
+/// assert!(tags.has_response_subject_tag);
+/// assert!(tags.has_patch_subject_tag);
+/// assert!(tags.has_rfc_subject_tag);
 /// assert_eq!(tags.subject_tags, vec!["Re", "PATCH", "RFC", "bpf-next", "2/6"]);
 /// assert_eq!(tags.untagged_subject, "Re: bpf: compute");
 /// ```
@@ -406,15 +406,115 @@ pub fn extract_tags_from_subject(email_subject: &str) -> SubjectTags {
         .to_string();
 
     SubjectTags {
-        has_patch_tag: state.has_patch,
-        has_rfc_tag: state.has_rfc,
-        has_response_tag: state.has_response,
-        has_forward_tag: state.has_forward,
+        has_patch_subject_tag: state.has_patch,
+        has_rfc_subject_tag: state.has_rfc,
+        has_response_subject_tag: state.has_response,
+        has_forward_subject_tag: state.has_forward,
         patch_version: state.version,
         patchset_sequence_number: state.sequence,
         subject_tags: state.tags,
         untagged_subject,
     }
+}
+
+static RE_FIXES_FULL: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r#"(?m)^Fixes:\s+([0-9a-fA-F]{12,40})\s+\("([^"\n]*)"\)"#)
+        .expect("RE_FIXES_FULL regex must compile")
+});
+
+static RE_FIXES_BARE: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"(?m)^Fixes:\s+([0-9a-fA-F]{12,40})\s*$").expect("RE_FIXES_BARE regex must compile")
+});
+
+static RE_FIXES_OPEN: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r#"(?m)^Fixes:\s+([0-9a-fA-F]{12,40})\s+\("([^"\n]*)$"#)
+        .expect("RE_FIXES_OPEN regex must compile")
+});
+
+/// Extracts `Fixes:` tags from a commit message / email body text.
+///
+/// Matches the standard kernel style:
+/// `Fixes: <12+ hex chars> ("<one line summary>")`
+///
+/// Also matches bare SHA-only tags without a description:
+/// `Fixes: <12+ hex chars>`
+///
+/// # Parsing rules
+///
+/// - Only the part of the body before `-- ` (the signature/diff marker) is
+///   scanned.
+/// - Copy-paste line wrapping is fixed via [`RE_COPYPASTE`] before extraction.
+/// - Three regexes are applied in order, line by line:
+///   | Regex | Matches | Example |
+///   |---|---|---|
+///   | `RE_FIXES_FULL` | `SHA ("desc")` all on one line | `Fixes: abcdef012345 ("fix thing")` |
+///   | `RE_FIXES_BARE` | `SHA` with no description | `Fixes: abcdef012345` |
+///   | `RE_FIXES_OPEN` | `SHA ("desc` with no closing `"` on the same line | `Fixes: abc ("fix` |
+///
+/// When `RE_FIXES_OPEN` matches, **only the immediate next line** is checked
+/// for a closing `")`. If found, the two parts are joined. If the close is
+/// more than one line away, the tag is discarded.
+///
+/// Returns each match as a string in the format `SHA ("description")` or
+/// just `SHA` for bare tags.
+///
+/// # Examples
+///
+/// ```
+/// use mlh_parser::extractors::extract_fixes_body_tags_from_body;
+///
+/// let body = "Fixes: 54a4f0239f2e (\"KVM: MMU: make kvm_mmu_zap_page()\")\n";
+/// let tags = extract_fixes_body_tags_from_body(body);
+/// assert_eq!(tags, vec!["54a4f0239f2e (\"KVM: MMU: make kvm_mmu_zap_page()\")"]);
+///
+/// let body = "Fixes: abcdef012345\nSigned-off-by: Dev";
+/// let tags = extract_fixes_body_tags_from_body(body);
+/// assert_eq!(tags, vec!["abcdef012345"]);
+/// ```
+pub fn extract_fixes_body_tags_from_body(body: &str) -> Vec<String> {
+    let body = body.split("\n-- \n").next().unwrap_or("");
+    let body = RE_COPYPASTE.replace_all(body, "$1 $2");
+
+    let mut results = Vec::new();
+    let lines: Vec<&str> = body.lines().collect();
+    let mut i = 0;
+
+    while i < lines.len() {
+        let line = lines[i];
+
+        if let Some(caps) = RE_FIXES_FULL.captures(line) {
+            let sha = &caps[1];
+            let desc = &caps[2];
+            results.push(format!("{} (\"{}\")", sha, desc));
+            i += 1;
+        } else if let Some(caps) = RE_FIXES_BARE.captures(line) {
+            let sha = &caps[1];
+            results.push(sha.to_string());
+            i += 1;
+        } else if let Some(caps) = RE_FIXES_OPEN.captures(line) {
+            let sha = &caps[1];
+            let desc_start = caps.get(2).map_or("", |m| m.as_str());
+            if i + 1 < lines.len() {
+                let next = lines[i + 1];
+                if let Some(close_pos) = next.find(")\"") {
+                    let rest = next[..close_pos].trim();
+                    let full_desc = if rest.is_empty() {
+                        desc_start.to_string()
+                    } else {
+                        format!("{} {}", desc_start, rest)
+                    };
+                    results.push(format!("{} (\"{}\")", sha, full_desc));
+                    i += 2;
+                    continue;
+                }
+            }
+            i += 1;
+        } else {
+            i += 1;
+        }
+    }
+
+    results
 }
 
 #[cfg(test)]
@@ -431,7 +531,7 @@ mod tests {
             (
                 "[PATCH 5.15.y] wifi: mac80211: check tdls flag in ieee80211_tdls_oper",
                 SubjectTags {
-                    has_patch_tag: true,
+                    has_patch_subject_tag: true,
                     subject_tags: vec![s("PATCH"), s("5.15.y")],
                     untagged_subject: s("wifi: mac80211: check tdls flag in ieee80211_tdls_oper"),
                     ..Default::default()
@@ -440,7 +540,7 @@ mod tests {
             (
                 "[RFC] 2.4.0-test6-pre2 Merge softirq, local_irq_count, local_bh_count",
                 SubjectTags {
-                    has_rfc_tag: true,
+                    has_rfc_subject_tag: true,
                     subject_tags: vec![s("RFC")],
                     untagged_subject: s(
                         "2.4.0-test6-pre2 Merge softirq, local_irq_count, local_bh_count",
@@ -451,7 +551,7 @@ mod tests {
             (
                 "[patch] 2.4.0-test11 Elf64_Word incorrectly defined",
                 SubjectTags {
-                    has_patch_tag: true,
+                    has_patch_subject_tag: true,
                     subject_tags: vec![s("patch")],
                     untagged_subject: s("2.4.0-test11 Elf64_Word incorrectly defined"),
                     ..Default::default()
@@ -460,7 +560,7 @@ mod tests {
             (
                 "[PATCH] xfrm: move policy_bydst RCU sync from per-netns .exit to .pre_exit",
                 SubjectTags {
-                    has_patch_tag: true,
+                    has_patch_subject_tag: true,
                     subject_tags: vec![s("PATCH")],
                     untagged_subject: s(
                         "xfrm: move policy_bydst RCU sync from per-netns .exit to .pre_exit",
@@ -471,7 +571,7 @@ mod tests {
             (
                 "[PATCH v2 0/3] libbpf: support STRUCT_OPS in light skeletons",
                 SubjectTags {
-                    has_patch_tag: true,
+                    has_patch_subject_tag: true,
                     patch_version: Some(2),
                     patchset_sequence_number: Some(s("0/3")),
                     subject_tags: vec![s("PATCH"), s("v2"), s("0/3")],
@@ -482,7 +582,7 @@ mod tests {
             (
                 "[PATCH v2 1/3] libbpf: load vmlinux BTF in gen_loader mode for struct_ops",
                 SubjectTags {
-                    has_patch_tag: true,
+                    has_patch_subject_tag: true,
                     patch_version: Some(2),
                     patchset_sequence_number: Some(s("1/3")),
                     subject_tags: vec![s("PATCH"), s("v2"), s("1/3")],
@@ -495,7 +595,7 @@ mod tests {
             (
                 "[PATCH 0/2] bpf: cgroup: fix sysctl new-value handling in __cgroup_bpf_run_filter_sysctl",
                 SubjectTags {
-                    has_patch_tag: true,
+                    has_patch_subject_tag: true,
                     patchset_sequence_number: Some(s("0/2")),
                     subject_tags: vec![s("PATCH"), s("0/2")],
                     untagged_subject: s(
@@ -507,9 +607,9 @@ mod tests {
             (
                 "Re: [PATCH RFC bpf-next 2/6] bpf: compute loops hierarchy",
                 SubjectTags {
-                    has_patch_tag: true,
-                    has_rfc_tag: true,
-                    has_response_tag: true,
+                    has_patch_subject_tag: true,
+                    has_rfc_subject_tag: true,
+                    has_response_subject_tag: true,
                     patchset_sequence_number: Some(s("2/6")),
                     subject_tags: vec![s("Re"), s("PATCH"), s("RFC"), s("bpf-next"), s("2/6")],
                     untagged_subject: s("Re: bpf: compute loops hierarchy"),
@@ -519,7 +619,7 @@ mod tests {
             (
                 "[PATCHv3 00/12] uprobes/x86: Fix red zone issue for optimized uprobes",
                 SubjectTags {
-                    has_patch_tag: true,
+                    has_patch_subject_tag: true,
                     patch_version: Some(3),
                     patchset_sequence_number: Some(s("00/12")),
                     subject_tags: vec![s("PATCH"), s("v3"), s("00/12")],
@@ -530,7 +630,7 @@ mod tests {
             (
                 "[PATCH dwarves v5 00/11] pahole: Encode true signatures in kernel BTF",
                 SubjectTags {
-                    has_patch_tag: true,
+                    has_patch_subject_tag: true,
                     patch_version: Some(5),
                     patchset_sequence_number: Some(s("00/11")),
                     subject_tags: vec![s("PATCH"), s("dwarves"), s("v5"), s("00/11")],
@@ -541,7 +641,7 @@ mod tests {
             (
                 "[PATCH 6.6.y v3 0/4] ksmbd: validate owner of durable handle on reconnect",
                 SubjectTags {
-                    has_patch_tag: true,
+                    has_patch_subject_tag: true,
                     patch_version: Some(3),
                     patchset_sequence_number: Some(s("0/4")),
                     subject_tags: vec![s("PATCH"), s("6.6.y"), s("v3"), s("0/4")],
@@ -562,7 +662,7 @@ mod tests {
             (
                 "Patch \"nvme: add quirk NVME_QUIRK_IGNORE_DEV_SUBNQN for 144d:a808 (Samsung PM981/983/970 EVO Plus )\" has been added to the 7.0-stable tree",
                 SubjectTags {
-                    has_patch_tag: true,
+                    has_patch_subject_tag: true,
                     subject_tags: vec![s("Patch")],
                     untagged_subject: s(
                         "nvme: add quirk NVME_QUIRK_IGNORE_DEV_SUBNQN for 144d:a808 (Samsung PM981/983/970 EVO Plus )\" has been added to the 7.0-stable tree",
@@ -584,7 +684,7 @@ mod tests {
             (
                 "fwd: [Bug 9106] Sun Fire v100 dmfe driver bug",
                 SubjectTags {
-                    has_forward_tag: true,
+                    has_forward_subject_tag: true,
                     subject_tags: vec![s("fwd"), s("Bug"), s("9106")],
                     untagged_subject: s("fwd: Sun Fire v100 dmfe driver bug"),
                     ..Default::default()
@@ -593,7 +693,7 @@ mod tests {
             (
                 "[PATCH v19 00/14] crypto/dmaengine: qce: introduce BAM locking and use DMA for register I/O",
                 SubjectTags {
-                    has_patch_tag: true,
+                    has_patch_subject_tag: true,
                     patch_version: Some(19),
                     patchset_sequence_number: Some(s("00/14")),
                     subject_tags: vec![s("PATCH"), s("v19"), s("00/14")],
@@ -606,7 +706,7 @@ mod tests {
             (
                 "[2.6 patch] fix dependencies of HUGETLB_PAGE_SIZE_64K",
                 SubjectTags {
-                    has_patch_tag: true,
+                    has_patch_subject_tag: true,
                     subject_tags: vec![s("2.6"), s("patch")],
                     untagged_subject: s("fix dependencies of HUGETLB_PAGE_SIZE_64K"),
                     ..Default::default()
@@ -615,7 +715,7 @@ mod tests {
             (
                 "[2.4 PATCH] sparc64 dma parenthesis fixes",
                 SubjectTags {
-                    has_patch_tag: true,
+                    has_patch_subject_tag: true,
                     subject_tags: vec![s("2.4"), s("PATCH")],
                     untagged_subject: s("sparc64 dma parenthesis fixes"),
                     ..Default::default()
@@ -624,7 +724,7 @@ mod tests {
             (
                 "Re: [adv7511] Adding audio to transmitter driver",
                 SubjectTags {
-                    has_response_tag: true,
+                    has_response_subject_tag: true,
                     subject_tags: vec![s("Re"), s("adv7511")],
                     untagged_subject: s("Re: Adding audio to transmitter driver"),
                     ..Default::default()
@@ -633,7 +733,7 @@ mod tests {
             (
                 "[PATCH] [ov511] Export snapshot button through input layer",
                 SubjectTags {
-                    has_patch_tag: true,
+                    has_patch_subject_tag: true,
                     subject_tags: vec![s("PATCH"), s("ov511")],
                     untagged_subject: s("Export snapshot button through input layer"),
                     ..Default::default()
@@ -658,8 +758,8 @@ mod tests {
             (
                 "[PATCH/RFC] io_remap_pfn_range()",
                 SubjectTags {
-                    has_patch_tag: true,
-                    has_rfc_tag: true,
+                    has_patch_subject_tag: true,
+                    has_rfc_subject_tag: true,
                     subject_tags: vec![s("PATCH"), s("RFC")],
                     untagged_subject: s("io_remap_pfn_range()"),
                     ..Default::default()
@@ -669,7 +769,7 @@ mod tests {
             (
                 "[Re: [Re: Linux Status for Sun Netra T1 200 ]]",
                 SubjectTags {
-                    has_response_tag: true,
+                    has_response_subject_tag: true,
                     subject_tags: vec![
                         s("Re"),
                         s("Re"),
@@ -712,7 +812,7 @@ mod tests {
             (
                 "[ath9k-devel] [PATCH] ath9k: Switch to using",
                 SubjectTags {
-                    has_patch_tag: true,
+                    has_patch_subject_tag: true,
                     subject_tags: vec![s("ath9k-devel"), s("PATCH")],
                     untagged_subject: s("ath9k: Switch to using"),
                     ..Default::default()
@@ -724,7 +824,7 @@ mod tests {
             (
                 "[PATCH 1/2] SWDEV-195825 drm/amd/amdgpu:[Gibraltar][V320] tdr-1 test failed after 2 rounds",
                 SubjectTags {
-                    has_patch_tag: true,
+                    has_patch_subject_tag: true,
                     patchset_sequence_number: Some(s("1/2")),
                     subject_tags: vec![s("PATCH"), s("1/2")],
                     untagged_subject: s(
@@ -736,7 +836,7 @@ mod tests {
             (
                 "[PATCH 1/2] SWDEV-195825 drm/amd/amdgpu:[Gibraltar][V320] tdr-1 test failed after 2 rounds",
                 SubjectTags {
-                    has_patch_tag: true,
+                    has_patch_subject_tag: true,
                     patchset_sequence_number: Some(s("1/2")),
                     subject_tags: vec![s("PATCH"), s("1/2")],
                     untagged_subject: s(
@@ -748,7 +848,7 @@ mod tests {
             (
                 "Re: ASoC: TLV320AIC3x: Adding additional functionality for 3106 with [Patch] for discuss",
                 SubjectTags {
-                    has_response_tag: true,
+                    has_response_subject_tag: true,
                     subject_tags: vec![s("Re")],
                     untagged_subject: s(
                         "Re: ASoC: TLV320AIC3x: Adding additional functionality for 3106 with [Patch] for discuss",
@@ -760,7 +860,7 @@ mod tests {
             (
                 "[PATCH 3/5 V55555] PCI/ERR: get device before call device driver to avoid NULL pointer reference",
                 SubjectTags {
-                    has_patch_tag: true,
+                    has_patch_subject_tag: true,
                     patch_version: Some(55555),
                     patchset_sequence_number: Some(s("3/5")),
                     subject_tags: vec![s("PATCH"), s("3/5"), s("V55555")],
@@ -773,8 +873,8 @@ mod tests {
             (
                 "Re: [PATCH 3/5 V55555] PCI/ERR: get device before call device driver to avoid NULL pointer reference",
                 SubjectTags {
-                    has_response_tag: true,
-                    has_patch_tag: true,
+                    has_response_subject_tag: true,
+                    has_patch_subject_tag: true,
                     patch_version: Some(55555),
                     patchset_sequence_number: Some(s("3/5")),
                     subject_tags: vec![s("Re"), s("PATCH"), s("3/5"), s("V55555")],
@@ -819,7 +919,7 @@ mod tests {
             (
                 "Re: tlv320aic3x: potential null dereference",
                 SubjectTags {
-                    has_response_tag: true,
+                    has_response_subject_tag: true,
                     subject_tags: vec![s("Re")],
                     untagged_subject: s("Re: tlv320aic3x: potential null dereference"),
                     ..Default::default()
@@ -828,7 +928,7 @@ mod tests {
             (
                 "[ath9k-devel] [RFC] ath9k: add devicetree support to ath9k",
                 SubjectTags {
-                    has_rfc_tag: true,
+                    has_rfc_subject_tag: true,
                     subject_tags: vec![s("ath9k-devel"), s("RFC")],
                     untagged_subject: s("ath9k: add devicetree support to ath9k"),
                     ..Default::default()
@@ -837,7 +937,7 @@ mod tests {
             (
                 "[Intel-gfx] [PATCH] HEX sched/core: Paper over the ttwu() race [take two]",
                 SubjectTags {
-                    has_patch_tag: true,
+                    has_patch_subject_tag: true,
                     subject_tags: vec![s("Intel-gfx"), s("PATCH")],
                     untagged_subject: s("HEX sched/core: Paper over the ttwu() race [take two]"),
                     ..Default::default()
@@ -846,7 +946,7 @@ mod tests {
             (
                 "[PATCH] drm/i915: split out intel_pch.[ch] from i915_drv.[ch]",
                 SubjectTags {
-                    has_patch_tag: true,
+                    has_patch_subject_tag: true,
                     subject_tags: vec![s("PATCH")],
                     untagged_subject: s("drm/i915: split out intel_pch.[ch] from i915_drv.[ch]"),
                     ..Default::default()
@@ -855,7 +955,7 @@ mod tests {
             (
                 "[PATCH AUTOSEL for 4.15 119/124] signal/metag: Document a conflict with SI_USER with SIGFPE",
                 SubjectTags {
-                    has_patch_tag: true,
+                    has_patch_subject_tag: true,
                     patchset_sequence_number: Some(s("119/124")),
                     subject_tags: vec![s("PATCH"), s("AUTOSEL"), s("for"), s("4.15"), s("119/124")],
                     untagged_subject: s(
@@ -867,7 +967,7 @@ mod tests {
             (
                 "Re: Demand dial doesn't raise ISP connection",
                 SubjectTags {
-                    has_response_tag: true,
+                    has_response_subject_tag: true,
                     subject_tags: vec![s("Re")],
                     untagged_subject: s("Re: Demand dial doesn't raise ISP connection"),
                     ..Default::default()
@@ -876,7 +976,7 @@ mod tests {
             (
                 "FW: [Lustre-discuss] Troubles compile lustre with --enable-quota",
                 SubjectTags {
-                    has_forward_tag: true,
+                    has_forward_subject_tag: true,
                     subject_tags: vec![s("FW"), s("Lustre-discuss")],
                     untagged_subject: s("FW: Troubles compile lustre with --enable-quota"),
                     ..Default::default()
@@ -885,7 +985,7 @@ mod tests {
             (
                 "Re: c++ code - not getting compiled !!!!!!!!!",
                 SubjectTags {
-                    has_response_tag: true,
+                    has_response_subject_tag: true,
                     subject_tags: vec![s("Re")],
                     untagged_subject: s("Re: c++ code - not getting compiled !!!!!!!!!"),
                     ..Default::default()
@@ -911,7 +1011,7 @@ mod tests {
             (
                 "Re: Re: Re: ...",
                 SubjectTags {
-                    has_response_tag: true,
+                    has_response_subject_tag: true,
                     subject_tags: vec![s("Re"), s("Re"), s("Re")],
                     untagged_subject: s("Re: Re: Re: ..."),
                     ..Default::default()
@@ -920,8 +1020,8 @@ mod tests {
             (
                 "Re: Fw: Re: ...",
                 SubjectTags {
-                    has_response_tag: true,
-                    has_forward_tag: true,
+                    has_response_subject_tag: true,
+                    has_forward_subject_tag: true,
                     subject_tags: vec![s("Re"), s("Fw"), s("Re")],
                     untagged_subject: s("Re: Fw: Re: ..."),
                     ..Default::default()
@@ -931,7 +1031,7 @@ mod tests {
             (
                 "Re: Re: other Re: tags are ignored Re: ...",
                 SubjectTags {
-                    has_response_tag: true,
+                    has_response_subject_tag: true,
                     subject_tags: vec![s("Re"), s("Re")],
                     untagged_subject: s("Re: Re: other Re: tags are ignored Re: ..."),
                     ..Default::default()
@@ -952,5 +1052,99 @@ mod tests {
             let result = extract_tags_from_subject(input);
             assert_eq!(&result, expected, "extract_tags_from_subject({:?})", input);
         }
+    }
+
+    #[test]
+    fn test_extract_fixes_body_tags_standard() {
+        let body = "commit message\n\nFixes: 54a4f0239f2e (\"KVM: MMU: make kvm_mmu_zap_page() return the number of pages it actually freed\")\nSigned-off-by: ...";
+        let result = extract_fixes_body_tags_from_body(body);
+        assert_eq!(result.len(), 1);
+        assert_eq!(
+            result[0],
+            "54a4f0239f2e (\"KVM: MMU: make kvm_mmu_zap_page() return the number of pages it actually freed\")"
+        );
+    }
+
+    #[test]
+    fn test_extract_fixes_body_tags_12_char_sha() {
+        let body = "Fixes: abcdef012345 (\"short sha test\")\nSigned-off-by: X";
+        let result = extract_fixes_body_tags_from_body(body);
+        assert_eq!(result.len(), 1);
+        assert_eq!(result[0], "abcdef012345 (\"short sha test\")");
+    }
+
+    #[test]
+    fn test_extract_fixes_body_tags_multiple() {
+        let body = "msg\n\nFixes: aabbccddeeff (\"first fix\")\nFixes: 112233445566 (\"second fix\")\nSigned-off-by: Dev";
+        let result = extract_fixes_body_tags_from_body(body);
+        assert_eq!(result.len(), 2);
+        assert_eq!(result[0], "aabbccddeeff (\"first fix\")");
+        assert_eq!(result[1], "112233445566 (\"second fix\")");
+    }
+
+    #[test]
+    fn test_extract_fixes_body_tags_none() {
+        let body = "regular message\nSigned-off-by: Dev <dev@example.com>";
+        let result = extract_fixes_body_tags_from_body(body);
+        assert!(result.is_empty());
+    }
+
+    #[test]
+    fn test_extract_fixes_body_tags_after_signature_ignored() {
+        let body = "commit msg\n\nFixes: aabbccddeeff (\"real fix\")\n-- \nFixes: deadbeefcafe (\"signature fix\")\n";
+        let result = extract_fixes_body_tags_from_body(body);
+        assert_eq!(result.len(), 1);
+        assert_eq!(result[0], "aabbccddeeff (\"real fix\")");
+    }
+
+    #[test]
+    fn test_extract_fixes_body_tags_wrapped_line() {
+        let body = "cause\n\nFixes: 123456789abc (\"some very long description that got\nwrapped\")\nSigned-off-by: ...";
+        let result = extract_fixes_body_tags_from_body(body);
+        assert_eq!(result.len(), 1);
+        assert_eq!(
+            result[0],
+            "123456789abc (\"some very long description that got wrapped\")"
+        );
+    }
+
+    #[test]
+    fn test_extract_fixes_body_tags_no_match_prose() {
+        let body = "Fixes: this is not a proper tag\nFixes 123456789abc (\"missing colon\")\nFixes: 1234567890ab (\"missing closing paren\"\nFixes: abc (\"too short sha\")";
+        let result = extract_fixes_body_tags_from_body(body);
+        assert!(result.is_empty());
+    }
+
+    #[test]
+    fn test_extract_fixes_body_tags_bare_sha() {
+        let body = "msg\nFixes: abcdef012345\nSigned-off-by: Dev";
+        let result = extract_fixes_body_tags_from_body(body);
+        assert_eq!(result.len(), 1);
+        assert_eq!(result[0], "abcdef012345");
+    }
+
+    #[test]
+    fn test_extract_fixes_body_tags_mixed_bare_and_full() {
+        let body = "Fixes: aabbccddeeff (\"has desc\")\nFixes: 112233445566\nFixes: 998877aabbcc (\"another\")\nSigned-off-by: Dev";
+        let result = extract_fixes_body_tags_from_body(body);
+        assert_eq!(result.len(), 3);
+        assert_eq!(result[0], "aabbccddeeff (\"has desc\")");
+        assert_eq!(result[1], "112233445566");
+        assert_eq!(result[2], "998877aabbcc (\"another\")");
+    }
+
+    #[test]
+    fn test_extract_fixes_body_tags_next_line_close() {
+        let body = "Fixes: 123456789abc (\"desc start\ncontinued\")\nSigned-off-by: Dev";
+        let result = extract_fixes_body_tags_from_body(body);
+        assert_eq!(result.len(), 1);
+        assert_eq!(result[0], "123456789abc (\"desc start continued\")");
+    }
+
+    #[test]
+    fn test_extract_fixes_body_tags_distant_close_ignored() {
+        let body = "Fixes: abcdef012345 (\"desc\nline2\nline3\")\nline4\nline5\nline6\nline7\nline8\nline9\nline10\nline11\")\nSigned-off-by: Dev";
+        let result = extract_fixes_body_tags_from_body(body);
+        assert!(result.is_empty());
     }
 }

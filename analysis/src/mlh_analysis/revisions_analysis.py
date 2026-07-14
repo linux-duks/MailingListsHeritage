@@ -35,9 +35,9 @@ def main(working_dir, output_dir):
     # Filter out non-patches
     df = df.filter(
         pl.col("date").is_between(date(2016, 5, 1), date(2026, 5, 1))
-        & (pl.col("has_patch_tag") | pl.col("has_rfc_tag"))
-        & (~pl.col("has_response_tag"))
-        & (~pl.col("has_forward_tag"))
+        & (pl.col("has_patch_subject_tag") | pl.col("has_rfc_subject_tag"))
+        & (~pl.col("has_response_subject_tag"))
+        & (~pl.col("has_forward_subject_tag"))
         & (
             pl.col("untagged_subject").is_not_null()
             & (pl.col("untagged_subject") != "")
