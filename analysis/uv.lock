@@ -8,7 +8,7 @@ resolution-markers = [
 
 [[package]]
 name = "analysis"
-version = "0.4.0"
+version = "0.5.0"
 source = { virtual = "." }
 dependencies = [
     { name = "datafusion" },
