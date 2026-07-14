@@ -89,7 +89,7 @@ fn test_email_dates() {
 
         let expected_date = expected_date.expect("Expected Date should parse");
 
-        let mail = parse_email(&mail_bytes, now).expect("Parse should not fail");
+        let mail = parse_email(&mail_bytes, now, None).expect("Parse should not fail");
 
         let acctual_date = mail.date;
         assert!(

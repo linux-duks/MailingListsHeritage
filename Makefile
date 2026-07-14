@@ -244,12 +244,18 @@ setup-demo:
 		fi; \
 	done
 	@$(MAKE) create-example-pi
+	@echo "==> Generating mailmap..."
+	@python3 scripts/generate_mailmap.py --input-dir output/archiver/ --output demo.mailmap
 	@echo ""
 	@echo "=============================="
 	@echo "  Demo environment is ready."
 	@echo "  Run 'make run' to start the pipeline,"
 	@echo "  or run components individually."
 	@echo "=============================="
+
+.PHONY: generate-mailmap
+generate-mailmap:
+	python3 scripts/generate_mailmap.py --input-dir output/archiver/ --output demo.mailmap
 
 .PHONY: create-example-pi
 create-example-pi:

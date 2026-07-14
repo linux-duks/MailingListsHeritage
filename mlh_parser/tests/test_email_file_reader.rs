@@ -335,6 +335,7 @@ fn test_parse_mail_batched() {
         &output_dir,
         true, // fail_on_error
         10,   // max_records_per_batch
+        None, // mailmap
     )
     .unwrap();
 

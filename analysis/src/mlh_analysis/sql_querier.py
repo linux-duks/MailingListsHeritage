@@ -45,7 +45,7 @@ def main(input_map, output_dir):
         table_name = name.removesuffix("_dir")
         print(f"\nSchema for {table_name}")
         df = ctx.sql(f"show columns from {table_name};")
-        df.show()
+        df.show(num=50)
 
     df = None
     result_path = os.path.join(output_dir, "sql_results")

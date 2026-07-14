@@ -26,7 +26,7 @@ fn test_complete_parser() {
             Err(_) => continue,
         };
 
-        match parse_email(&mail_bytes, now) {
+        match parse_email(&mail_bytes, now, None) {
             Ok(r) => {
                 if !r.raw_body.is_empty() {
                     for trailer in &r.trailers {

@@ -41,6 +41,7 @@ pub static PARQUET_SCHEMA: LazyLock<Schema> = LazyLock::new(|| {
     Schema::new(vec![
         Field::new("message_id", DataType::Utf8, true),
         Field::new("from", DataType::Utf8, true),
+        Field::new("from_canonical_addr", DataType::Utf8, true),
         Field::new(
             "to",
             DataType::List(Arc::new(Field::new("item", DataType::Utf8, true))),
@@ -88,6 +89,11 @@ pub static PARQUET_SCHEMA: LazyLock<Schema> = LazyLock::new(|| {
                 DataType::Struct(trailer_fields),
                 true,
             ))),
+            true,
+        ),
+        Field::new(
+            "trailers_canonical_addr",
+            DataType::List(Arc::new(Field::new("item", DataType::Utf8, true))),
             true,
         ),
         Field::new(
