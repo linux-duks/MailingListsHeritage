@@ -11,6 +11,7 @@ use crate::email_reader::{
 };
 use crate::errors::ParseError;
 use crate::extractors::{self};
+use crate::mailmap::Mailmap;
 
 use chrono::{DateTime, FixedOffset, Utc};
 use mail_parser::Message;
@@ -23,9 +24,15 @@ use sha1::{Digest, Sha1};
 /// and code patches. Dates are
 /// normalized by [`process_date`](crate::date_parser::parse_date_string).
 /// Missing single-valued columns are populated with empty strings.
+///
+/// When a `mailmap` is provided, the `from` address and trailer
+/// identifications are resolved to their canonical forms via the
+/// mailmap and stored in `from_canonical_addr` and
+/// `trailers_canonical_addr` respectively.
 pub fn parse_email(
     email_data: &[u8],
     now: DateTime<FixedOffset>,
+    mailmap: Option<&Mailmap>,
 ) -> Result<ParsedEmail, ParseError> {
     let msg = email_reader::decode_mail(email_data)
         .ok_or_else(|| ParseError::DecodeError("Failed to parse email bytes".to_string()))?;
@@ -40,6 +47,20 @@ pub fn parse_email(
     email.fixes_body_tags = extractors::extract_fixes_body_tags_from_body(&raw_body);
     email.trailers = extractors::extract_attributions(&raw_body);
     email.code = extractors::extract_patches(&raw_body);
+
+    if let Some(mm) = mailmap {
+        email.from_canonical_addr = mm.resolve(&email.from).unwrap_or_default();
+        let resolved: Vec<Option<String>> = mm.resolve_trailers(&email.trailers);
+        // Only emit the list if at least one entry resolved to a value.
+        // Otherwise leave the list empty (null).
+        if resolved.iter().any(|r| r.is_some()) {
+            email.trailers_canonical_addr = resolved
+                .into_iter()
+                .map(|r| r.unwrap_or_default())
+                .collect();
+        }
+    }
+
     email.body_sha1 = generate_sha1_hash(&raw_body);
     email.raw_body = raw_body;
     Ok(email)

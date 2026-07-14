@@ -18,6 +18,7 @@ fn test_parse_empty_directory() {
         &output_base,
         false,
         BATCH_MAX_RECORDS,
+        None,
     );
     assert!(result.is_ok());
 }
@@ -48,6 +49,7 @@ fn test_parse_single_eml() {
         &output_base,
         false,
         BATCH_MAX_RECORDS,
+        None,
     );
     assert!(result.is_ok());
 
@@ -77,6 +79,7 @@ fn test_parse_errors_written_to_csv() {
         &output_base,
         false,
         BATCH_MAX_RECORDS,
+        None,
     );
     assert!(result.is_ok());
 
@@ -120,6 +123,7 @@ fn test_parse_errors_csv_forwarding_newlines() {
         &output_base,
         false,
         BATCH_MAX_RECORDS,
+        None,
     );
     assert!(result.is_ok());
 
@@ -167,6 +171,7 @@ fn test_multiple_to_addresses_in_parquet() {
         &output_base,
         false,
         BATCH_MAX_RECORDS,
+        None,
     );
     assert!(result.is_ok());
 
@@ -253,6 +258,7 @@ fn test_multiple_cc_addresses_in_parquet() {
         &output_base,
         false,
         BATCH_MAX_RECORDS,
+        None,
     );
     assert!(result.is_ok());
 
@@ -389,6 +395,7 @@ fn test_multiple_emails_varied_to_cc_row_count() {
         &output_base,
         false,
         BATCH_MAX_RECORDS,
+        None,
     );
     assert!(result.is_ok());
 
@@ -536,6 +543,7 @@ fn test_trailers_nullable_mixed_counts() {
         &output_base,
         false,
         BATCH_MAX_RECORDS,
+        None,
     );
     assert!(result.is_ok());
 
@@ -633,6 +641,7 @@ fn test_quoted_display_name_with_comma() {
         &output_base,
         false,
         BATCH_MAX_RECORDS,
+        None,
     );
     assert!(result.is_ok());
 
@@ -752,6 +761,7 @@ fn test_unquoted_comma_name_with_at_obfuscation() {
         &output_base,
         false,
         BATCH_MAX_RECORDS,
+        None,
     );
     assert!(result.is_ok());
 
@@ -820,6 +830,7 @@ fn test_unquoted_comma_name_in_to_with_obfuscation() {
         &output_base,
         false,
         BATCH_MAX_RECORDS,
+        None,
     );
     assert!(result.is_ok());
 
@@ -916,6 +927,7 @@ fn test_100_emails_order_preserved() {
             output_dir_path: output_base.to_string_lossy().to_string(),
             fail_on_parsing_error: false,
             lists_to_parse: Some(vec!["list_a".to_string(), "list_b".to_string()]),
+            mailmap_file: None,
         };
 
         pool.install(|| {

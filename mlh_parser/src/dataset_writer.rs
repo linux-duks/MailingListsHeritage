@@ -71,6 +71,7 @@ pub fn build_record_batch(
     let schema = constants::PARQUET_SCHEMA.clone();
 
     let mut from_arr = StringBuilder::new();
+    let mut from_canonical_addr_arr = StringBuilder::new();
     let mut to_arr = ListBuilder::new(StringBuilder::new());
     let mut cc_arr = ListBuilder::new(StringBuilder::new());
     let mut subject_arr = StringBuilder::new();
@@ -105,6 +106,7 @@ pub fn build_record_batch(
     let mut raw_body_arr = StringBuilder::new();
     let mut body_sha1_arr = StringBuilder::new();
     let mut fixes_body_tags_arr = ListBuilder::new(StringBuilder::new());
+    let mut trailers_canonical_addr_arr = ListBuilder::new(StringBuilder::new());
     let mut source_reference_arr = StringBuilder::new();
 
     for (idx, (email, source_reference)) in emails.iter().enumerate() {
@@ -115,6 +117,10 @@ pub fn build_record_batch(
         // from
         {
             from_arr.append_value(&email.from);
+        }
+        // from_canonical_addr
+        {
+            from_canonical_addr_arr.append_value(&email.from_canonical_addr);
         }
 
         // to
@@ -230,6 +236,20 @@ pub fn build_record_batch(
             }
         }
 
+        // trailers_canonical_addr
+        {
+            if email.trailers_canonical_addr.is_empty() {
+                trailers_canonical_addr_arr.append_null();
+            } else {
+                for canonical in &email.trailers_canonical_addr {
+                    trailers_canonical_addr_arr
+                        .values()
+                        .append_value(canonical.as_str());
+                }
+                trailers_canonical_addr_arr.append(true);
+            }
+        }
+
         // code
         {
             for patch in &email.code {
@@ -266,6 +286,7 @@ pub fn build_record_batch(
         vec![
             Arc::new(message_id_arr.finish()),
             Arc::new(from_arr.finish()),
+            Arc::new(from_canonical_addr_arr.finish()),
             Arc::new(to_arr.finish()),
             Arc::new(cc_arr.finish()),
             Arc::new(subject_arr.finish()),
@@ -283,6 +304,7 @@ pub fn build_record_batch(
             Arc::new(references_arr.finish()),
             Arc::new(x_mailing_list_arr.finish()),
             Arc::new(trailers_arr.finish()),
+            Arc::new(trailers_canonical_addr_arr.finish()),
             Arc::new(code_arr.finish()),
             Arc::new(raw_body_arr.finish()),
             Arc::new(body_sha1_arr.finish()),

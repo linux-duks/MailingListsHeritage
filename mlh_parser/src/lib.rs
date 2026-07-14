@@ -25,9 +25,11 @@ pub mod entities;
 pub mod errors;
 pub mod extractors;
 pub mod lineage_parser;
+pub mod mailmap;
 
 use crate::constants::{BATCH_MAX_RECORDS, PARQUET_FILE_NAME};
 use crate::errors::ParseError;
+use crate::mailmap::Mailmap;
 pub use entities::{Attribution, ParsedEmail};
 
 use chrono::FixedOffset;
@@ -35,6 +37,7 @@ use rayon::prelude::*;
 use std::fs;
 use std::io::{BufWriter, Write};
 use std::path::{Path, PathBuf};
+use std::sync::Arc;
 
 /// Convenience result type used throughout the crate.
 pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
@@ -43,6 +46,14 @@ pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 pub fn start(cfg: &mut crate::config::AppConfig) -> Result<()> {
     let input_path = PathBuf::from(&cfg.input_dir_path);
     let output_path = PathBuf::from(&cfg.output_dir_path);
+
+    let mailmap: Option<Arc<Mailmap>> = match &cfg.mailmap_file {
+        Some(path) => {
+            let mm = Mailmap::from_file(Path::new(path))?;
+            Some(Arc::new(mm))
+        }
+        None => None,
+    };
 
     // use the list of files folders in the config, or list all subfolders for the input folder
     let lists: Vec<String> = if let Some(ref specified_lists) = cfg.lists_to_parse {
@@ -74,11 +85,13 @@ pub fn start(cfg: &mut crate::config::AppConfig) -> Result<()> {
             let input = input_path.clone();
             let output = output_path.clone();
             let fail_on_err = cfg.fail_on_parsing_error;
+            let mm = mailmap.clone();
 
             s.spawn(move |_| {
                 log::debug!("Processing: {mail_l}");
 
-                if let Err(e) = process_mailing_list_wrap(&mail_l, &input, &output, fail_on_err) {
+                if let Err(e) = process_mailing_list_wrap(&mail_l, &input, &output, fail_on_err, mm)
+                {
                     log::error!("Error on {}: {}", mail_l, e);
                     if fail_on_err {
                         panic!("Fail on error requested. Error: {e}");
@@ -97,6 +110,7 @@ fn process_mailing_list_wrap(
     input_dir: &Path,
     output_dir: &Path,
     fail_on_error: bool,
+    mailmap: Option<Arc<Mailmap>>,
 ) -> Result<()> {
     log::debug!("Processing: {}", mail_l);
     process_mailing_list(
@@ -105,6 +119,7 @@ fn process_mailing_list_wrap(
         output_dir,
         fail_on_error,
         BATCH_MAX_RECORDS,
+        mailmap,
     )
     .map_err(|e| Box::<dyn std::error::Error>::from(e.to_string()))
 }
@@ -122,6 +137,7 @@ pub fn process_mailing_list(
     output_dir: &Path,
     fail_on_error: bool,
     max_records_per_batch: usize,
+    mailmap: Option<Arc<Mailmap>>,
 ) -> Result<()> {
     let list_input_path = input_dir.join(mailing_list);
 
@@ -178,7 +194,8 @@ pub fn process_mailing_list(
             .map(|row| {
                 let email_id = row.email_id;
                 let content = row.content;
-                match email_parser::parse_email(content.as_bytes(), now) {
+                let mm = mailmap.as_deref();
+                match email_parser::parse_email(content.as_bytes(), now, mm) {
                     Ok(email) => Ok((email, email_id)),
                     Err(e) => Err((e, email_id)),
                 }

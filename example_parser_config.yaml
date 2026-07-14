@@ -7,3 +7,6 @@ fail_on_parsing_error: false
 
 # (optional, parses all by default)
 # lists_to_parse: []
+
+# (optional) path to a git-format .mailmap file for address canonicalization
+# mailmap_file: "./kernel.mailmap"

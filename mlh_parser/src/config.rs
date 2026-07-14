@@ -34,6 +34,8 @@ pub struct AppConfig {
     pub fail_on_parsing_error: bool,
     /// Specific mailing list directories to parse. `None` parses all subdirectories.
     pub lists_to_parse: Option<Vec<String>>,
+    /// Optional path to a git mailmap file for address canonicalization.
+    pub mailmap_file: Option<String>,
 }
 
 /// Reads configuration from files matching the glob pattern in [`Opts::config_file`].

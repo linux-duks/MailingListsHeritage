@@ -88,7 +88,7 @@ fn test_header_parser() {
         let mail_bytes = fs::read(email_file).unwrap();
         let expected_headers = parse_headers_file(headers_file);
 
-        let parsed = match parse_email(&mail_bytes, now) {
+        let parsed = match parse_email(&mail_bytes, now, None) {
             Ok(p) => p,
             Err(e) => {
                 eprintln!("Skipping {:?}: {}", email_file, e);

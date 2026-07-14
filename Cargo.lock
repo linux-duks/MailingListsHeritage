@@ -2607,6 +2607,7 @@ dependencies = [
  "dateparser",
  "encoding_rs",
  "env_logger",
+ "git2",
  "glob",
  "log",
  "mail-parser",

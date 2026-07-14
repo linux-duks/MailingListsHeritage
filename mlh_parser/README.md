@@ -14,6 +14,7 @@ The MLH Parser processes email files produced by the MLH Archiver and converts t
 - **Hive Partitioning**: Data organized by mailing list (`list=<name>/`) for efficient querying
 - **Auto-detection of Input Format**: Reads `.eml` and `.parquet` files transparently from the same input directory
 - **Email Field Extraction**: Parses headers, body, attachments, and metadata (including trailers, fixes tags, patches, and code snippets)
+- **Mailmap Canonicalization**: Resolves email addresses to canonical identities via a git-format `.mailmap` file
 - **Error Handling**: Failed parses are saved separately per mailing list for review
 - **Multi-threaded**: Configurable thread pool for parallel processing of mailing lists
 - **Batch Processing**: Auto-splits large datasets into multiple Parquet row groups to stay within Arrow's 2 GB offset limits
@@ -123,6 +124,7 @@ The Parquet dataset includes the following columns:
 |--------|------|-------------|
 | `message-id` | string | Email Message-ID header |
 | `from` | string | Sender email address |
+| `from_canonical_addr` | string | Canonical from address resolved via mailmap (empty if no mapping) |
 | `to` | list\<string\> | Recipients (To field) |
 | `cc` | list\<string\> | CC recipients |
 | `subject` | string | Email subject line |
@@ -132,6 +134,7 @@ The Parquet dataset includes the following columns:
 | `references` | list\<string\> | References headers |
 | `x-mailing-list` | string | Mailing list name |
 | `trailers` | list\<struct\<attribution: string, identification: string\>\> | Signature block attribution and identification |
+| `trailers_canonical_addr` | list\<string\> | Canonical trailer addresses resolved via mailmap (null if no mapping) |
 | `fixes_body_tags` | list\<string\> | `Fixes:` tags extracted from the commit message body |
 | `code` | list\<string\> | Code snippets extracted from email |
 | `raw_body` | string | Complete raw email body |
@@ -208,10 +211,11 @@ RUST_LOG=debug cargo run
 
 - `src/main.rs` — Entry point and Ctrl+C signal handling
 - `src/lib.rs` — Core `start()` function, thread pool, batch flush orchestration
-- `src/email_parser.rs` — Top-level email parsing: headers, body, dates, trailers, fixes tags, patches
+- `src/email_parser.rs` — Top-level email parsing: headers, body, dates, trailers, fixes tags, patches, mailmap resolution
 - `src/email_reader.rs` — Low-level mail-parser integration: decode, headers, body text
 - `src/extractors.rs` — Trailer, fixes tag, and patch extraction from email body text; subject tag parsing
 - `src/date_parser.rs` — Date parsing, validation, and millennium correction
+- `src/mailmap.rs` — Git-format mailmap parsing and address canonicalization
 - `src/dataset_writer.rs` — Parquet output with batched row group writes
 - `src/email_file_reader.rs` — `.eml` and `.parquet` file reader with unified iterator
 - `src/entities.rs` — `ParsedEmail` and `Attribution` data types
@@ -224,6 +228,7 @@ RUST_LOG=debug cargo run
 
 - [`arrow` + `parquet`](https://docs.rs/arrow/) — Apache Arrow columnar storage backend
 - [`mail-parser`](https://docs.rs/mail-parser/) — RFC 822 / MIME email parsing
+- [`git2`](https://docs.rs/git2/) — Git mailmap file parsing and validation
 - [`config`](https://docs.rs/config/) — YAML/JSON/TOML configuration file loading
 - [`clap`](https://docs.rs/clap/) — CLI argument parsing
 - [`env_logger`](https://docs.rs/env_logger/) — Log level control via `RUST_LOG`

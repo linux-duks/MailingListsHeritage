@@ -44,6 +44,13 @@ pub struct ParsedEmail {
     pub body_sha1: String,
     /// list of "Fixes:" tags, as described in the Kernel docs: https://docs.kernel.org/process/submitting-patches.html#describe-changes
     pub fixes_body_tags: Vec<String>,
+    /// Canonical from address as resolved via mailmap.
+    /// Empty when no mailmap is configured or no mapping exists.
+    pub from_canonical_addr: String,
+    /// Canonical trailer addresses as resolved via mailmap, parallel to [`trailers`](ParsedEmail::trailers).
+    /// Each entry is the resolved canonical address, or empty when no mapping exists.
+    /// Empty when no mailmap is configured.
+    pub trailers_canonical_addr: Vec<String>,
     /// source reference is a information to trace back to the original source
     /// it will be different for each kind of email source.
     pub source_reference: String,
